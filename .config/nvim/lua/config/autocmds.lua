@@ -45,7 +45,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.api.nvim_create_autocmd("BufEnter", {
    pattern = { "*.js", "*.ts", "*.jsx", "*.tsx", "*.astro" },
    callback = function()
-      vim.keymap.set("n", "<leader>rd", ":VimuxRunCommand 'pnpm run dev'<cr>")
-      vim.keymap.set("n", "<leader>rs", ":VimuxRunCommand 'pnpm start'<cr>")
+      vim.keymap.set("n", "<leader>rd", ":TermExec cmd='pnpm run dev'<cr>")
+      vim.keymap.set("n", "<leader>rs", ":TermExec cmd='pnpm start'<cr>")
    end,
 });

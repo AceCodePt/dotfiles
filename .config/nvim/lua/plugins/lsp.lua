@@ -11,6 +11,7 @@ local languages = {
 	"tailwindcss",
 	"pyright",
 	"gopls",
+	"astro"
 }
 
 return {

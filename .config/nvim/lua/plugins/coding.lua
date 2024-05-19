@@ -26,13 +26,6 @@ return {
       end,
    },
    {
-      "lukas-reineke/indent-blankline.nvim",
-      main = "ibl",
-      config = function()
-         require("ibl").setup()
-      end,
-   },
-   {
       "github/copilot.vim",
       config = function()
          vim.cmd('imap <silent><script><expr> <C-CR> copilot#Accept("\\<CR>")')

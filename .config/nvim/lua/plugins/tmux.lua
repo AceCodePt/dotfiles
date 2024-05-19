@@ -10,7 +10,4 @@ return {
             })
       end
    },
-   {
-      "preservim/vimux"
-   }
 }

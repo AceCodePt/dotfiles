@@ -6,10 +6,10 @@ vim.g.maplocalleader = " "
 
 -- better up/down
 map({ "n", "x" }, "j", function()
-  return vim.v.count > 0 and "j" or "gj"
+	return vim.v.count > 0 and "j" or "gj"
 end, { expr = true })
 map({ "n", "x" }, "k", function()
-  return vim.v.count > 0 and "k" or "gk"
+	return vim.v.count > 0 and "k" or "gk"
 end, { expr = true })
 
 map("n", "<C-u>", "<C-u>zz")
@@ -29,8 +29,8 @@ map({ "n", "v" }, "d", '"+d')
 map({ "n", "v" }, "D", '"+D')
 
 -- Disable copying for X
-map({"n", "v"}, "x", '"_x')
-map({"n", "v"}, "X", '"_X')
+map({ "n", "v" }, "x", '"_x')
+map({ "n", "v" }, "X", '"_X')
 
 -- Diagnostic for convnience
 map({ "n" }, "gp", vim.diagnostic.goto_prev)
@@ -56,8 +56,7 @@ map("v", ">", ">gv")
 map("v", "K", ":move '>+1<CR>gv-gv")
 map("v", "J", ":move '<-2<CR>gv-gv")
 
-map({"n", "v", "t"}, "<leader>q","<CMD>wa<CR><CMD>qa<CR>")
+map({ "n", "v" }, "<C-q>", "<CMD>wa<CR><CMD>qa<CR>")
 
 -- Trick from the primagen
 map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
-

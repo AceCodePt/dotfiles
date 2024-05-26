@@ -9,6 +9,11 @@ sudo apt install zsh
 chsh -s $(which zsh)
 ```
 
+# Automatic Stow on commit
+```bash
+sudo mv ./post-commit ./.git/hooks/post-commit
+```
+
 # basic stuff
 ```bash
 sudo apt-get install ripgrep
@@ -23,7 +28,7 @@ sudo snap install nvim --classic
 
 # install clipboard tool
 ```bash
-sudo apt-get install xclip
+sudo apt-get install xsel
 ```
 
 # swap capslock and escape
@@ -91,4 +96,6 @@ systemctl start docker
 systemctl enable docker
 sudo chmod 666 /var/run/docker.sock
 ```
+
+
 

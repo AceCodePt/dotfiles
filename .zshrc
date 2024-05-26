@@ -120,3 +120,6 @@ convert_to_webp() {
 }
 
 
+if [ -z "$TMUX" ] && [ "$TERM" = "xterm-kitty" ]; then
+  tmux new -A -s main
+fi

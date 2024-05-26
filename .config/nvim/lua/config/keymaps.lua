@@ -75,5 +75,4 @@ local openUrl = function()
 end
 local open = openUrl()
 
-vim.keymap.set({"n", "t"}, "gx", open, { desc = "OpenUrl Undercurword" })
-
+vim.keymap.set({ "n", "t" }, "<C-s-o>", open, { desc = "OpenUrl Undercurword" })

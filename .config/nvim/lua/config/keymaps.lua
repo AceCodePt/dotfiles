@@ -60,3 +60,20 @@ map({ "n", "v" }, "<C-q>", "<CMD>wa<CR><CMD>qa<CR>")
 
 -- Trick from the primagen
 map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
+
+local openUrl = function()
+	return function()
+		local file = vim.fn.expand("<cWORD>")
+		-- open(macos) || xdg-open(linux)
+		local result = ":silent !open " .. file
+		if string.match(file, "https") == "https" or string.match(file, "http") == "http" then
+			vim.cmd(result)
+		else
+			return print("💁 Woops is not url gais 🙅")
+		end
+	end
+end
+local open = openUrl()
+
+vim.keymap.set({"n", "t"}, "gx", open, { desc = "OpenUrl Undercurword" })
+

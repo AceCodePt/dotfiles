@@ -6,12 +6,12 @@ window:
     columns: 0
     lines: 0
   padding:
-    x: 150
+    x: 250
     y: 150
 scrolling:
   history: 0
 font:
-  size: 18
+  size: 16
   normal:
     family: Hack Nerd Font
 colors:
@@ -32,8 +32,8 @@ shell:
   args:
     - --login
     - -c
-    - tmux attach || tmux
-key_bindings:
+    -  tmux new -A -s main
+  key_bindings:
   - key: Return
     mods: Shift
     chars: "\e[13;2u"

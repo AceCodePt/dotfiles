@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- tab format for .lua file
 vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.js", "*.ts", "*.jsx", "*.tsx", "*.astro" },
+	pattern = { "*.js", "*.ts", "*.mjs", "*.mts", "*.jsx", "*.tsx", "*.astro" },
 	callback = function()
 		vim.keymap.set("n", "<leader>rd", ":TermExec cmd='pnpm run dev'<cr>")
 		vim.keymap.set("n", "<leader>rs", ":TermExec cmd='pnpm start'<cr>")

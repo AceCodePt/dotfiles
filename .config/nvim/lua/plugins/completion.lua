@@ -16,10 +16,10 @@ return {
 			local types = require("cmp.types")
 			local compare = require("cmp.config.compare")
 
-			vim.keymap.set({ "i", "s" }, "<C-L>", function()
+			vim.keymap.set({ "i", "s" }, "<C-l>", function()
 				luasnip.jump(1)
 			end, { silent = true })
-			vim.keymap.set({ "i", "s" }, "<C-J>", function()
+			vim.keymap.set({ "i", "s" }, "<C-j>", function()
 				luasnip.jump(-1)
 			end, { silent = true })
 

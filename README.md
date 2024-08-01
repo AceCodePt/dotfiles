@@ -81,6 +81,11 @@ case ":$PATH:" in
 esac' >> ~/.zshrc
 ```
 
+# Install tmux
+```bash
+sudo apt install i3
+```
+
 # Install tiling Manager
 ```bash
 sudo apt install i3
@@ -92,8 +97,8 @@ sudo apt-get update
 sudo apt-get upgrade
 sudo apt install docker.io
 sudo apt-get install docker-compose-plugin
-systemctl start docker
-systemctl enable docker
+sudo systemctl start docker
+sudo systemctl enable docker
 sudo chmod 666 /var/run/docker.sock
 ```
 

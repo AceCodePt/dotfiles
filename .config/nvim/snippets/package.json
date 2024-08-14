@@ -54,11 +54,20 @@
       },
       {
         "language": [
+          "typescript",
+          "astro",
+          "typescriptreact"
+        ],
+        "path": "./snippets/astro/astro.json"
+      },
+      {
+        "language": [
           "css",
           "scss",
           "sass",
           "less",
-          "stylus"
+          "stylus",
+          "astro"
         ],
         "path": "./snippets/css.json"
       },
@@ -66,6 +75,7 @@
         "language": [
           "javascript",
           "javascriptreact",
+          "typescript",
           "astro",
           "vue",
           "svelte"
@@ -126,6 +136,10 @@
       {
         "language": "python",
         "path": "./snippets/python/base.json"
+      },
+      {
+        "language": "python",
+        "path": "./snippets/python/custom.json"
       },
       {
         "language": "python",

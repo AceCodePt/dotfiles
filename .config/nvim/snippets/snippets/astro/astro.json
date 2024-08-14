@@ -1,0 +1,20 @@
+{
+  "ImportEnv": {
+    "prefix": "envv",
+    "body": "import.meta.env.$1",
+    "description": "import environment variable"
+  },
+  "GetAttributeFromDataset": {
+    "prefix": "getdataset",
+    "body": [
+      "get $1() {",
+      "  const $1 = this.dataset.$1;",
+      "  if (!$1) {",
+      "    throw new Error(`data-$1 wasn't found on ${this.nodeName}`);",
+      "  }",
+      "  return $1;",
+      "}"
+    ],
+    "description": "Get the data set using a get"
+  }
+}

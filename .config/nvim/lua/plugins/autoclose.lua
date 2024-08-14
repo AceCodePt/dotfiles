@@ -1,11 +1,5 @@
 return {
-	{
-		"m4xshen/autoclose.nvim",
-		config = function()
-			require("autoclose").setup()
-		end,
-	},
-	-- "windwp/nvim-ts-autotag",
+	"windwp/nvim-ts-autotag",
 	{
 		"kylechui/nvim-surround",
 		version = "*",

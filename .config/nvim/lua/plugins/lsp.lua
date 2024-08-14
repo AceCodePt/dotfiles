@@ -11,7 +11,7 @@ local languages = {
 	"tailwindcss",
 	"pyright",
 	"gopls",
-	"astro"
+	"astro",
 }
 
 return {
@@ -55,6 +55,24 @@ return {
 
 				nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 				nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+
+				nmap("<leader>m", function()
+					vim.lsp.buf.code_action({
+						apply = true,
+						filter = function(action)
+							if
+								string.find(action.title, "Add braces to arrow function")
+								or string.find(action.title, "Remove braces from arrow function")
+								or string.find(action.title, "Convert named export to default export")
+								or string.find(action.title, "Convert default export to namef export")
+							then
+								return true
+							else
+								return false
+							end
+						end,
+					})
+				end, "Toggle function")
 			end
 
 			require("lspconfig").tailwindcss.setup({

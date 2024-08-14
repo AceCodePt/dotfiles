@@ -13,26 +13,27 @@ return {
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
-			local types = require("cmp.types")
+			-- local types = require("cmp.types")
 			local compare = require("cmp.config.compare")
 
 			vim.keymap.set({ "i", "s" }, "<C-l>", function()
 				luasnip.jump(1)
 			end, { silent = true })
-			vim.keymap.set({ "i", "s" }, "<C-j>", function()
+			vim.keymap.set({ "i", "s" }, "<C-h>", function()
 				luasnip.jump(-1)
 			end, { silent = true })
 
-			local modified_priority = {
-				[types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
-				[types.lsp.CompletionItemKind.Snippet] = 0, -- top
-				[types.lsp.CompletionItemKind.Keyword] = 1, -- top
-				[types.lsp.CompletionItemKind.Text] = 100, -- bottom
-			}
+			-- local modified_priority = {
+			-- 	[types.lsp.CompletionItemKind.Variable] = 1,
+			-- 	[types.lsp.CompletionItemKind.Method] = 2,
+			-- 	[types.lsp.CompletionItemKind.Snippet] = 0, -- top
+			-- 	[types.lsp.CompletionItemKind.Keyword] = 3,
+			-- 	[types.lsp.CompletionItemKind.Text] = 100, -- bottom
+			-- }
 
-			local function modified_kind(kind)
-				return modified_priority[kind] or kind
-			end
+			-- local function modified_kind(kind)
+			-- 	return modified_priority[kind] or kind
+			-- end
 
 			cmp.setup({
 				preselect = cmp.PreselectMode.Item,
@@ -45,18 +46,24 @@ return {
 					completion = cmp.config.window.bordered(),
 					documentation = cmp.config.window.bordered(),
 				},
+				completion = {
+					completeopt = "menu,menuone,noinsert",
+				},
 				mapping = cmp.mapping.preset.insert({
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 					["<C-j>"] = cmp.mapping.select_next_item(),
 					["<C-k>"] = cmp.mapping.select_prev_item(),
+					-- ["<C-Space>"] = cmp.mapping.complete({}),
 				}),
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
-					{ name = "nvim_lua" },
-					{ name = "buffer" },
+					{ name = "nvim_lsp", priority = 8 },
+					{ name = "luasnip", priority = 8 },
+					{ name = "buffer", priority = 7 }, -- first for locality sorting?
+					{ name = "spell", keyword_length = 3, priority = 5, keyword_pattern = [[\w\+]] },
+					{ name = "nvim_lua", priority = 5 },
+					{ name = "calc", priority = 3 },
 				}),
 				enabled = function()
 					-- disable completion in comments
@@ -81,27 +88,18 @@ return {
 				sorting = {
 					-- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/compare.lua
 					comparators = {
-						compare.offset,
-						compare.exact,
-						compare.scopes,
-						compare.length,
-						-- function(entry1, entry2) -- sort by length ignoring "=~"
-						-- 	local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
-						-- 	local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
-						-- 	if len1 ~= len2 then
-						-- 		return len1 - len2 < 0
+						-- compare.exact,
+						-- compare.offset,
+						compare.score,
+						-- function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
+						-- 	local kind1 = modified_kind(entry1:get_kind())
+						-- 	local kind2 = modified_kind(entry2:get_kind())
+						-- 	if kind1 ~= kind2 then
+						-- 		return kind1 - kind2 < 0
 						-- 	end
 						-- end,
-						compare.recently_used,
-						function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-							local kind1 = modified_kind(entry1:get_kind())
-							local kind2 = modified_kind(entry2:get_kind())
-							if kind1 ~= kind2 then
-								return kind1 - kind2 < 0
-							end
-						end,
-						compare.sort_text,
-						compare.score,
+						compare.locality,
+						-- compare.recently_used,
 					},
 				},
 			})

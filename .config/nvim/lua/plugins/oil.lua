@@ -19,8 +19,8 @@ return {
 				["<C-s>"] = "actions.select_vsplit",
 				["<C-h>"] = "actions.select_split",
 				["<C-p>"] = "actions.preview",
-				["<C-c>"] = "actions.close",
 				["<C-l>"] = "actions.refresh",
+				["<leader>e"] = "actions.close",
 				["-"] = "actions.parent",
 				["_"] = "actions.open_cwd",
 				["`"] = "actions.cd",
@@ -32,7 +32,7 @@ return {
 			},
 		})
 
-		vim.keymap.set("n", "<leader>e", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+		vim.keymap.set("n", "<leader>e", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
 	end,
 
 	-- Optional dependencies

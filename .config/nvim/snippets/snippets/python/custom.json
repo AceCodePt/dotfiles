@@ -1,0 +1,12 @@
+{
+  "intinput": {
+    "prefix": "inin",
+    "body": ["x = int(input(\"Please insert a number: $1\"))"],
+    "description": "Inin"
+  },
+  "input": {
+    "prefix": "in",
+    "body": ["x = input(\"Please insert a string: $1\")"],
+    "description": "Input"
+  }
+}

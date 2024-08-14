@@ -53,8 +53,8 @@ map("v", "<", "<gv")
 map("v", ">", ">gv")
 
 -- Move selected line / block of text in visual mode
-map("v", "K", ":move '>+1<CR>gv-gv")
-map("v", "J", ":move '<-2<CR>gv-gv")
+map("v", "J", ":move '>+1<CR>gv-gv")
+map("v", "K", ":move '<-2<CR>gv-gv")
 
 map({ "n", "v" }, "<C-q>", "<CMD>wa<CR><CMD>qa<CR>")
 

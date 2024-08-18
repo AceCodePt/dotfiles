@@ -38,19 +38,17 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-# fnm
-export PATH="/home/sagi/.local/share/fnm:$PATH"
-eval "`fnm env`"
 
 # Created by `pipx` on 2023-07-06 11:16:21
-export PATH="$PATH:/home/sagi/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
+
 
 if [ -d "$HOME/Downloads/android-studio/bin" ] ; then
     export PATH="$PATH:$HOME/Downloads/android-studio/bin"
 fi
 
 
-export PNPM_HOME="/home/sagi/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -61,14 +59,14 @@ alias pnpx='pnpm dlx'
 alias work="cd ~/Desktop/companies"
 
 # bun completions
-[ -s "/home/sagi/.bun/_bun" ] && source "/home/sagi/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # deno
-export DENO_INSTALL="/home/sagi/.deno"
+export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
 # The next lines enables shell command completion for Stripe
@@ -76,7 +74,7 @@ fpath=(~/.stripe $fpath)
 autoload -Uz compinit && compinit -i
 
 # pnpm
-export PNPM_HOME="/home/sagi/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -123,3 +121,11 @@ convert_to_webp() {
 if [ -z "$TMUX" ] && [ "$TERM" = "xterm-kitty" ]; then
   tmux new -A -s main
 fi
+
+# fnm
+FNM_PATH="$HOME/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$HOME/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
+# hii

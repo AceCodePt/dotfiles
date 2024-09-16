@@ -6,7 +6,7 @@ local languages = {
 	"clangd",
 	"html",
 	"cssls",
-	"tsserver",
+	"ts_ls",
 	"eslint",
 	"tailwindcss",
 	"pyright",

@@ -1,5 +1,11 @@
-# Set up the prompt
 
+addToPathFront() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$1:$PATH
+    fi
+}
+
+# Set up the prompt
 autoload -Uz promptinit
 promptinit
 prompt adam1
@@ -128,4 +134,4 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="$HOME/.local/share/fnm:$PATH"
   eval "`fnm env`"
 fi
-# hii
+

@@ -24,8 +24,8 @@ local config = function()
 			"tsx",
 		},
 		highlight = { enable = true },
-		indent = { enable = true },
-		autotag = { enable = true },
+		indent = { enable = false },
+		autotag = { enable = false },
 		textobjects = {
 			select = {
 				enable = true,

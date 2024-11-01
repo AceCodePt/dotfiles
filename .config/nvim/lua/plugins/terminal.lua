@@ -34,7 +34,6 @@ return {
 				end,
 			})
 
-			util.map("t", "<C-q>", "<CMD>wa<CR><CMD>qa<CR>")
 			-- Note: The use of shift keys didn't work on regular terminal
 			util.map({ "n", "t" }, "<c-s-" .. char .. ">", function()
 				Terminal:new():toggle()

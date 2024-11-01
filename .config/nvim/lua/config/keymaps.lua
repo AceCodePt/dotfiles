@@ -56,8 +56,6 @@ map("v", ">", ">gv")
 map("v", "J", ":move '>+1<CR>gv-gv")
 map("v", "K", ":move '<-2<CR>gv-gv")
 
-map({ "n", "v" }, "<C-q>", "<CMD>wa<CR><CMD>qa<CR>")
-
 -- Trick from the primagen
 map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
 

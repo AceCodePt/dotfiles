@@ -11,6 +11,7 @@ return {
 			"saadparwaiz1/cmp_luasnip",
 		},
 		config = function()
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			-- local types = require("cmp.types")
@@ -115,6 +116,8 @@ return {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
 			})
+
+			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 			require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
 		end,

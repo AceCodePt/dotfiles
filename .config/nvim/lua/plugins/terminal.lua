@@ -11,6 +11,7 @@ return {
 				start_in_insert = true,
 				persist_mode = false,
 				on_create = function(t)
+					t.is_full = false
 					local opts = { buffer = t.bufnr, noremap = true }
 					util.map("t", "<ESC>", [[<C-\><C-n>]], opts)
 					-- To close the currently open terminal
@@ -21,6 +22,15 @@ return {
 					util.map("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
 					util.map("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
 					util.map("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
+					util.map("t", "<C-f>", function()
+						if t.is_full then
+							vim.cmd("resize " .. 12)
+							t.is_full = false
+						else
+							vim.cmd("resize " .. 24)
+							t.is_full = true
+						end
+					end, opts)
 				end,
 			})
 

@@ -6,6 +6,7 @@ addToPathFront() {
 }
 
 source ~/.zsh_profile
+source ~/.zsh_alias
 
 # Set up the prompt
 autoload -Uz promptinit

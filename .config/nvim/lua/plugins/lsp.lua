@@ -2,6 +2,7 @@
 --  This function gets run when an LSP connects to a particular buffer.
 
 local languages = {
+	"terraformls",
 	"lua_ls",
 	"clangd",
 	"html",
@@ -76,6 +77,7 @@ return {
 			end
 
 			require("lspconfig").tailwindcss.setup({
+				capabilities = capabilities,
 				on_attach = function()
 					require("tailwindcss-colors").buf_attach(0)
 				end,

@@ -29,12 +29,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank({ timeout = 80 })
 	end,
 })
-
--- tab format for .lua file
-vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.js", "*.ts", "*.mjs", "*.mts", "*.jsx", "*.tsx", "*.astro" },
-	callback = function()
-		vim.keymap.set("n", "<leader>rd", ":TermExec cmd='pnpm run dev'<cr>")
-		vim.keymap.set("n", "<leader>rs", ":TermExec cmd='pnpm start'<cr>")
-	end,
-})

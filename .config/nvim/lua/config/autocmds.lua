@@ -1,3 +1,5 @@
+local map = require("util.map").map
+
 -- only highlight when searching
 vim.api.nvim_create_autocmd("CmdlineEnter", {
 	callback = function()
@@ -27,5 +29,29 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.highlight.on_yank({ timeout = 80 })
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "TextYankPost" }, {
+	pattern = "term://*",
+	callback = function()
+		local width = vim.api.nvim_win_get_width(0) - 2
+		local yanked_text = vim.fn.getreg("+")
+		local new_str = ""
+		local count = 1
+		while true do
+			local next_index = string.find(yanked_text, "\n", count)
+			if next_index == nil then
+				new_str = new_str .. string.sub(yanked_text, count, string.len(yanked_text))
+				break
+			end
+			if next_index - count >= width then
+				new_str = new_str .. string.sub(yanked_text, count, next_index - 1)
+			else
+				new_str = new_str .. string.sub(yanked_text, count, next_index)
+			end
+			count = next_index + 1
+		end
+		vim.fn.setreg("+", new_str)
 	end,
 })

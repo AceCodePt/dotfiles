@@ -3,7 +3,7 @@ return {
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		config = function()
-			local util = require("util.map")
+			local map = require("util.map").map
 			local Terminal = require("toggleterm.terminal").Terminal
 			local char = "t"
 			require("toggleterm").setup({
@@ -12,17 +12,17 @@ return {
 				persist_mode = false,
 				on_create = function(t)
 					t.is_full = false
-					local opts = { buffer = t.bufnr, noremap = true }
-					util.map("t", "<ESC>", [[<C-\><C-n>]], opts)
+					local opts = { buffer = t.bufnr }
+					map("t", "<ESC>", [[<C-\><C-n>]], opts)
 					-- To close the currently open terminal
-					util.map({ "n", "t" }, "<C-w>", [[<ESC><CMD>q<CR>]], opts)
+					map({ "n", "t" }, "<C-w>", [[<ESC><CMD>q<CR>]], opts)
 
 					-- window movements
-					util.map("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
-					util.map("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
-					util.map("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
-					util.map("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
-					util.map("t", "<C-f>", function()
+					map("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
+					map("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
+					map("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
+					map("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
+					map("t", "<C-f>", function()
 						if t.is_full then
 							vim.cmd("resize " .. 12)
 							t.is_full = false
@@ -35,7 +35,7 @@ return {
 			})
 
 			-- Note: The use of shift keys didn't work on regular terminal
-			util.map({ "n", "t" }, "<c-s-" .. char .. ">", function()
+			map({ "n", "t" }, "<c-s-" .. char .. ">", function()
 				Terminal:new():toggle()
 			end)
 		end,

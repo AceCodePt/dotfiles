@@ -24,12 +24,12 @@ return {
 				pickers = {
 					live_grep = {
 						additional_args = function(_)
-							return { "--hidden" }
+							return { "--hidden", "-u" }
 						end,
 					},
 					find_files = {
 						-- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
-						find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+						find_command = { "rg", "--files", "-u", "--hidden" },
 					},
 				},
 				defaults = {
@@ -48,6 +48,15 @@ return {
 							["<C-j>"] = telescope_actions.move_selection_next,
 							["<C-k>"] = telescope_actions.move_selection_previous,
 						},
+					},
+					file_ignore_patterns = {
+						".git",
+						"node_modules",
+						"build",
+						"dist",
+						"yarn.lock",
+						"pnpm-lock.yaml",
+						"package-lock.json",
 					},
 				},
 				extensions = {

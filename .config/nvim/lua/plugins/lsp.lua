@@ -2,6 +2,7 @@
 --  This function gets run when an LSP connects to a particular buffer.
 
 local languages = {
+	"tflint",
 	"terraformls",
 	"lua_ls",
 	"clangd",
@@ -9,7 +10,6 @@ local languages = {
 	"cssls",
 	"ts_ls",
 	"eslint",
-	"tailwindcss",
 	"pyright",
 	"gopls",
 	"astro",
@@ -43,50 +43,15 @@ return {
 				end,
 			})
 
-			local on_attach = function(_, bufnr)
-				-- In this case, we create a function that lets us more easily define mappings specific
-				-- for LSP related items. It sets the mode, buffer and description for us each time.
-				local nmap = function(keys, func, desc)
-					if desc then
-						desc = "LSP: " .. desc
-					end
-
-					vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-				end
-
-				nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-				nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-
-				nmap("<leader>m", function()
-					vim.lsp.buf.code_action({
-						apply = true,
-						filter = function(action)
-							if
-								string.find(action.title, "Add braces to arrow function")
-								or string.find(action.title, "Remove braces from arrow function")
-								or string.find(action.title, "Convert named export to default export")
-								or string.find(action.title, "Convert default export to namef export")
-							then
-								return true
-							else
-								return false
-							end
-						end,
-					})
-				end, "Toggle function")
-			end
-
-			require("lspconfig").tailwindcss.setup({
-				capabilities = capabilities,
-				on_attach = function()
-					require("tailwindcss-colors").buf_attach(0)
-				end,
-			})
-
 			for _, language in pairs(languages) do
 				require("lspconfig")[language].setup({
 					capabilities = capabilities,
-					on_attach = on_attach,
+					on_attach = function(_, bufnr)
+						local ok, mod = pcall(require, "config.custom-keymaps." .. language)
+						if ok then
+							mod.init(bufnr)
+						end
+					end,
 				})
 			end
 

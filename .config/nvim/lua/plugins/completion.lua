@@ -53,10 +53,16 @@ return {
 				mapping = cmp.mapping.preset.insert({
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<CR>"] = cmp.mapping.confirm({ select = true }),
-					["<C-j>"] = cmp.mapping.select_next_item(),
-					["<C-k>"] = cmp.mapping.select_prev_item(),
-					-- ["<C-Space>"] = cmp.mapping.complete({}),
+					["<C-j>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
+					["<C-k>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
+					["<CR>"] = cmp.mapping(
+						cmp.mapping.confirm({
+							behavior = cmp.ConfirmBehavior.Replace,
+							select = true,
+						}),
+						{ "i" }
+					),
+					["<C-Space>"] = cmp.mapping.complete({}),
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp", priority = 8 },

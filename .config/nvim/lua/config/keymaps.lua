@@ -53,6 +53,8 @@ map("v", "<", "<gv")
 map("v", ">", ">gv")
 
 -- Move selected line / block of text in visual mode
+map("n", "J", "gJ")
+map("n", "K", "gK")
 map("v", "J", ":move '>+1<CR>gv-gv")
 map("v", "K", ":move '<-2<CR>gv-gv")
 

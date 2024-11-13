@@ -385,7 +385,16 @@
   },
   "async function": {
     "prefix": "asf",
-    "body": "async function (${1:arguments}) {\n\t${0}\n}"
+    "body": "async function ${1:name}(${2:arguments}) {\n\t${0}\n}"
+  },
+  "export async function": {
+    "prefix": "eaf",
+    "body": "export async function ${1:name}(${2:arguments}) {\n\t${0}\n}"
+  },
+
+  "export async arrow function": {
+    "prefix": "eaa",
+    "body": "export async ${1:name}(${2:arguments}) => {\n\t${0}\n}"
   },
   "async arrow function": {
     "prefix": "aa",

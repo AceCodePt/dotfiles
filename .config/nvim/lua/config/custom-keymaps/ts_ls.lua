@@ -1,6 +1,19 @@
 local map = require("util.map").map
 local M = {}
 
+local priorities = {
+	'Add import from "[^"]+"',
+	'Update import from "[^"]+"',
+	"Add braces to arrow function",
+	"Remove braces from arrow function",
+	"Convert named export to default export",
+	"Convert default export to named export",
+	"Convert to named function",
+	"import type",
+	"^Use 'type ",
+	"^Replace '[^']+' with '[^']+'$",
+}
+
 function M.init(bufnr)
 	local nmap = function(keys, func, desc)
 		if desc then
@@ -20,18 +33,6 @@ function M.init(bufnr)
 		params.context = {
 			triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked,
 			diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
-		}
-
-		local priorities = {
-			'Add import from "[^"]+"',
-			"Add braces to arrow function",
-			"Remove braces from arrow function",
-			"Convert named export to default export",
-			"Convert default export to named export",
-			"Convert to named function",
-			"import type",
-			"^Use 'type ",
-			"^Replace '[^']+' with '[^']+'$",
 		}
 
 		vim.lsp.buf_request(bufnr, "textDocument/codeAction", params, function(_, results, _, _)

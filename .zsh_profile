@@ -1,2 +1,2 @@
 addToPathFront $HOME/.local/scripts
-addToPathFront $HOME/.local/bin
+addToPathFront $HOME/.local/bin/nvim/bin

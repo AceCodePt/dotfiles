@@ -12,6 +12,7 @@ local languages = {
 	"eslint",
 	"pyright",
 	"astro",
+	"jsonls"
 }
 
 return {

@@ -11,7 +11,6 @@ local languages = {
 	"ts_ls",
 	"eslint",
 	"pyright",
-	"gopls",
 	"astro",
 }
 

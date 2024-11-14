@@ -13,6 +13,13 @@
         "path": "./snippets/gitcommit.json"
       },
       {
+        "language": [
+          "json",
+          "jsonc"
+        ],
+        "path": "./snippets/json.json"
+      },
+      {
         "language": "ejs",
         "path": "./snippets/ejs.json"
       },

@@ -46,23 +46,27 @@ function M.init(bufnr)
 						:totable()[1]
 
 					local priority = priority_item and (100 + #priorities - priority_item[1]) or 0
+					item.command["priority"] = priority
 
-					return { text = item.title, priority = priority }
+					return item.command
 				end)
 				:totable()
 
 			table.sort(mapped, function(a, b)
 				if a.priority == b.priority then
-					return #a.text < #b.text
+					return #a.title < #b.title
 				end
 				return a.priority > b.priority
 			end)
-			-- vim.notify(vim.inspect(mapped))
+
+			vim.notify(vim.inspect(mapped))
+
+			-- vim.lsp.buf_request(bufnr, mapped[1].command, mapped[1].arguments)
 
 			vim.lsp.buf.code_action({
 				apply = true,
 				filter = function(action)
-					return action.title == mapped[1].text
+					return action.title == mapped[1].title
 				end,
 			})
 		end)

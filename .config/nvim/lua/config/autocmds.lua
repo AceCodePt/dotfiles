@@ -36,6 +36,7 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 	pattern = "term://*",
 	callback = function()
 		local width = vim.api.nvim_win_get_width(0) - 2
+		local offset = vim.api.nvim_win_get_cursor(0)[2]
 		local yanked_text = vim.fn.getreg("+")
 		local new_str = ""
 		local count = 1
@@ -45,12 +46,13 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 				new_str = new_str .. string.sub(yanked_text, count, string.len(yanked_text))
 				break
 			end
-			if next_index - count >= width then
+			if next_index - count + offset >= width then
 				new_str = new_str .. string.sub(yanked_text, count, next_index - 1)
 			else
 				new_str = new_str .. string.sub(yanked_text, count, next_index)
 			end
 			count = next_index + 1
+			offset = 0
 		end
 		vim.fn.setreg("+", new_str)
 	end,

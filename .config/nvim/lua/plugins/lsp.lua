@@ -1,18 +1,55 @@
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 
-local languages = {
-	"tflint",
-	"terraformls",
-	"lua_ls",
-	"clangd",
-	"html",
-	"cssls",
-	"ts_ls",
-	"eslint",
-	"pyright",
-	"astro",
-	"jsonls",
+local servers_config = {
+	tflint = {},
+	terraformls = {},
+	lua_ls = {},
+	clangd = {},
+	html = {},
+	cssls = {},
+	ts_ls = {},
+	eslint = {},
+	pyright = {},
+	astro = {},
+	jsonls = {
+		filetypes = { "json", "jsonc" },
+		settings = {
+			json = {
+				-- Schemas https://www.schemastore.org
+				schemas = {
+					{
+						fileMatch = { "package.json" },
+						url = "https://json.schemastore.org/package.json",
+					},
+					{
+						fileMatch = { "tsconfig*.json" },
+						url = "https://json.schemastore.org/tsconfig.json",
+					},
+					{
+						fileMatch = {
+							".prettierrc",
+							".prettierrc.json",
+							"prettier.config.json",
+						},
+						url = "https://json.schemastore.org/prettierrc.json",
+					},
+					{
+						fileMatch = { ".eslintrc", ".eslintrc.json" },
+						url = "https://json.schemastore.org/eslintrc.json",
+					},
+					{
+						fileMatch = { ".babelrc", ".babelrc.json", "babel.config.json" },
+						url = "https://json.schemastore.org/babelrc.json",
+					},
+					{
+						fileMatch = { "now.json", "vercel.json" },
+						url = "https://json.schemastore.org/now.json",
+					},
+				},
+			},
+		},
+	},
 }
 
 return {
@@ -44,16 +81,16 @@ return {
 				end,
 			})
 
-			for _, language in pairs(languages) do
-				lspconfig[language].setup({
+			for server_name, config in pairs(servers_config) do
+				lspconfig[server_name].setup(vim.tbl_deep_extend("force", {
 					capabilities = capabilities,
 					on_attach = function(_, bufnr)
-						local ok, mod = pcall(require, "config.custom-keymaps." .. language)
+						local ok, mod = pcall(require, "config.custom-keymaps." .. server_name)
 						if ok then
 							mod.init(bufnr)
 						end
 					end,
-				})
+				}, config))
 			end
 
 			vim.lsp.handlers["textDocument/publishDiagnostics"] =
@@ -69,7 +106,7 @@ return {
 	{
 		"williamboman/mason-lspconfig.nvim",
 		opts = {
-			ensure_installed = languages,
+			ensure_installed = vim.tbl_keys(servers_config),
 		},
 	},
 }

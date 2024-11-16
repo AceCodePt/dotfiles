@@ -5,7 +5,6 @@ local servers_config = {
 	tflint = {},
 	terraformls = {},
 	lua_ls = {},
-	clangd = {},
 	html = {},
 	cssls = {},
 	ts_ls = {},

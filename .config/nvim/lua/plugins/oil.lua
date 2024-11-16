@@ -36,5 +36,8 @@ return {
 	end,
 
 	-- Optional dependencies
-	dependencies = { "nvim-tree/nvim-web-devicons" },
+	dependencies = {
+		{ "nvim-treesitter/nvim-treesitter" },
+		{ "nvim-tree/nvim-web-devicons", lazy = true },
+	},
 }

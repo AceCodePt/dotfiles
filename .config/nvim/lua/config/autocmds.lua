@@ -1,5 +1,3 @@
-local map = require("util.map").map
-
 -- only highlight when searching
 vim.api.nvim_create_autocmd("CmdlineEnter", {
 	callback = function()

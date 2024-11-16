@@ -3,6 +3,9 @@ return {
 		"tpope/vim-sleuth",
 	},
 	{
+		"LunarVim/bigfile.nvim",
+	},
+	{
 		"sbdchd/neoformat",
 		config = function()
 			vim.g.neoformat_try_node_exe = 1

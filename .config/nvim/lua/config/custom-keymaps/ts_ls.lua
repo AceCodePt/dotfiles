@@ -4,6 +4,8 @@ local M = {}
 local priorities = {
 	'Add import from "[^"]+"',
 	'Update import from "[^"]+"',
+	"Prefix '[^']+' with an underscore",
+	"Infer parameter types from usage",
 	"Add braces to arrow function",
 	"Remove braces from arrow function",
 	"Convert named export to default export",
@@ -13,6 +15,15 @@ local priorities = {
 	"^Use 'type ",
 	"^Replace '[^']+' with '[^']+'$",
 }
+
+local function organize_imports()
+	local params = {
+		command = "_typescript.organizeImports",
+		arguments = { vim.api.nvim_buf_get_name(0) },
+		title = "",
+	}
+	vim.lsp.buf.execute_command(params)
+end
 
 function M.init(bufnr)
 	local nmap = function(keys, func, desc)
@@ -24,6 +35,7 @@ function M.init(bufnr)
 	end
 	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 	nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+	nmap("<leader>oi", organize_imports, "[O]rganize [I]mports")
 	nmap("<leader>rd", ":TermExec cmd='pnpm run dev'<cr>", "pnpm [R]un [D]ev")
 	nmap("<leader>rs", ":TermExec cmd='pnpm start'<cr>", "pnpm [R]un [S]tart")
 
@@ -37,20 +49,20 @@ function M.init(bufnr)
 
 		vim.lsp.buf_request(bufnr, "textDocument/codeAction", params, function(_, results, _, _)
 			local mapped = vim.iter(results)
-				:map(function(item)
-					local priorities_iter = vim.iter(ipairs(priorities))
-					local priority_item = priorities_iter
-						:filter(function(_, priority_text)
-							return string.find(item.title, priority_text)
-						end)
-						:totable()[1]
+					:map(function(item)
+						local priorities_iter = vim.iter(ipairs(priorities))
+						local priority_item = priorities_iter
+								:filter(function(_, priority_text)
+									return string.find(item.title, priority_text)
+								end)
+								:totable()[1]
 
-					local priority = priority_item and (100 + #priorities - priority_item[1]) or 0
-					item.command["priority"] = priority
+						local priority = priority_item and (100 + #priorities - priority_item[1]) or 0
+						item.command["priority"] = priority
 
-					return item.command
-				end)
-				:totable()
+						return item.command
+					end)
+					:totable()
 
 			table.sort(mapped, function(a, b)
 				if a.priority == b.priority then
@@ -59,16 +71,7 @@ function M.init(bufnr)
 				return a.priority > b.priority
 			end)
 
-			vim.notify(vim.inspect(mapped))
-
-			-- vim.lsp.buf_request(bufnr, mapped[1].command, mapped[1].arguments)
-
-			vim.lsp.buf.code_action({
-				apply = true,
-				filter = function(action)
-					return action.title == mapped[1].title
-				end,
-			})
+			vim.lsp.buf.execute_command(mapped[1])
 		end)
 	end, "Toggle function")
 end

@@ -1,3 +1,4 @@
+local map = require("util.map").map
 -- only highlight when searching
 vim.api.nvim_create_autocmd("CmdlineEnter", {
 	callback = function()
@@ -53,5 +54,19 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 			offset = 0
 		end
 		vim.fn.setreg("+", new_str)
+	end,
+})
+
+-- Made vim enter with some sick npm commands
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		local res = vim.fs.find("package.json", { limit = 1, type = "file" })
+		if res == nil or res[1] == nil then
+			return
+		end
+
+		map("n", "<leader>ni", ":TermExec cmd='ni' go_back=0<cr>", { desc = "[I]nstall" })
+		map("n", "<leader>rd", ":TermExec cmd='nr dev' go_back=0<cr>", { desc = "[R]un [D]ev" })
+		map("n", "<leader>rs", ":TermExec cmd='nr start' go_back=0<cr>", { desc = "[R]un [S]tart" })
 	end,
 })

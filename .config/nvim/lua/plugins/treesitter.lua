@@ -26,16 +26,13 @@ local config = function()
 		highlight = { enable = true },
 		indent = { enable = false },
 		autotag = { enable = false },
-		textobjects = {
-			select = {
-				enable = true,
-				lookahead = true,
-				keymaps = {
-					["af"] = "@function.outer",
-					["if"] = "@function.inner",
-					["ac"] = "@class.outer",
-					["ic"] = "@class.inner",
-				},
+		incremental_selection = {
+			enable = true,
+			keymaps = {
+				init_selection = "<leader>ti",
+				scope_incremental = "<leader>ts",
+				node_incremental = "<leader>ti",
+				node_decremental = "<leader>td",
 			},
 		},
 	})

@@ -12,7 +12,7 @@ local languages = {
 	"eslint",
 	"pyright",
 	"astro",
-	"jsonls"
+	"jsonls",
 }
 
 return {
@@ -20,8 +20,9 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = { "hrsh7th/cmp-nvim-lsp" },
 		config = function()
+			local lspconfig = require("lspconfig")
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			require("lspconfig").lua_ls.setup({
+			lspconfig.lua_ls.setup({
 				on_init = function(client)
 					local path = client.workspace_folders[1].name
 					if
@@ -44,7 +45,7 @@ return {
 			})
 
 			for _, language in pairs(languages) do
-				require("lspconfig")[language].setup({
+				lspconfig[language].setup({
 					capabilities = capabilities,
 					on_attach = function(_, bufnr)
 						local ok, mod = pcall(require, "config.custom-keymaps." .. language)

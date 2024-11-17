@@ -31,6 +31,13 @@ return {
 				luasnip.jump(-1)
 			end, { silent = true })
 
+			cmp.setup.filetype({ "sql" }, {
+				sources = {
+					{ name = "vim-dabod-completion" },
+					{ name = "buffer" },
+				},
+			})
+
 			-- local modified_priority = {
 			-- 	[types.lsp.CompletionItemKind.Variable] = 1,
 			-- 	[types.lsp.CompletionItemKind.Method] = 2,

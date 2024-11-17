@@ -18,17 +18,13 @@ return {
 		-- use opts = {} for passing setup options
 		-- this is equivalent to setup({}) function
 	},
+	{ "tpope/vim-repeat" },
 	{
 		"kylechui/nvim-surround",
 		version = "*",
 		event = "VeryLazy",
 		config = function()
-			require("nvim-surround").setup({
-				keymaps = {
-					normal = "gs",
-					normal_cur = "gss",
-				},
-			})
+			require("nvim-surround").setup()
 		end,
 	},
 }

@@ -11,6 +11,7 @@ local servers_config = {
 	eslint = {},
 	pyright = {},
 	astro = {},
+	sqlls = {},
 	jsonls = {
 		filetypes = { "json", "jsonc" },
 		settings = {

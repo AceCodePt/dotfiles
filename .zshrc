@@ -140,5 +140,4 @@ if [ -d "$FNM_PATH" ]; then
   eval "`fnm env`"
 fi
 
-alias lzd='lazydocker'
-alias lzd='lazydocker'
+alias ld='lazydocker'

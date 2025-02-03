@@ -48,6 +48,8 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 
+export PATH=$PATH:$(go env GOPATH)/bin
+
 # Created by `pipx` on 2023-07-06 11:16:21
 export PATH="$PATH:$HOME/.local/bin"
 
@@ -138,3 +140,5 @@ if [ -d "$FNM_PATH" ]; then
   eval "`fnm env`"
 fi
 
+alias lzd='lazydocker'
+alias lzd='lazydocker'

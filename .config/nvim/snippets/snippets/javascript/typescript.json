@@ -173,24 +173,21 @@
     "body": ["do {", "\t$0", "} while (${1:condition});"],
     "description": "Do-While Statement"
   },
-  "Try-Catch Statement": {
-    "prefix": "trycatch",
-    "body": ["try {", "\t$0", "} catch (${1:error}) {", "\t", "}"],
-    "description": "Try-Catch Statement"
+  "Astro Get": {
+    "prefix": "getapi-astro",
+    "body": [
+      "import type { APIRoute } from 'astro';",
+      "",
+      "export const GET: APIRoute = ({ $1 }) => {",
+      "  $0",
+      "  return new Response({})",
+      "}"
+    ],
+    "description": "Astro Get"
   },
-  "Set Timeout Function": {
-    "prefix": "settimeout",
-    "body": ["setTimeout(() => {", "\t$0", "}, ${1:timeout});"],
-    "description": "Set Timeout Function"
-  },
-  "Region Start": {
-    "prefix": "#region",
-    "body": ["//#region $0"],
-    "description": "Folding Region Start"
-  },
-  "Region End": {
-    "prefix": "#endregion",
-    "body": ["//#endregion"],
-    "description": "Folding Region End"
+  "Export Type From Zod": {
+    "prefix": "etz",
+    "body": ["export type ${1/(.*)/${1:/pascalcase}/} = z.infer<typeof $1>;"],
+    "description": "Export Type From Zod"
   }
 }

@@ -60,5 +60,3 @@ map("v", "K", ":move '<-2<CR>gv-gv")
 
 -- Trick from the primagen
 map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
-
-vim.keymap.set({ "n", "t" }, "<C-s-o>", "gx", { desc = "OpenUrl Undercurword" })

@@ -26,10 +26,30 @@ return {
 						additional_args = function(_)
 							return { "--hidden", "-u" }
 						end,
+						file_ignore_patterns = {
+							".git",
+							"build",
+							"dist",
+							".vercel",
+							"node_modules",
+							"yarn.lock",
+							"pnpm-lock.yaml",
+							"package-lock.json",
+						},
 					},
 					find_files = {
 						-- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
 						find_command = { "rg", "--files", "-u", "--hidden" },
+
+						file_ignore_patterns = {
+							".git",
+							"build",
+							"dist",
+							"node_modules",
+							"yarn.lock",
+							"pnpm-lock.yaml",
+							"package-lock.json",
+						},
 					},
 				},
 				defaults = {
@@ -51,9 +71,9 @@ return {
 					},
 					file_ignore_patterns = {
 						".git",
-						"node_modules",
 						"build",
 						"dist",
+						".vercel",
 						"yarn.lock",
 						"pnpm-lock.yaml",
 						"package-lock.json",

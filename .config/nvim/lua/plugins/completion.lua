@@ -22,6 +22,7 @@ return {
 			})
 		end,
 		config = function()
+			local map = require("util.map").map
 			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
@@ -143,6 +144,9 @@ return {
 
 			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
+			map("n", "<leader>ls", function()
+				require("luasnip.loaders.from_vscode").load({ paths = { "./snippets" } })
+			end, { desc = "Update luasnipt" })
 			require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
 		end,
 	},

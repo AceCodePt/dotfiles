@@ -10,6 +10,7 @@ local servers_config = {
 	ts_ls = {},
 	eslint = {},
 	pyright = {},
+	htmx = {},
 	astro = {},
 	sqlls = {},
 	jsonls = {

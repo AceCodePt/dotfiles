@@ -23,7 +23,7 @@ sudo apt install fzf
 
 # install neovim
 ```bash
-sudo snap install nvim --classic
+sudo apt install neovim
 ```
 
 # install clipboard tool

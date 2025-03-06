@@ -6,6 +6,7 @@ local servers_config = {
 	terraformls = {},
 	lua_ls = {},
 	html = {},
+	tailwindcss = {},
 	cssls = {},
 	ts_ls = {},
 	eslint = {},

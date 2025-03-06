@@ -2,8 +2,13 @@ local map = require("util.map").map
 local M = {}
 
 local priorities = {
+	"Change spelling to '[^']+'",
 	'Add import from "[^"]+"',
 	'Update import from "[^"]+"',
+	"Remove import from '[^']+'",
+	"Remove unused declaration for: '[^']+'",
+	"Remove unused declarations for: '[^']+'",
+	"Remove unused declaration from: '[^']+'",
 	"Prefix '[^']+' with an underscore",
 	"Infer parameter types from usage",
 	"Add braces to arrow function",
@@ -14,6 +19,10 @@ local priorities = {
 	"import type",
 	"^Use 'type ",
 	"^Replace '[^']+' with '[^']+'$",
+}
+
+local filters = {
+	"Move to a new file",
 }
 
 local function organize_imports()
@@ -44,14 +53,27 @@ function M.init(bufnr)
 			triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked,
 			diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
 		}
+		-- vim.schedule(function()
+		-- 	vim.notify("here!")
+		-- end)
 
 		vim.lsp.buf_request(bufnr, "textDocument/codeAction", params, function(_, results, _, _)
+			-- vim.schedule(function()
+			-- 	vim.notify("here!")
+			-- end)
+			-- vim.notify(vim.inspect(results))
 			local mapped = vim.iter(results)
+				:filter(function(item)
+					-- -- Remove filtered items
+					return not vim.iter(filters):any(function(filter_item)
+						return string.find(item.title, filter_item) ~= nil
+					end)
+				end)
 				:map(function(item)
 					local priorities_iter = vim.iter(ipairs(priorities))
 					local priority_item = priorities_iter
 						:filter(function(_, priority_text)
-							return string.find(item.title, priority_text)
+							return string.find(item.title, priority_text) ~= nil
 						end)
 						:totable()[1]
 

@@ -61,7 +61,10 @@ function M.init(bufnr)
 			-- vim.schedule(function()
 			-- 	vim.notify("here!")
 			-- end)
-			-- vim.notify(vim.inspect(results))
+			if results == nil then
+				return
+			end
+
 			local mapped = vim.iter(results)
 				:filter(function(item)
 					-- -- Remove filtered items

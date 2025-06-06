@@ -123,13 +123,19 @@ return {
 		end,
 	},
 	{
-		"williamboman/mason.nvim",
+		"mason-org/mason-lspconfig.nvim",
 		opts = {},
+		dependencies = {
+			{ "mason-org/mason.nvim", opts = {} },
+			"neovim/nvim-lspconfig",
+		},
 	},
 	{
-		"williamboman/mason-lspconfig.nvim",
-		opts = {
-			ensure_installed = vim.tbl_keys(servers_config),
+		"mason-org/mason-lspconfig.nvim",
+		opts = {},
+		dependencies = {
+			{ "mason-org/mason.nvim", opts = {} },
+			"neovim/nvim-lspconfig",
 		},
 	},
 }

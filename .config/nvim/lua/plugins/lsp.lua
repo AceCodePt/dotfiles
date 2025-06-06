@@ -12,7 +12,24 @@ local servers_config = {
 	eslint = {},
 	pyright = {},
 	htmx = {},
-	astro = {},
+	astro = {
+		on_attach = function(client, bufnr)
+			vim.api.nvim_create_autocmd("BufWritePost", {
+				pattern = { "*.js", "*.ts" },
+				group = vim.api.nvim_create_augroup("astro_ondidchangetsorjsfile", { clear = true }),
+				callback = function(ctx)
+					client.notify("workspace/didChangeWatchedFiles", {
+						changes = {
+							{
+								uri = ctx.match,
+								type = 2, -- 1 = Created, 2 = Changed, 3 = Deleted
+							},
+						},
+					})
+				end,
+			})
+		end,
+	},
 	sqlls = {},
 	jsonls = {
 		filetypes = { "json", "jsonc" },
@@ -86,7 +103,10 @@ return {
 			for server_name, config in pairs(servers_config) do
 				lspconfig[server_name].setup(vim.tbl_deep_extend("force", {
 					capabilities = capabilities,
-					on_attach = function(_, bufnr)
+					on_attach = function(client, bufnr)
+						if config.on_attach ~= nil then
+							config.on_attach(client, bufnr)
+						end
 						local ok, mod = pcall(require, "config.custom-keymaps." .. server_name)
 						if ok then
 							mod.init(bufnr)
@@ -99,6 +119,7 @@ return {
 				vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
 					virtual_text = true,
 				})
+			return {}
 		end,
 	},
 	{

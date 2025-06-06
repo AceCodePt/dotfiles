@@ -46,6 +46,27 @@ function M.init(bufnr)
 	nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 	nmap("<leader>oi", organize_imports, "[O]rganize [I]mports")
 
+	nmap("<leader>i", function()
+		-- textDocument/diagnostic
+
+		local tbl = vim.lsp.diagnostic.get_line_diagnostics(bufnr)
+
+		local row = vim.iter(tbl)
+			:filter(function(item)
+				--
+				return item["code"] == 2307
+			end)
+			:pop()
+
+		if row == nil then
+			return
+		end
+
+		local package = string.gsub(string.match(row["message"], "'.+'"), "'", "")
+
+		vim.cmd(":TermExec cmd='ni " .. package .. "' go_back=0<cr>")
+	end, "Install package")
+
 	nmap("<leader>m", function()
 		local params = vim.lsp.util.make_range_params()
 
@@ -53,14 +74,8 @@ function M.init(bufnr)
 			triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked,
 			diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
 		}
-		-- vim.schedule(function()
-		-- 	vim.notify("here!")
-		-- end)
 
 		vim.lsp.buf_request(bufnr, "textDocument/codeAction", params, function(_, results, _, _)
-			-- vim.schedule(function()
-			-- 	vim.notify("here!")
-			-- end)
 			if results == nil then
 				return
 			end

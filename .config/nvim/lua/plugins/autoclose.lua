@@ -15,8 +15,6 @@ return {
 				disable_filetype = { "TelescopePrompt", "vim" },
 			})
 		end,
-		-- use opts = {} for passing setup options
-		-- this is equivalent to setup({}) function
 	},
 	{ "tpope/vim-repeat" },
 	{

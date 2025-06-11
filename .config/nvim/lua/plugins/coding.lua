@@ -1,5 +1,15 @@
 return {
 	{
+		"echasnovski/mini.comment",
+		version = "*",
+		opts = {
+			options = {
+				-- Whether to ignore blank lines when commenting
+				ignore_blank_line = true,
+			},
+		},
+	},
+	{
 		"sbdchd/neoformat",
 		config = function()
 			vim.g.neoformat_try_node_exe = 1
@@ -11,23 +21,6 @@ return {
 	{
 		"nacro90/numb.nvim",
 		opts = {},
-	},
-	{
-		"numToStr/Comment.nvim",
-		event = "VeryLazy",
-		dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
-		init = function()
-			vim.g.skip_ts_context_commentstring_module = true
-		end,
-		config = function()
-			local comment = require("Comment")
-			local comment_string = require("ts_context_commentstring")
-
-			comment.setup({
-				pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
-			})
-			comment_string.setup()
-		end,
 	},
 	{
 		"norcalli/nvim-colorizer.lua",

@@ -51,41 +51,6 @@ return {
 		end,
 	},
 	{
-		"ThePrimeagen/harpoon",
-		config = function()
-			local harpoon = require("harpoon")
-			local harpoon_mark = require("harpoon.mark")
-			local harpoon_ui = require("harpoon.ui")
-
-			harpoon.setup({
-				menu = {
-					width = vim.api.nvim_win_get_width(0) - 4,
-				},
-			})
-
-			require("telescope").load_extension("harpoon")
-
-			vim.keymap.set("n", "<C-e>", function()
-				harpoon_ui.toggle_quick_menu()
-			end)
-			vim.keymap.set("n", "<C-w>", function()
-				harpoon_mark.add_file()
-			end)
-			vim.keymap.set("n", "<C-a>", function()
-				harpoon_ui.nav_file(1)
-			end)
-			vim.keymap.set("n", "<C-f>", function()
-				harpoon_ui.nav_file(2)
-			end)
-			vim.keymap.set("n", "<C-d>", function()
-				harpoon_ui.nav_file(3)
-			end)
-			vim.keymap.set("n", "<C-s>", function()
-				harpoon_ui.nav_file(4)
-			end)
-		end,
-	},
-	{
 		"folke/lazydev.nvim",
 		ft = "lua", -- only load on lua files
 		opts = {

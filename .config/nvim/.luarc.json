@@ -3,5 +3,8 @@
   "diagnostics": {
     "enable": true,
     "globals": ["vim", "use"]
-  }
+  },
+    "diagnostics.disable": [
+        "undefined-field"
+    ]
 }

@@ -111,6 +111,7 @@ return {
 					end,
 				},
 				sorting = {
+					priority_weight = 1,
 					-- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/compare.lua
 					comparators = {
 						-- compare.exact,

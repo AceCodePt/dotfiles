@@ -44,7 +44,7 @@ return {
 			})
 			vim.api.nvim_set_keymap(
 				"n",
-				"<Leader>nf",
+				"<Leader>ng",
 				":lua require('neogen').generate()<CR>",
 				{ noremap = true, silent = true }
 			)

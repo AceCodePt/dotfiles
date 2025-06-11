@@ -45,3 +45,12 @@ vim.o.termguicolors = true
 -- Stop with the swap file!
 vim.o.swapfile = false
 vim.o.cursorline = true
+vim.opt.guicursor = "n:Cursor,v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
+
+vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+	group = vim.api.nvim_create_augroup("InvisibleCursor", { clear = true }),
+	callback = function()
+		vim.api.nvim_set_hl(0, "Cursor", { reverse = true, blend = 100 })
+	end,
+	once = true, -- Ensures the callback runs only once for each event
+})

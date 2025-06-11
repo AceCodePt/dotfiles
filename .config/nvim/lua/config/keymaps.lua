@@ -36,11 +36,13 @@ map({ "n", "v" }, "X", '"_X')
 map({ "n" }, "gp", vim.diagnostic.goto_prev)
 map({ "n" }, "gn", vim.diagnostic.goto_next)
 
-map({ "n", "v" }, "H", "^")
+map({ "n" }, "H", "<c-o>")
+map({ "v" }, "H", "^")
 map({ "n" }, "cH", "c^")
 map({ "n" }, "dH", "d^")
 
-map({ "n", "v" }, "L", "$")
+map({ "n" }, "L", "<c-i>")
+map({ "v" }, "L", "$")
 map({ "n" }, "cL", "c$")
 map({ "n" }, "dL", "d$")
 

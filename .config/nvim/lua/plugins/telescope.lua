@@ -51,6 +51,7 @@ return {
 							".git",
 							"build",
 							"dist",
+							".vercel",
 							"node_modules",
 							"yarn.lock",
 							"pnpm-lock.yaml",

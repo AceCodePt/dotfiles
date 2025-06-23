@@ -17,12 +17,6 @@ return {
 			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
 			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
 
-			vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "[G]oto [D]efinition" })
-			vim.keymap.set("n", "gI", builtin.lsp_implementations, { desc = "[G]oto [I]mplementation" })
-			vim.keymap.set("n", "gr", builtin.lsp_references, { desc = "[G]oto [I]mplementation" })
-
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
-
 			local telescope_actions = require("telescope.actions")
 			require("telescope").setup({
 				pickers = {

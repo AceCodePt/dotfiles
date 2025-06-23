@@ -31,7 +31,16 @@ local function organize_imports()
 		arguments = { vim.api.nvim_buf_get_name(0) },
 		title = "",
 	}
-	vim.lsp.buf.execute_command(params)
+	--- @type vim.lsp.Client
+	local client = vim.iter(vim.lsp.get_clients())
+		:filter(function(client)
+			return client.name == "ts_ls"
+		end)
+		:pop()
+
+	if client then
+		client:exec_cmd(params)
+	end
 end
 
 function M.init(bufnr)
@@ -68,15 +77,19 @@ function M.init(bufnr)
 	end, "Install package")
 
 	nmap("<leader>m", function()
-		local params = vim.lsp.util.make_range_params()
-
+		local params = vim.lsp.util.make_range_params(0, "utf-8")
 		params.context = {
 			triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked,
 			diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
 		}
 
-		vim.lsp.buf_request(bufnr, "textDocument/codeAction", params, function(_, results, _, _)
-			if results == nil then
+		vim.lsp.buf_request(bufnr, "textDocument/codeAction", params, function(err, results, ctx, _)
+			if err then
+				vim.notify("Error fetching code actions: " .. err.message, vim.log.levels.ERROR)
+				return
+			end
+			if results == nil or vim.tbl_isempty(results) then
+				vim.notify("No code actions available.", vim.log.levels.INFO)
 				return
 			end
 
@@ -96,11 +109,24 @@ function M.init(bufnr)
 						:totable()[1]
 
 					local priority = priority_item and (100 + #priorities - priority_item[1]) or 0
-					item.command["priority"] = priority
 
-					return item.command
+					-- Check if item.command exists before modifying it
+					if item.command then
+						item.command["priority"] = priority
+						return item.command
+					end
+					-- Some code actions might be structured differently
+					return item
+				end)
+				:filter(function(item) -- Ensure we only have items with a command
+					return item.command ~= nil
 				end)
 				:totable()
+
+			if vim.tbl_isempty(mapped) then
+				vim.notify("No actionable items found after filtering.", vim.log.levels.INFO)
+				return
+			end
 
 			table.sort(mapped, function(a, b)
 				if a.priority == b.priority then
@@ -109,9 +135,16 @@ function M.init(bufnr)
 				return a.priority > b.priority
 			end)
 
-			vim.lsp.buf.execute_command(mapped[1])
+			local selected_command = mapped[1]
+
+			if selected_command then
+				local client = vim.lsp.get_client_by_id(ctx.client_id)
+				if client then
+					client:exec_cmd(selected_command, { bufnr = bufnr })
+				end
+			end
 		end)
-	end, "Toggle function")
+	end, "[M]agic Fix")
 end
 
 return M

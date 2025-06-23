@@ -55,8 +55,6 @@ map("v", "<", "<gv")
 map("v", ">", ">gv")
 
 -- Move selected line / block of text in visual mode
-map("n", "J", "gJ")
-map("n", "K", "gK")
 map("v", "J", ":move '>+1<CR>gv-gv")
 map("v", "K", ":move '<-2<CR>gv-gv")
 
@@ -75,3 +73,11 @@ map("n", "G", function()
 	-- Using :keepjumps with 'normal! G' for the 'G' command.
 	vim.cmd("keepjumps normal! G")
 end, { desc = "Go to last line without adding to jumplist" })
+
+
+-- Create a keymap for visual mode for easier access.
+-- Usage: Select text, then press <leader>c
+-- The '<,'> part automatically passes the visual selection range to the command.
+map("v", "<leader>c", ":'<,'>CamelCase<CR>", {
+	desc = "Convert selection to camelCase",
+})

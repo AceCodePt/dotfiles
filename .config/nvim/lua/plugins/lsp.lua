@@ -10,7 +10,19 @@ local servers_config = {
 	cssls = {},
 	ts_ls = {},
 	eslint = {},
-	pyright = {},
+	pyright = {
+		settings = {
+			python = {
+				pythonPath = (function()
+					local venv = vim.fn.findfile(".venv/bin/python", vim.fn.getcwd() .. ";")
+					if venv ~= "" then
+						return venv
+					end
+					return vim.fn.exepath("python3")
+				end)(),
+			},
+		},
+	},
 	htmx = {},
 	astro = {
 		on_attach = function(client, bufnr)

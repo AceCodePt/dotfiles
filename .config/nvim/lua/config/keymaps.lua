@@ -62,3 +62,16 @@ map("v", "K", ":move '<-2<CR>gv-gv")
 
 -- Trick from the primagen
 map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
+
+-- Jumping is slightly better
+map("n", "gg", function()
+	-- The :keepjumps command modifier executes the following command
+	-- without adding an entry to the jumplist.
+	-- 'normal! gg' executes the default 'gg' command.
+	vim.cmd("keepjumps normal! gg")
+end, { desc = "Go to first line without adding to jumplist" })
+
+map("n", "G", function()
+	-- Using :keepjumps with 'normal! G' for the 'G' command.
+	vim.cmd("keepjumps normal! G")
+end, { desc = "Go to last line without adding to jumplist" })

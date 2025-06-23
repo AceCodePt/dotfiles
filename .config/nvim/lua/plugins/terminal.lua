@@ -8,7 +8,7 @@ return {
 			local char = "t"
 			require("toggleterm").setup({
 				open_mapping = "<c-" .. char .. ">",
-				start_in_insert = true,
+				start_in_insert = false,
 				persist_mode = false,
 				on_create = function(t)
 					t.is_full = false

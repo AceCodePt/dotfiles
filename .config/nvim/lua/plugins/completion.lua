@@ -34,10 +34,11 @@ return {
 				luasnip.jump(-1)
 			end, { silent = true })
 
-			cmp.setup.filetype({ "sql" }, {
+			cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
 				sources = {
 					{ name = "vim-dabod-completion" },
 					{ name = "buffer" },
+					{ name = "luasnip" },
 				},
 			})
 

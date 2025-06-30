@@ -6,10 +6,10 @@ vim.g.maplocalleader = " "
 
 -- better up/down
 map({ "n", "x" }, "j", function()
-	return vim.v.count > 0 and "j" or "gj"
+  return vim.v.count > 0 and "j" or "gj"
 end, { expr = true })
 map({ "n", "x" }, "k", function()
-	return vim.v.count > 0 and "k" or "gk"
+  return vim.v.count > 0 and "k" or "gk"
 end, { expr = true })
 
 map("n", "<C-u>", "<C-u>zz")

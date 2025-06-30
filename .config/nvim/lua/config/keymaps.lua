@@ -12,6 +12,10 @@ map({ "n", "x" }, "k", function()
   return vim.v.count > 0 and "k" or "gk"
 end, { expr = true })
 
+-- Better J behavior
+map("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
+
+
 map("n", "<C-u>", "<C-u>zz")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-b>", "<C-b>zz")
@@ -32,12 +36,21 @@ map({ "n", "v" }, "D", '"+D')
 map({ "n", "v" }, "x", '"_x')
 map({ "n", "v" }, "X", '"_X')
 
+-- Definition
+map({ "n" }, "<leader>d", vim.lsp.buf.definition)
 map({ "n" }, "<leader>f", function()
   vim.lsp.buf.format({ async = true })
 end)
+map({ "n" }, "<leader>r", "grr")
+
 -- Diagnostic for convnience
-map({ "n" }, "gp", vim.diagnostic.goto_prev)
-map({ "n" }, "gn", vim.diagnostic.goto_next)
+map({ "n" }, "<leader>p", function()
+  vim.diagnostic.jump({ count = -1, float = true })
+end)
+
+map({ "n" }, "<leader>n", function()
+  vim.diagnostic.jump({ count = 1, float = true })
+end)
 
 map({ "n" }, "H", "<c-o>")
 map({ "v" }, "H", "^")
@@ -50,8 +63,8 @@ map({ "n" }, "cL", "c$")
 map({ "n" }, "dL", "d$")
 
 -- Center search results
-map("n", "n", "nzz")
-map("n", "N", "Nzz")
+map("n", "n", "nzzzv")
+map("n", "N", "Nzzzv")
 
 -- Better indentation
 map("v", "<", "<gv")
@@ -61,26 +74,39 @@ map("v", ">", ">gv")
 map("v", "J", ":move '>+1<CR>gv-gv")
 map("v", "K", ":move '<-2<CR>gv-gv")
 
+-- Buffer navigation
+map("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
+map("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
+
 -- Trick from the primagen
 map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
 
 -- Jumping is slightly better
 map("n", "gg", function()
-	-- The :keepjumps command modifier executes the following command
-	-- without adding an entry to the jumplist.
-	-- 'normal! gg' executes the default 'gg' command.
-	vim.cmd("keepjumps normal! gg")
+  -- The :keepjumps command modifier executes the following command
+  -- without adding an entry to the jumplist.
+  -- 'normal! gg' executes the default 'gg' command.
+  vim.cmd("keepjumps normal! gg")
 end, { desc = "Go to first line without adding to jumplist" })
 
 map("n", "G", function()
-	-- Using :keepjumps with 'normal! G' for the 'G' command.
-	vim.cmd("keepjumps normal! G")
+  -- Using :keepjumps with 'normal! G' for the 'G' command.
+  vim.cmd("keepjumps normal! G")
 end, { desc = "Go to last line without adding to jumplist" })
-
 
 -- Create a keymap for visual mode for easier access.
 -- Usage: Select text, then press <leader>c
 -- The '<,'> part automatically passes the visual selection range to the command.
-map("v", "<leader>c", ":'<,'>CamelCase<CR>", {
-	desc = "Convert selection to camelCase",
+map("v", "<leader>cc", ":'<,'>CamelCase<CR>", {
+  desc = "Convert selection to camelCase",
 })
+
+-- Quick config editing
+map("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
+
+-- Copy Full File-Path
+vim.keymap.set("n", "<leader>pa", function()
+	local path = vim.fn.expand("%:p")
+	vim.fn.setreg("+", path)
+	print("file:", path)
+end)

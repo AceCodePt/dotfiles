@@ -111,18 +111,8 @@ return {
 					priority_weight = 1,
 					-- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/compare.lua
 					comparators = {
-						-- compare.exact,
-						-- compare.offset,
 						compare.score,
-						-- function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-						-- 	local kind1 = modified_kind(entry1:get_kind())
-						-- 	local kind2 = modified_kind(entry2:get_kind())
-						-- 	if kind1 ~= kind2 then
-						-- 		return kind1 - kind2 < 0
-						-- 	end
-						-- end,
 						compare.locality,
-						-- compare.recently_used,
 					},
 				},
 			})

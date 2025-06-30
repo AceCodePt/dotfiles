@@ -32,6 +32,9 @@ map({ "n", "v" }, "D", '"+D')
 map({ "n", "v" }, "x", '"_x')
 map({ "n", "v" }, "X", '"_X')
 
+map({ "n" }, "<leader>f", function()
+  vim.lsp.buf.format({ async = true })
+end)
 -- Diagnostic for convnience
 map({ "n" }, "gp", vim.diagnostic.goto_prev)
 map({ "n" }, "gn", vim.diagnostic.goto_next)

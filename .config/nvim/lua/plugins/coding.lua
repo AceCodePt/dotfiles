@@ -10,15 +10,6 @@ return {
 		},
 	},
 	{
-		"sbdchd/neoformat",
-		config = function()
-			vim.g.neoformat_try_node_exe = 1
-		end,
-		keys = {
-			{ "<leader>fm", ":Neoformat<CR>" },
-		},
-	},
-	{
 		"nacro90/numb.nvim",
 		opts = {},
 	},

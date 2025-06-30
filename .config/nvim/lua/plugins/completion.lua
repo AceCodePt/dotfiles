@@ -60,13 +60,7 @@ return {
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-j>"] = cmp.mapping({
-						i = function(fallback)
-							if cmp.visible() then
-								cmp.mapping.select_next_item()(fallback)
-							else
-								cmp.mapping.complete()(fallback)
-							end
-						end,
+						i = cmp.mapping.select_next_item(),
 						c = cmp.mapping.select_next_item(),
 						n = cmp.mapping.complete(),
 					}),

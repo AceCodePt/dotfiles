@@ -43,15 +43,6 @@ map({ "n" }, "<leader>f", function()
 end)
 map({ "n" }, "<leader>r", "grr")
 
--- Diagnostic for convnience
-map({ "n" }, "<leader>p", function()
-  vim.diagnostic.jump({ count = -1, float = true })
-end)
-
-map({ "n" }, "<leader>n", function()
-  vim.diagnostic.jump({ count = 1, float = true })
-end)
-
 map({ "n" }, "H", "<c-o>")
 map({ "v" }, "H", "^")
 map({ "n" }, "cH", "c^")

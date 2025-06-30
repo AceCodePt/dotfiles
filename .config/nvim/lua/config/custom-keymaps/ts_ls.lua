@@ -32,11 +32,10 @@ local function organize_imports()
 		title = "",
 	}
 	--- @type vim.lsp.Client
-	local client = vim.iter(vim.lsp.get_clients())
-		:filter(function(client)
-			return client.name == "ts_ls"
-		end)
-		:pop()
+	local client = vim.lsp.get_clients({
+		name = "ts_ls",
+		bufnr = 0,
+	})[1]
 
 	if client then
 		client:exec_cmd(params)

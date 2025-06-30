@@ -9,6 +9,7 @@ return {
 				-- Also use this to disable builtin textobjects. See |MiniAi.config|.
 				custom_textobjects = {
 					f = ai.gen_spec.treesitter({ i = "@function.inner", a = "@function.outer" }),
+					c = ai.gen_spec.treesitter({ i = "@class.inner", a = "@class.outer" }),
 				},
 
 				-- Number of lines within which textobject is searched

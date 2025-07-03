@@ -1,3 +1,4 @@
+local map = require("util.map").map
 -- File: lua/my_lsp_utils/init.lua (Corrected)
 -- Description:
 -- This Neovim utility provides functionality to replace a function's signature
@@ -173,11 +174,10 @@ end
 --- Initializes the keymap to trigger the signature replacement.
 -- This function is called by the LSP on_attach setup.
 function M.init(client, bufnr)
-  vim.keymap.set("n", "<leader>m", function()
+  map("n", "<leader>m", function()
     -- 1. Get the signature from the LSP as a table of lines.
     local signature_lines = M.get_function_signature_lines(client, bufnr)
     if not signature_lines then
-      vim.notify("Failed to get signature from hover.", vim.log.levels.ERROR)
       return
     end
 
@@ -190,7 +190,7 @@ function M.init(client, bufnr)
 
 
     -- Reconstruct the signature with newlines.
-    local new_text = table.concat(signature_lines, "\n")
+    local new_text = table.concat(signature_lines, "")
 
     -- The LSP hover doesn't provide it, but it's required for valid syntax.
     new_text = new_text .. ":"

@@ -13,7 +13,7 @@ local M = {}
 -- @param client The LSP client object.
 -- @param bufnr The buffer number.
 -- @return A table of strings representing the lines of the signature, or nil.
-function M.get_function_signature_lines(client, bufnr)
+function M.get_function_return_value(client, bufnr)
   -- Prepare and send the hover request to the LSP server.
   local params = vim.lsp.util.make_position_params(0, client.offset_encoding)
   -- Use a reasonable timeout for the synchronous request.
@@ -24,6 +24,7 @@ function M.get_function_signature_lines(client, bufnr)
     vim.notify("No information available from LSP hover.", vim.log.levels.WARN)
     return nil
   end
+  -- vim.lsp.bug.hover
 
   -- This handles different formats of hover content across Neovim versions.
   local hover_value
@@ -55,29 +56,10 @@ function M.get_function_signature_lines(client, bufnr)
 
   -- Process the signature as a multi-line block.
   -- 1. Remove the markdown code block fences (e.g., ```python ... ```).
-  local cleaned_signature = hover_value:gsub("^```[^\n]*\n", ""):gsub("\n```$", "")
+  local return_value = hover_value:gsub("^```[^\n]*[%s%S]*->%s", ""):gsub("\n```[%s%S]*$", "")
 
-  -- Remove the (function) or (method) prefix from the hover info.
-  cleaned_signature = cleaned_signature:gsub("^%s*%([%w_]+%)%s*", "")
-
-  -- 2. Split the cleaned signature into a table of lines.
-  local lines = {}
-  for line in cleaned_signature:gmatch("([^\n]*)") do
-    -- Trim leading/trailing whitespace from each line to keep formatting clean.
-    -- Wrap gsub in parentheses to select its first return value.
-    table.insert(lines, (line:gsub("^%s*(.-)%s*$", "%1")))
-  end
-
-  -- Remove any blank lines that might have resulted from the split.
-  local cleaned_lines = {}
-  for _, line in ipairs(lines) do
-    if line ~= "" then
-      table.insert(cleaned_lines, line)
-    end
-  end
-
-  if #cleaned_lines > 0 then
-    return cleaned_lines
+  if return_value then
+    return return_value
   else
     vim.notify("Cleaned signature is empty after processing.", vim.log.levels.WARN)
     return nil
@@ -89,7 +71,7 @@ end
 -- end of the signature, which is typically the colon ':' before the body.
 -- @param bufnr The buffer number.
 -- @return A table representing the start and end position for replacement, or nil.
-function M.get_current_definition_range(bufnr)
+function M.get_current_definition_range()
   -- Ensure nvim-treesitter is available.
   if not pcall(require, "nvim-treesitter.ts_utils") then
     vim.notify("nvim-treesitter is not available.", vim.log.levels.ERROR)
@@ -104,71 +86,65 @@ function M.get_current_definition_range(bufnr)
   end
 
   -- Traverse up the syntax tree to find the containing function or class definition.
+  --- @type TSNode
   local definition_node
   --- @type TSNode | nil
   local node = current_node
   while node do
     local node_type = node:type()
     -- Add other language-specific definition types if needed.
-    if node_type == 'function_definition' or node_type == 'class_definition' then
+    if node_type == 'function_definition' then
       definition_node = node
       break
     end
     node = node:parent()
   end
 
-  if definition_node then
-    local start_row, start_col, def_end_row, _ = definition_node:range()
-    local last_known_colon = nil
 
-    -- Find the body by iterating children and checking their node type.
-    -- This is more robust than using field names, which can fail on older APIs.
-    local body_node = nil
-    for child in definition_node:iter_children() do
-      -- For Python, the body is a 'block'. This may need adjustment for other languages.
-      if child:type() == "block" then
-        body_node = child
-        break
-      end
-    end
-
-    local search_end_row = def_end_row
-    if body_node then
-      -- The signature must end on or before the line where the body starts.
-      search_end_row, _, _, _ = body_node:range()
-    end
-
-    for r = start_row, search_end_row do
-      local line_text = vim.api.nvim_buf_get_lines(bufnr, r, r + 1, true)[1]
-      local search_start = 1
-      while true do
-        local colon_pos = line_text:find(":", search_start, true)
-        if not colon_pos then break end
-
-        -- If we are on the same line as the body, ensure the colon is before it.
-        if body_node and r == search_end_row then
-          local _, body_start_col, _, _ = body_node:range()
-          if colon_pos >= body_start_col then
-            break
-          end
-        end
-        -- Store this colon and keep searching for a later one on the same line or subsequent lines.
-        last_known_colon = { line = r, character = colon_pos }
-        search_start = colon_pos + 1
-      end
-    end
-
-    if last_known_colon then
-      return {
-        start = { line = start_row, character = start_col },
-        ['end'] = last_known_colon,
-      }
-    end
+  if not definition_node then
+    vim.notify("Could not find a parent function or class definition.", vim.log.levels.WARN)
+    return nil
   end
 
 
-  vim.notify("Could not find a parent function or class definition.", vim.log.levels.WARN)
-  return nil
+
+  local parameters_node = definition_node:field("parameters")[1]
+
+  if not parameters_node then
+    vim.notify("Couldn't find the parameters node", vim.log.levels.ERROR)
+    return nil
+  end
+
+
+
+  --- @type TSNode | nil
+  local first_item_before_colon = parameters_node
+  while true do
+    if not first_item_before_colon then
+      vim.notify("Didn't find next sibiling for some reason on line continuation", vim.log.levels.ERROR)
+      return nil
+    end
+    if first_item_before_colon:type() == "block" or first_item_before_colon:type() == "comment" then
+      first_item_before_colon = first_item_before_colon:prev_sibling()
+      break
+    end
+    first_item_before_colon = first_item_before_colon:next_sibling()
+  end
+
+
+  if not first_item_before_colon then
+    vim.notify("Couldn't find the end of the function signature", vim.log.levels.ERROR)
+    return nil
+  end
+
+
+  local _, _, start_row, start_col = parameters_node:range()
+  local _, _, end_row, end_col = first_item_before_colon:range()
+
+  return {
+    start = { line = start_row, character = start_col },
+    ['end'] = { line = end_row, character = end_col },
+  }
 end
 
 --- Initializes the keymap to trigger the signature replacement.
@@ -176,29 +152,22 @@ end
 function M.init(client, bufnr)
   map("n", "<leader>m", function()
     -- 1. Get the signature from the LSP as a table of lines.
-    local signature_lines = M.get_function_signature_lines(client, bufnr)
-    if not signature_lines then
+    local function_return_value = M.get_function_return_value(client, bufnr)
+    if not function_return_value then
       return
     end
 
     -- 2. Get the range in the buffer that needs to be replaced.
-    local replacement_range = M.get_current_definition_range(bufnr)
+    local replacement_range = M.get_current_definition_range()
     if not replacement_range then
-      vim.notify("Could not determine the definition range to replace.", vim.log.levels.ERROR)
       return
     end
 
 
-    -- Reconstruct the signature with newlines.
-    local new_text = table.concat(signature_lines, "")
-
-    -- The LSP hover doesn't provide it, but it's required for valid syntax.
-    new_text = new_text .. ":"
-
     -- 3. Prepare and apply the text edit.
     local text_edit = {
       range = replacement_range,
-      newText = new_text,
+      newText = " -> " .. function_return_value .. ":"
     }
 
     vim.lsp.util.apply_text_edits({ text_edit }, bufnr, client.offset_encoding)

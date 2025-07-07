@@ -1,13 +1,10 @@
 return {
-   {
-      "aserowy/tmux.nvim",
-      config = function()
-         return require("tmux").setup(
-            {
-               copy_sync = {
-                  enable = false
-               },
-            })
-      end
-   },
+  {
+    "aserowy/tmux.nvim",
+    opts = {
+      copy_sync = {
+        enable = false
+      },
+    }
+  },
 }

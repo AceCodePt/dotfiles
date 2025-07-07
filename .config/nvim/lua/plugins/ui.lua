@@ -7,7 +7,6 @@ return {
       vim.cmd.colorscheme 'onedark'
     end,
   },
-
   {
     'nvim-lualine/lualine.nvim',
     opts = {

@@ -87,5 +87,13 @@
       "@name ${1:text}$0"
     ],
     "description": "The name of the function or table definition. This is usually infered from the code analysis, and the programmer does not need to define it. If LuaDoc can infer the name of the function automatically it's even not recomended to define the name explicitly, to avoid redundancy."
+  },
+  "schedule+notify": {
+    "prefix": "vimsn",
+    "body": [
+      "vim.schedule(function()",
+      " vim.notify($0)",
+      "end)"
+    ]
   }
 }

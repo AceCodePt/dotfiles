@@ -2,6 +2,7 @@ return {
   {
     "echasnovski/mini.ai",
     version = "*",
+    event = { "BufReadPre", "BufNewFile" },
     opts = function(mod)
       local ai = require(mod.name)
       return {
@@ -31,6 +32,7 @@ return {
   {
     "echasnovski/mini.surround",
     version = "*",
+    event = { "BufReadPre", "BufNewFile" },
     opts = {
       -- Add custom surroundings to be used on top of builtin ones. For more
       -- information with examples, see `:h MiniSurround.config`.
@@ -76,6 +78,7 @@ return {
   {
     "echasnovski/mini.hipatterns",
     version = "*",
+    event = { "BufReadPre", "BufNewFile" },
     opts = function(mod)
       local hipatterns = require(mod.name)
       return {
@@ -107,9 +110,8 @@ return {
   {
     "echasnovski/mini.pairs",
     version = "*",
-    opts =
-    -- No need to copy this inside `setup()`. Will be used automatically.
-    {
+    event = { "InsertEnter" },
+    opts = {
       -- In which modes mappings from this `config` should be created
       modes = { insert = true, command = false, terminal = false },
 

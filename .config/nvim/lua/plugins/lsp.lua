@@ -26,7 +26,7 @@ local servers_config = {
   eslint = {},
   htmx = {},
   astro = {
-    on_attach = function(client, bufnr)
+    on_attach = function(client, _)
       vim.api.nvim_create_autocmd("BufWritePost", {
         pattern = { "*.js", "*.ts" },
         group = vim.api.nvim_create_augroup("astro_ondidchangetsorjsfile", { clear = true }),
@@ -91,6 +91,7 @@ local servers_config = {
 return {
   {
     "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = { "hrsh7th/cmp-nvim-lsp", "nanotee/sqls.nvim" },
     config = function()
       local lspconfig = require("lspconfig")

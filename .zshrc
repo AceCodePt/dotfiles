@@ -1,3 +1,26 @@
+convert_latest_recording_to_mp4() {
+  dir=~/Videos/Recordings
+  latest_file=$(ls -t "$dir" | head -n 1)
+
+  if [ -z "$latest_file" ]; then
+    echo "No files found in $dir"
+    return 1
+  fi
+
+  full_path="$dir/$latest_file"
+  extension="${latest_file##*.}"
+  filename="${latest_file%.*}"
+  output_file="$dir/$filename.mp4"
+
+  # Skip if it's already an mp4
+  if [ "$extension" = "mp4" ]; then
+    echo "The newest file is already an MP4: $latest_file"
+    return 0
+  fi
+
+  echo "Converting '$latest_file' to '$output_file'..."
+  ffmpeg -i "$full_path" -c:v libx264 -preset fast -crf 23 -c:a aac -b:a 128k "$output_file"
+}
 
 addToPathFront() {
     if [[ "$PATH" != *"$1"* ]]; then
@@ -49,21 +72,12 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 
 export PATH=$PATH:$(go env GOPATH)/bin
-
-# Created by `pipx` on 2023-07-06 11:16:21
 export PATH="$PATH:$HOME/.local/bin"
-
 
 if [ -d "$HOME/Downloads/android-studio/bin" ] ; then
     export PATH="$PATH:$HOME/Downloads/android-studio/bin"
 fi
 
-
-export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
 
 alias pnpx='pnpm dlx'
 
@@ -129,6 +143,7 @@ convert_to_webp() {
 }
 
 
+
 if [ -z "$TMUX" ] && [ "$TERM" = "xterm-kitty" ]; then
   tmux new -A -s main
 fi
@@ -141,3 +156,8 @@ if [ -d "$FNM_PATH" ]; then
 fi
 
 alias ld='lazydocker'
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc' ]; then . '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc'; fi
+
+export PATH="$PATH:/opt/mssql-tools18/bin"

@@ -36,12 +36,6 @@ map({ "n", "v" }, "D", '"+D')
 map({ "n", "v" }, "x", '"_x')
 map({ "n", "v" }, "X", '"_X')
 
--- Definition
-map({ "n" }, "<leader>d", vim.lsp.buf.definition)
-map({ "n" }, "<leader>f", function()
-  vim.lsp.buf.format({ async = true })
-end)
-map({ "n" }, "<leader>r", "grr")
 
 map({ "n" }, "H", "<c-o>")
 map({ "v" }, "H", "^")
@@ -74,16 +68,31 @@ map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
 
 -- Jumping is slightly better
 map("n", "gg", function()
-  -- The :keepjumps command modifier executes the following command
-  -- without adding an entry to the jumplist.
-  -- 'normal! gg' executes the default 'gg' command.
   vim.cmd("keepjumps normal! gg")
 end, { desc = "Go to first line without adding to jumplist" })
 
 map("n", "G", function()
-  -- Using :keepjumps with 'normal! G' for the 'G' command.
   vim.cmd("keepjumps normal! G")
 end, { desc = "Go to last line without adding to jumplist" })
+
+map("n", "{", function()
+  vim.cmd("keepjumps normal! {")
+end, { desc = "Go to next blank line without adding to jumplist" })
+
+map("n", "}", function()
+  vim.cmd("keepjumps normal! }")
+end, { desc = "Go to previous blank line without adding to jumplist" })
+
+
+-- Quick config editing
+map("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
+
+-- Copy Full File-Path
+vim.keymap.set("n", "<leader>pa", function()
+  local path = vim.fn.expand("%:p")
+  vim.fn.setreg("+", path)
+  print("file:", path)
+end)
 
 -- Create a keymap for visual mode for easier access.
 -- Usage: Select text, then press <leader>c
@@ -91,13 +100,3 @@ end, { desc = "Go to last line without adding to jumplist" })
 map("v", "<leader>cc", ":'<,'>CamelCase<CR>", {
   desc = "Convert selection to camelCase",
 })
-
--- Quick config editing
-map("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
-
--- Copy Full File-Path
-vim.keymap.set("n", "<leader>pa", function()
-	local path = vim.fn.expand("%:p")
-	vim.fn.setreg("+", path)
-	print("file:", path)
-end)

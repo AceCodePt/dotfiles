@@ -1,7 +1,7 @@
 local map = require("util.map").map
 local actions = require("util.actions")
 local create_nvim_keybind_callback = require("util.expression").create_nvim_keybind_callback
-local converter = require('utils.case_converter')
+local converter = require('util.case_converter')
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -96,10 +96,11 @@ map("n", "<leader>pa", function()
   print("file:", path)
 end)
 
-map('v', '<leader>cc', converter.convert_selection_to_camel, { desc = 'Convert to camelCase' })
-map('v', '<leader>cp', converter.convert_selection_to_pascal, { desc = 'Convert to PascalCase' })
-map('v', '<leader>cs', converter.convert_selection_to_snake, { desc = 'Convert to snake_case' })
-map('v', '<leader>ck', converter.convert_selection_to_kebab, { desc = 'Convert to kebab-case' })
+map('v', '<leader>ccc', converter.convert_selection_to_camel, { desc = 'Convert to camelCase' })
+map('v', '<leader>ccp', converter.convert_selection_to_pascal, { desc = 'Convert to PascalCase' })
+map('v', '<leader>ccs', converter.convert_selection_to_snake, { desc = 'Convert to snake_case' })
+map('v', '<leader>cck', converter.convert_selection_to_kebab,
+  { desc = 'Convert to kebab-case' })
 
 for prefix, fn in pairs({ y = actions.yank, p = actions.paste }) do
   for keys, expr in pairs({

@@ -1,6 +1,5 @@
 require("config.autocmds.buffer")
 require("config.autocmds.cmdline")
-require("config.autocmds.custom")
 require("config.autocmds.lsp")
 require("config.autocmds.terminal")
 require("config.autocmds.window")

@@ -31,7 +31,7 @@ return {
     },
     opts = {
       formatters_by_ft = {
-        python = { "isort", "black" },
+        python = { "ruff" },
         rust = { "rustfmt", lsp_format = "fallback" },
       },
       -- Set this to change the default values when calling conform.format()

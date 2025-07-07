@@ -11,12 +11,12 @@ end
 
 ---@param fn fun(str: string): nil
 ---@param expr string
-function M.fn_expression(fn, expr)
-  local result = M.expression(expr)
-  if not result then
-    return
-  end
+function M.create_nvim_keybind_callback(fn, expr)
   return function()
+    local result = M.expression(expr)
+    if not result then
+      return
+    end
     fn(result)
   end
 end

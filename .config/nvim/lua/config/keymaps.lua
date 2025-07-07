@@ -1,5 +1,7 @@
-local M = require("util.map")
-local map = M.map
+local map = require("util.map").map
+local actions = require("util.actions")
+local create_nvim_keybind_callback = require("util.expression").create_nvim_keybind_callback
+local converter = require('utils.case_converter')
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -88,15 +90,24 @@ end, { desc = "Go to previous blank line without adding to jumplist" })
 map("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
 
 -- Copy Full File-Path
-vim.keymap.set("n", "<leader>pa", function()
+map("n", "<leader>pa", function()
   local path = vim.fn.expand("%:p")
   vim.fn.setreg("+", path)
   print("file:", path)
 end)
 
--- Create a keymap for visual mode for easier access.
--- Usage: Select text, then press <leader>c
--- The '<,'> part automatically passes the visual selection range to the command.
-map("v", "<leader>cc", ":'<,'>CamelCase<CR>", {
-  desc = "Convert selection to camelCase",
-})
+map('v', '<leader>cc', converter.convert_selection_to_camel, { desc = 'Convert to camelCase' })
+map('v', '<leader>cp', converter.convert_selection_to_pascal, { desc = 'Convert to PascalCase' })
+map('v', '<leader>cs', converter.convert_selection_to_snake, { desc = 'Convert to snake_case' })
+map('v', '<leader>ck', converter.convert_selection_to_kebab, { desc = 'Convert to kebab-case' })
+
+for prefix, fn in pairs({ y = actions.yank, p = actions.paste }) do
+  for keys, expr in pairs({
+    fap = "%:p",  -- Absolute Path
+    ffn = "%:t",  -- Full Filename (Tail)
+    frp = "%:h",  -- Root Path (Head)
+    fn = "%:t:r", -- Filename without extension
+  }) do
+    map({ 'n', 'v', 'x' }, '<leader>' .. prefix .. keys, create_nvim_keybind_callback(fn, expr))
+  end
+end

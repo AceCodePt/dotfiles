@@ -1,13 +1,12 @@
 local M = {}
 
 function M.yank(str)
-  vim.fn.setreg('"', str)
+  vim.fn.setreg('+', str)
+  vim.notify('Yanked: ' .. str)
 end
 
 function M.paste(str)
-  local current_mode = vim.fn.mode()
-  local prefix = current_mode == "n" and 'i' or 'c'
-  vim.api.nvim_feedkeys(prefix .. str, 'n', true)
+  vim.api.nvim_put({ str }, 'c', true, true)
 end
 
 return M

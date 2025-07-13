@@ -104,7 +104,7 @@ map('v', '<leader>cck', converter.convert_selection_to_kebab,
 
 for prefix, fn in pairs({ y = actions.yank, p = actions.paste }) do
   for keys, expr in pairs({
-    fap = "%:p",  -- Absolute Path
+    fp = "%:p",   -- Absolute Path
     ffn = "%:t",  -- Full Filename (Tail)
     frp = "%:h",  -- Root Path (Head)
     fn = "%:t:r", -- Filename without extension

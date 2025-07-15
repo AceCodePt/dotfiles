@@ -6,13 +6,38 @@ local converter = require('util.case_converter')
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- better up/down
+local function move_and_center(motion_char)
+  local count = vim.v.count
+  local keys_to_feed   -- This will hold the key sequence to send
+
+  if count > 0 then
+    -- If a count is given, form the string like "5j" or "3k"
+    keys_to_feed = count .. motion_char
+  else
+    -- If no count, form the string like "gj" or "gk"
+    keys_to_feed = "g" .. motion_char
+  end
+
+  -- Feed the generated key sequence (e.g., "gj" or "5j") to Neovim.
+  -- "nx": Apply in Normal and Visual modes.
+  -- true: Means these keys should NOT be remapped by other mappings.
+  --       This ensures 'j', 'k', 'gj', 'gk' perform their literal motions.
+  vim.api.nvim_feedkeys(keys_to_feed, "nx", true)
+
+  -- Now, explicitly call the built-in "zz" command to center the view.
+  -- "normal! zz" is used to ensure the original 'zz' behavior,
+  -- bypassing any potential user remappings of 'zz'.
+  vim.cmd("normal! zz")
+end
+
+-- Your existing keymaps (assuming 'map' is vim.keymap.set)
 map({ "n", "x" }, "j", function()
-  return vim.v.count > 0 and "j" or "gj"
-end, { expr = true })
+  move_and_center("j")
+end, { noremap = true, silent = true })
+
 map({ "n", "x" }, "k", function()
-  return vim.v.count > 0 and "k" or "gk"
-end, { expr = true })
+  move_and_center("k")
+end, { noremap = true, silent = true })
 
 -- Better J behavior
 map("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
@@ -39,13 +64,13 @@ map({ "n", "v" }, "x", '"_x')
 map({ "n", "v" }, "X", '"_X')
 
 
-map({ "n" }, "H", "<c-o>")
-map({ "v" }, "H", "^")
+map({ "n" }, "<M-h>", "<C-o>", { desc = "Jump back" })
+map({ "n" }, "<M-l>", "<C-i>", { desc = "Jump forward" })
+map({ "v", "n" }, "H", "^")
 map({ "n" }, "cH", "c^")
 map({ "n" }, "dH", "d^")
 
-map({ "n" }, "L", "<c-i>")
-map({ "v" }, "L", "$")
+map({ "v", "n" }, "L", "$")
 map({ "n" }, "cL", "c$")
 map({ "n" }, "dL", "d$")
 
@@ -70,19 +95,19 @@ map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
 
 -- Jumping is slightly better
 map("n", "gg", function()
-  vim.cmd("keepjumps normal! gg")
+  vim.cmd("keepjumps normal! ggzz")
 end, { desc = "Go to first line without adding to jumplist" })
 
 map("n", "G", function()
-  vim.cmd("keepjumps normal! G")
+  vim.cmd("keepjumps normal! Gzz")
 end, { desc = "Go to last line without adding to jumplist" })
 
 map("n", "{", function()
-  vim.cmd("keepjumps normal! {")
+  vim.cmd("keepjumps normal! {zz")
 end, { desc = "Go to next blank line without adding to jumplist" })
 
 map("n", "}", function()
-  vim.cmd("keepjumps normal! }")
+  vim.cmd("keepjumps normal! }zz")
 end, { desc = "Go to previous blank line without adding to jumplist" })
 
 

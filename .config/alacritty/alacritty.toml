@@ -37,7 +37,7 @@ white = "#d8d7d7"
 
 [shell]
 program = "/bin/zsh"
-args = [ "--login", "-c", "tmux new -A -s main" ]
+args = [ "--login", "-c", "tmux new -A -s main -c ~/dotfiles" ]
 
 [[keyboard.bindings]]
 key = "Return"

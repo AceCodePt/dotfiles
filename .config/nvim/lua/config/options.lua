@@ -1,5 +1,4 @@
 -- theme & transparency
-vim.cmd.colorscheme("unokai")
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
@@ -11,6 +10,7 @@ vim.opt.cursorline = true     -- Highlight current line
 vim.opt.wrap = true           -- Don't wrap lines
 vim.opt.scrolloff = 10        -- Keep 10 lines above/below cursor
 vim.opt.sidescrolloff = 8     -- Keep 8 columns left/right of cursor
+vim.opt.shellcmdflag = '-ic'
 
 -- Indentation
 vim.opt.tabstop = 2        -- Tab width

@@ -98,12 +98,6 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 fpath=(~/.stripe $fpath)
 autoload -Uz compinit && compinit -i
 
-# pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
 # pnpm end
 
 mcd() { mkdir -p "$@" 2> >(sed s/mkdir/mcd/ 1>&2) && cd "$_"; }

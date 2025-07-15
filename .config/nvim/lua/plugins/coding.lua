@@ -24,29 +24,49 @@ return {
         "<leader>f",
         function()
           local conform = require("conform")
-          conform.format({ async = true, lsp_format = "first" })
+          conform.format()
         end,
         { description = "Format the code" }
       }
     },
     opts = {
       formatters_by_ft = {
-        python = { "ruff" },
-        rust = { "rustfmt", lsp_format = "fallback" },
+        javascript = { "prettierd", "prettier" },
+        javascriptreact = { "prettierd", "prettier" },
+        typescript = { "prettierd", "prettier" },
+        typescriptreact = { "prettierd", "prettier" },
+        astro = { "prettierd", "prettier" },
+        rust = { "rustfmt" },
+        sql = {
+          "sqruff",
+        },
+        python = { "ruff" }
       },
       -- Set this to change the default values when calling conform.format()
       -- This will also affect the default values for format_on_save/format_after_save
       default_format_opts = {
+        stop_after_first = true,
         lsp_format = "fallback",
       },
-      formatters = {
-        black = {
-          command = "black",
-          args = { "--fast", "-" }, -- Common arguments for Black
-          stdin = true,
-        },
-      },
+
     },
+  },
+  {
+    "mfussenegger/nvim-lint",
+    config = function()
+      local lint = require("lint")
+      lint.linters_by_ft = {
+        sql = { 'sqruff' },
+      }
+      vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+        callback = function()
+          -- try_lint without arguments runs the linters defined in `linters_by_ft`
+          -- for the current filetype
+          lint.try_lint()
+        end,
+      })
+      return true
+    end
   },
   {
     "norcalli/nvim-colorizer.lua",

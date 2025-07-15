@@ -144,10 +144,6 @@ convert_to_webp() {
 
 
 
-if [ -z "$TMUX" ] && [ "$TERM" = "xterm-kitty" ]; then
-  tmux new -A -s main
-fi
-
 # fnm
 FNM_PATH="$HOME/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
@@ -161,3 +157,5 @@ alias ld='lazydocker'
 if [ -f '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc' ]; then . '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc'; fi
 
 export PATH="$PATH:/opt/mssql-tools18/bin"
+export EDITOR="nvim"
+export VISUAL="$EDITOR"

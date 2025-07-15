@@ -8,7 +8,7 @@ vim.g.maplocalleader = " "
 
 local function move_and_center(motion_char)
   local count = vim.v.count
-  local keys_to_feed   -- This will hold the key sequence to send
+  local keys_to_feed -- This will hold the key sequence to send
 
   if count > 0 then
     -- If a count is given, form the string like "5j" or "3k"
@@ -30,7 +30,6 @@ local function move_and_center(motion_char)
   vim.cmd("normal! zz")
 end
 
--- Your existing keymaps (assuming 'map' is vim.keymap.set)
 map({ "n", "x" }, "j", function()
   move_and_center("j")
 end, { noremap = true, silent = true })
@@ -41,6 +40,12 @@ end, { noremap = true, silent = true })
 
 -- Better J behavior
 map("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
+
+
+map('n', '<M-w>', ':tabclose<CR>', { desc = 'Close current tab' })
+map('n', '<M-t>', ':tabnew | term<CR>', { desc = 'Create new tab with terminal' })
+map('n', '<M-j>', ':tabprevious<CR>', { desc = 'Go to previous tab' })
+map('n', '<M-k>', ':tabnext<CR>', { desc = 'Go to next tab' })
 
 
 map("n", "<C-u>", "<C-u>zz")
@@ -85,10 +90,6 @@ map("v", ">", ">gv")
 -- Move selected line / block of text in visual mode
 map("v", "J", ":move '>+1<CR>gv-gv")
 map("v", "K", ":move '<-2<CR>gv-gv")
-
--- Buffer navigation
-map("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
-map("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
 
 -- Trick from the primagen
 map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
@@ -137,3 +138,5 @@ for prefix, fn in pairs({ y = actions.yank, p = actions.paste }) do
     map({ 'n', 'v', 'x' }, '<leader>' .. prefix .. keys, create_nvim_keybind_callback(fn, expr))
   end
 end
+
+map('t', '<Esc>', '<C-\\><C-N>', { desc = 'Escape terminal mode' })

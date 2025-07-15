@@ -49,6 +49,12 @@ map('n', '<M-k>', ':tabnext<CR>', { desc = 'Go to next tab' })
 map('n', '<M-J>', ':-tabmove<CR>', { desc = 'Move to previous tab' })
 map('n', '<M-K>', ':+tabmove<CR>', { desc = 'Go to next tab' })
 
+-- Mimic harpoon style
+map('n', '<M-a>', ':1tabnext<CR>', { desc = 'Go to first tab' })
+map('n', '<M-s>', ':2tabnext<CR>', { desc = 'Go to second tab' })
+map('n', '<M-d>', ':3tabnext<CR>', { desc = 'Go to third tab' })
+map('n', '<M-f>', ':4tabnext<CR>', { desc = 'Go to fourth tab' })
+
 
 map("n", "<C-u>", "<C-u>zz")
 map("n", "<C-d>", "<C-d>zz")

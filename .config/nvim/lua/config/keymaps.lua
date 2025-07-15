@@ -46,6 +46,8 @@ map('n', '<M-w>', ':tabclose<CR>', { desc = 'Close current tab' })
 map('n', '<M-t>', ':tabnew | term<CR>', { desc = 'Create new tab with terminal' })
 map('n', '<M-j>', ':tabprevious<CR>', { desc = 'Go to previous tab' })
 map('n', '<M-k>', ':tabnext<CR>', { desc = 'Go to next tab' })
+map('n', '<M-J>', ':-tabmove<CR>', { desc = 'Move to previous tab' })
+map('n', '<M-K>', ':+tabmove<CR>', { desc = 'Go to next tab' })
 
 
 map("n", "<C-u>", "<C-u>zz")

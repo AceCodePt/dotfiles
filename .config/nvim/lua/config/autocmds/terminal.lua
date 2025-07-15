@@ -29,17 +29,19 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   end,
 })
 
--- Disable line numbers in terminal
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = augroup,
-  callback = function()
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.opt_local.signcolumn = "no"
-    map("t", "<ESC>", [[<C-\><C-n>]])
-  end,
-})
-
+-- Helper function to open a terminal and execute a command
+local function open_and_run_terminal_command(command)
+  vim.cmd('tabnew')
+  -- Open the terminal in the new split and execute the command
+  -- The 'term://' prefix indicates a terminal buffer
+  -- The command after 'term://' will be executed immediately.
+  vim.cmd('terminal ' .. command)
+  -- Optional: Go back to normal mode after the command runs
+  -- This is often preferred if the command is short-lived.
+  -- If you want to interact with the terminal after, remove this line.
+  -- vim.cmd('startinsert') -- If you want to be in insert mode
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), 'n', false)
+end
 
 -- Made vim enter with some sick npm commands
 vim.api.nvim_create_autocmd("VimEnter", {
@@ -50,8 +52,16 @@ vim.api.nvim_create_autocmd("VimEnter", {
       return
     end
 
-    map("n", "<leader>ni", ":TermExec cmd='ni' go_back=0<cr>", { desc = "[I]nstall" })
-    map("n", "<leader>nd", ":TermExec cmd='nr dev' go_back=0<cr>", { desc = "[D]ev" })
-    map("n", "<leader>ns", ":TermExec cmd='nr start' go_back=0<cr>", { desc = "[S]tart" })
+    map('n', '<leader>nd', function()
+      open_and_run_terminal_command('nr dev')
+    end, { desc = "[N]PM [D]ev" })
+
+    map('n', '<leader>ns', function()
+      open_and_run_terminal_command('nr start')
+    end, { desc = "[N]PM [S]tart" })
+
+    map('n', '<leader>ni', function()
+      open_and_run_terminal_command('ni')
+    end, { desc = "[N]PM [I]nstall" })
   end,
 })

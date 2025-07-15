@@ -10,8 +10,10 @@ chsh -s $(which zsh)
 ```
 
 # Automatic Stow on commit
+In .git/hooks/post-commit
 ```bash
-sudo mv ./post-commit ./.git/hooks/post-commit
+#!/bin/sh
+exec stow --adopt -R .
 ```
 
 # basic stuff

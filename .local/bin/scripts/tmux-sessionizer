@@ -1,25 +1,75 @@
 #!/usr/bin/env bash
 
+# This script allows you to quickly switch between or create tmux sessions
+# based on project directories identified by common root markers.
+
+# --- Configuration ---
+# Define common project root markers
+PROJECT_ROOT_MARKERS=(
+    \.git              # Git repository
+    package\.json      # Node.js
+    go\.mod            # Go modules
+    Cargo\.toml        # Rust
+    pyproject\.toml    # Python (PEP 518)
+    setup\.py          # Python (traditional)
+    requirements\.txt  # requirements.txt (pip dependencies)
+    Pipfile            # Pipfile
+    \.venv             # Python virtual environment directory
+    Makefile           # General build system
+    Dockerfile         # Docker project
+)
+
+# Join the markers with a regex OR operator (|)
+MARKERS_REGEX=$(IFS='|'; echo "${PROJECT_ROOT_MARKERS[*]}")
+
+# Base directory(ies) to search for projects
+# IMPORTANT: Use literal paths, fd handles recursion.
+# Use $HOME for proper expansion, not ~ inside quotes for scripts.
+SEARCH_BASE_DIRS="$HOME/Desktop/companies" # Corrected this line
+
+# --- Project Selection Logic ---
+
+# If an argument is provided, use it as the selected path
 if [[ $# -eq 1 ]]; then
-    selected=$1
+    selected="$1"
 else
-    selected=$(find ~/Desktop/companies/** -mindepth 1 -maxdepth 1 -type d | fzf)
+    # Otherwise, use fd and fzf to select a project directory
+    selected=$(
+        fd \
+            --max-depth 4 \
+            "${MARKERS_REGEX}" \
+            "${SEARCH_BASE_DIRS}" \
+        | xargs -I {} dirname {} \
+        | sort -u \
+        | fzf
+    )
 fi
 
-if [[ -z $selected ]]; then
+# If no project was selected (fzf was cancelled), exit
+if [[ -z "$selected" ]]; then
     exit 0
 fi
 
+# Derive the session name from the selected directory's basename
+# Replace dots with underscores for valid tmux session names
 selected_name=$(basename "$selected" | tr . _)
+
+# --- Tmux Session Management ---
+
+# Check if a tmux server is running at all
 tmux_running=$(pgrep tmux)
 
-if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-    tmux new-session -s $selected_name -c $selected
+# If tmux is not running (no server), start a new session and attach to it
+if [[ -z "$TMUX" ]] && [[ -z "$tmux_running" ]]; then
+    tmux new-session -s "$selected_name" -c "$selected"
     exit 0
 fi
 
-if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c $selected
+# If tmux is running, but the session does not exist, create it as a detached session
+if ! tmux has-session -t="$selected_name" 2> /dev/null; then
+    tmux new-session -ds "$selected_name" -c "$selected"
 fi
 
-tmux switch-client -t $selected_name
+# Switch to the selected session
+# This works whether we just created it (detached) or it already existed
+tmux switch-client -t "$selected_name"

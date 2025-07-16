@@ -79,10 +79,6 @@ if [ -d "$HOME/Downloads/android-studio/bin" ] ; then
 fi
 
 
-alias pnpx='pnpm dlx'
-
-alias work="cd ~/Desktop/companies"
-
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
@@ -97,8 +93,6 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 # The next lines enables shell command completion for Stripe
 fpath=(~/.stripe $fpath)
 autoload -Uz compinit && compinit -i
-
-# pnpm end
 
 mcd() { mkdir -p "$@" 2> >(sed s/mkdir/mcd/ 1>&2) && cd "$_"; }
 
@@ -137,13 +131,6 @@ convert_to_webp() {
 }
 
 
-
-# fnm
-FNM_PATH="$HOME/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="$HOME/.local/share/fnm:$PATH"
-  eval "`fnm env`"
-fi
 
 alias ld='lazydocker'
 

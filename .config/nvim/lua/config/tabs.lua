@@ -44,18 +44,38 @@ end
 -- Set the global tabline option to use our function
 vim.opt.tabline = "%!v:lua.get_custom_tabline()"
 
-local function bypass_terminal(command)
-  return function()
-    vim.cmd(command)
-  end
-end
 
-map({ "n", "t" }, '<M-w>', bypass_terminal('tabclose'), { desc = 'Close current tab' })
-map({ "n", "t" }, '<M-t>', bypass_terminal('tabnew | term'), { desc = 'Create new tab with terminal' })
-map({ "n", "t" }, '<M-j>', bypass_terminal('tabprevious'), { desc = 'Go to previous tab' })
-map({ "n", "t" }, '<M-k>', bypass_terminal('tabnext'), { desc = 'Go to next tab' })
-map({ "n", "t" }, '<M-J>', bypass_terminal('-tabmove'), { desc = 'Move to previous tab' })
-map({ "n", "t" }, '<M-K>', bypass_terminal('+tabmove'), { desc = 'Go to next tab' })
+
+map({ "n", "t" }, '<M-w>', function()
+  -- Check if there is only one tab page open
+  if vim.fn.tabpagenr('$') == 1 then
+    vim.cmd.quit()
+  else
+    -- Otherwise, just close the current tab
+    vim.cmd.tabclose()
+  end
+end, { desc = 'Close current tab' })
+
+map({ "n", "t" }, '<M-t>', function()
+  vim.cmd.tabnew()
+  vim.cmd.term()
+end, { desc = 'Create new tab with terminal' })
+
+-- Go to the previous tab
+map({ "n", "t" }, '<M-j>', vim.cmd.tabprevious, { desc = 'Go to previous tab' })
+
+-- Go to the next tab
+map({ "n", "t" }, '<M-k>', vim.cmd.tabnext, { desc = 'Go to next tab' })
+
+-- Move the current tab one position to the left
+map({ "n", "t" }, '<M-J>', function()
+  vim.cmd.tabmove({ args = { '-1' } })
+end, { desc = 'Move tab left' })
+
+-- Move the current tab one position to the right
+map({ "n", "t" }, '<M-K>', function()
+  vim.cmd.tabmove({ args = { '+1' } })
+end, { desc = 'Move tab right' })
 
 -- Function to swap the positions of two Neovim tab pages
 --- @param tab1_num number: The current display number of the first tab page to swap (1-indexed).

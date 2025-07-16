@@ -1,4 +1,7 @@
 local map = require("util.map").map
+
+map('t', '<Esc>', '<C-\\><C-N>', { desc = 'Escape terminal mode' })
+
 local augroup = vim.api.nvim_create_augroup("UserTerminal", { clear = true })
 
 -- This is a better coping mechnizem for copy

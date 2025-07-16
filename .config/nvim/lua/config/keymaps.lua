@@ -119,13 +119,6 @@ end, { desc = "Go to previous blank line without adding to jumplist" })
 -- Quick config editing
 map("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
 
--- Copy Full File-Path
-map("n", "<leader>pa", function()
-  local path = vim.fn.expand("%:p")
-  vim.fn.setreg("+", path)
-  print("file:", path)
-end)
-
 map('v', '<leader>ccc', converter.convert_selection_to_camel, { desc = 'Convert to camelCase' })
 map('v', '<leader>ccp', converter.convert_selection_to_pascal, { desc = 'Convert to PascalCase' })
 map('v', '<leader>ccs', converter.convert_selection_to_snake, { desc = 'Convert to snake_case' })
@@ -143,11 +136,12 @@ for prefix, fn in pairs({ y = actions.yank, p = actions.paste }) do
   end
 end
 
-map('t', '<Esc>', '<C-\\><C-N>', { desc = 'Escape terminal mode' })
 
-map('v', '<leader>s', function()
-  -- Step 1: Get the selection
-
+map({ 'n', 'v' }, '<leader>v', function()
+  if vim.fn.mode() == 'n' then
+    -- If so, execute 'viw' to select the word under the cursor.
+    vim.cmd('normal! viw')
+  end
   local selection_text
   local current_mode = vim.fn.mode()
   local start_pos = vim.fn.getpos("v")
@@ -169,10 +163,11 @@ map('v', '<leader>s', function()
 
   local escaped_text = vim.fn.escape(selection_text, [[\/.*^$[]~\]])
   local final_pattern = escaped_text:gsub('\n', '\\n')
-  local cmd = "s/" .. final_pattern .. "//"
+  local cmd = "%s/" .. final_pattern .. "//g"
 
+  vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), "n")
   vim.fn.feedkeys(":" .. cmd, "t")
-  vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Left>', true, false, true), "t")
+  vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Left><Left>', true, false, true), "t")
 end, {
   desc = "Substitute selected text"
 })

@@ -14,12 +14,6 @@ vim.cmd([[let g:terraform_fmt_on_save=1]])
 vim.cmd([[let g:terraform_align=1]])
 
 
--- File: lua/utils/notify_filter.lua
--- Description:
--- A utility to globally filter vim.notify() messages based on a log level.
--- This overrides the default vim.notify and vim.log.set_level functions
--- to create a centralized notification management system.
-
 local M = {}
 
 -- =============================================================================

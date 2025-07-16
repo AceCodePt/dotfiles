@@ -1,8 +1,7 @@
-live_config_reload = true
-
 [window]
 decorations = "none"
 startup_mode = "Maximized"
+dynamic_padding = true
 
   [window.dimensions]
   columns = 80
@@ -35,7 +34,7 @@ magenta = "#af87d7"
 cyan = "#60d7af"
 white = "#d8d7d7"
 
-[shell]
+[terminal.shell]
 program = "/bin/zsh"
 args = [ "--login", "-c", "tmux new -A -s dotfiles -c ~/dotfiles" ]
 
@@ -298,3 +297,8 @@ chars = "\u001b[46;6u"
 key = "/"
 mods = "Control|Shift"
 chars = "\u001b[47;6u"
+
+[general]
+live_config_reload = true
+
+[terminal]

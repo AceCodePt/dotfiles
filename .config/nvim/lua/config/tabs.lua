@@ -1,13 +1,48 @@
 local map = require("util.map").map
 
 -- Tab display settings
-vim.opt.showtabline = 1 -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
-vim.opt.tabline = ''    -- Use default tabline (empty string uses built-in)
+vim.opt.showtabline = 2 -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
 
--- Transparent tabline appearance
-vim.cmd([[
-  hi TabLineFill guibg=NONE ctermfg=242 ctermbg=NONE
-]])
+function get_custom_tabline()
+  local tabs = {}
+  local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
+
+  local tab_handles = vim.api.nvim_list_tabpages()
+  local current_tab_handle = vim.api.nvim_get_current_tabpage()
+
+  for i, tab_handle in ipairs(tab_handles) do
+    local is_current_tab = (tab_handle == current_tab_handle)
+    -- CORRECTED: Use standard highlight logic
+    local tab_highlight_name = is_current_tab and "TabLine" or "TabLineSel"
+    local tab_highlight_str = "%#" .. tab_highlight_name .. "#"
+
+    local win_handle = vim.api.nvim_tabpage_get_win(tab_handle)
+    local bufnr = vim.api.nvim_win_get_buf(win_handle)
+
+    local buf_name = vim.api.nvim_buf_get_name(bufnr)
+    local file_name = vim.fn.fnamemodify(buf_name, ":t")
+    local filetype = vim.bo[bufnr].filetype
+
+    if file_name == "" then
+      file_name = "[No Name]"
+    end
+
+    local tab_label = tab_highlight_str .. " %" .. i .. "T"
+
+    if devicons_ok then
+      local icon, icon_hl_group = devicons.get_icon(file_name, filetype, { default = true })
+      tab_label = tab_label .. " %#" .. icon_hl_group .. "#" .. icon .. tab_highlight_str
+    end
+
+    tab_label = tab_label .. " " .. file_name .. "  "
+    table.insert(tabs, tab_label)
+  end
+
+  return table.concat(tabs, "") .. "%#TabLineSel#%T"
+end
+
+-- Set the global tabline option to use our function
+vim.opt.tabline = "%!v:lua.get_custom_tabline()"
 
 local function bypass_terminal(command)
   return function()

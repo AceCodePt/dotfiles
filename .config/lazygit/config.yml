@@ -1,1 +1,9 @@
 quitOnTopLevelReturn: true
+keybinding:
+  branches:
+    createPullRequest: <disabled>
+customCommands:
+  - key: 'o'
+    command: "gh pr create --base '{{.CheckedOutBranch.Name}}' --head '{{.SelectedLocalBranch.Name}}'  --web"
+    context: 'localBranches'
+    description: 'Create PR (non-interactive): current -> selected'

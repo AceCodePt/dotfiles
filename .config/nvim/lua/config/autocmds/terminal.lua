@@ -65,3 +65,32 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end, { desc = "[N]PM [I]nstall" })
   end,
 })
+
+-- Create the autocommand
+vim.api.nvim_create_autocmd({ "TermEnter", "TermLeave", "TabLeave" }, {
+  group = augroup,
+  pattern = "term://*",
+  desc = "Sync tab CWD when entering or leaving a terminal",
+  callback = function()
+    -- This method doesn't work on Windows
+    if vim.fn.has("win32") == 1 then
+      return
+    end
+
+    -- Get the process ID (PID) of the shell in the terminal
+    local pid = vim.fn.jobpid(vim.b.terminal_job_id)
+    if not pid or pid == 0 then
+      return
+    end
+
+    -- Find the terminal's CWD by reading the /proc filesystem symlink
+    local proc_path = string.format("/proc/%d/cwd", pid)
+    local term_dir = vim.fn.trim(vim.fn.system("readlink " .. vim.fn.shellescape(proc_path)))
+
+    -- If we found a valid directory and it's different from the current tab's CWD...
+    if term_dir and term_dir ~= "" and term_dir ~= vim.fn.getcwd(-1) then
+      -- ...change the tab's directory to match it
+      vim.cmd("tcd " .. vim.fn.fnameescape(term_dir))
+    end
+  end,
+})

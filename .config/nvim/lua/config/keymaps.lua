@@ -6,60 +6,61 @@ local converter = require('util.case_converter')
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+---@param motion_char string
 local function move_and_center(motion_char)
-  local count = vim.v.count
-  local keys_to_feed -- This will hold the key sequence to send
+  return function()
+    local count = vim.v.count
+    local keys_to_feed
 
-  if count > 0 then
-    -- If a count is given, form the string like "5j" or "3k"
-    keys_to_feed = count .. motion_char
-  else
-    -- If no count, form the string like "gj" or "gk"
-    keys_to_feed = "g" .. motion_char
+    if motion_char:find("<", 1, true) then
+      -- For special keys like <C-u>, <C-d>, etc.
+      -- If a count is present, prepend it.
+      if count > 0 then
+        keys_to_feed = count .. motion_char
+      else
+        keys_to_feed = motion_char
+      end
+    else
+      -- For single characters like 'j' or 'k'
+      if count > 0 then
+        keys_to_feed = count .. motion_char
+      else
+        -- If no count, and it's 'j' or 'k', we can consider 'gj'/'gk'
+        -- or just the literal 'j'/'k'. Your original logic for 'g' prefix
+        -- seems to indicate a desire for line-based movement rather than display-line.
+        -- If you want 'gj'/'gk' for no-count 'j'/'k', use:
+        -- keys_to_feed = "g" .. motion_char
+        -- Otherwise, for standard 'j'/'k' without count, it's just the motion_char:
+        keys_to_feed = motion_char
+      end
+    end
+
+    -- Feed the generated key sequence.
+    -- It's crucial to use vim.api.nvim_replace_termcodes for ALL `keys_to_feed`
+    -- as it handles both "<C-u>" and "j" (and counts like "5j") correctly.
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys_to_feed, true, true, true), "nx", true)
+
+    -- Now, explicitly call the built-in "zz" command to center the view.
+    vim.cmd("normal! zz")
   end
-
-  -- Feed the generated key sequence (e.g., "gj" or "5j") to Neovim.
-  -- "nx": Apply in Normal and Visual modes.
-  -- true: Means these keys should NOT be remapped by other mappings.
-  --       This ensures 'j', 'k', 'gj', 'gk' perform their literal motions.
-  vim.api.nvim_feedkeys(keys_to_feed, "nx", true)
-
-  -- Now, explicitly call the built-in "zz" command to center the view.
-  -- "normal! zz" is used to ensure the original 'zz' behavior,
-  -- bypassing any potential user remappings of 'zz'.
-  vim.cmd("normal! zz")
 end
 
-map({ "n", "x" }, "j", function()
-  move_and_center("j")
-end, { noremap = true, silent = true })
+-- Assuming 'map' is your wrapper for vim.keymap.set
+-- local map = function(modes, lhs, rhs, opts)
+--   vim.keymap.set(modes, lhs, rhs, opts)
+-- end
 
-map({ "n", "x" }, "k", function()
-  move_and_center("k")
-end, { noremap = true, silent = true })
+map({ "n", "x" }, "j", move_and_center("j"))
+map({ "n", "x" }, "k", move_and_center("k"))
+map({ "n" }, "<C-u>", move_and_center("<C-u>"))
+map({ "n" }, "<C-d>", move_and_center("<C-d>"))
+map({ "n" }, "<C-b>", move_and_center("<C-b>"))
+map({ "n" }, "<C-f>", move_and_center("<C-f>"))
+map({ "n" }, "<M-h>", move_and_center("<C-o>"), { desc = "Jump back" })
+map({ "n" }, "<M-l>", move_and_center("<C-i>"), { desc = "Jump forward" })
 
 -- Better J behavior
 map("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
-
-
-map('n', '<M-w>', ':tabclose<CR>', { desc = 'Close current tab' })
-map('n', '<M-t>', ':tabnew | term<CR>', { desc = 'Create new tab with terminal' })
-map('n', '<M-j>', ':tabprevious<CR>', { desc = 'Go to previous tab' })
-map('n', '<M-k>', ':tabnext<CR>', { desc = 'Go to next tab' })
-map('n', '<M-J>', ':-tabmove<CR>', { desc = 'Move to previous tab' })
-map('n', '<M-K>', ':+tabmove<CR>', { desc = 'Go to next tab' })
-
--- Mimic harpoon style
-map('n', '<M-a>', ':1tabnext<CR>', { desc = 'Go to first tab' })
-map('n', '<M-s>', ':2tabnext<CR>', { desc = 'Go to second tab' })
-map('n', '<M-d>', ':3tabnext<CR>', { desc = 'Go to third tab' })
-map('n', '<M-f>', ':4tabnext<CR>', { desc = 'Go to fourth tab' })
-
-
-map("n", "<C-u>", "<C-u>zz")
-map("n", "<C-d>", "<C-d>zz")
-map("n", "<C-b>", "<C-b>zz")
-map("n", "<C-f>", "<C-f>zz")
 
 map({ "n", "v" }, "y", '"+y')
 map({ "n", "v" }, "Y", '"+y$')
@@ -77,8 +78,6 @@ map({ "n", "v" }, "x", '"_x')
 map({ "n", "v" }, "X", '"_X')
 
 
-map({ "n" }, "<M-h>", "<C-o>", { desc = "Jump back" })
-map({ "n" }, "<M-l>", "<C-i>", { desc = "Jump forward" })
 map({ "v", "n" }, "H", "^")
 map({ "n" }, "cH", "c^")
 map({ "n" }, "dH", "d^")

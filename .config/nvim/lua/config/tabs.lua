@@ -9,12 +9,18 @@ vim.cmd([[
   hi TabLineFill guibg=NONE ctermfg=242 ctermbg=NONE
 ]])
 
-map('n', '<M-w>', ':tabclose<CR>', { desc = 'Close current tab' })
-map('n', '<M-t>', ':tabnew | term<CR>', { desc = 'Create new tab with terminal' })
-map('n', '<M-j>', ':tabprevious<CR>', { desc = 'Go to previous tab' })
-map('n', '<M-k>', ':tabnext<CR>', { desc = 'Go to next tab' })
-map('n', '<M-J>', ':-tabmove<CR>', { desc = 'Move to previous tab' })
-map('n', '<M-K>', ':+tabmove<CR>', { desc = 'Go to next tab' })
+local function bypass_terminal(command)
+  return function()
+    vim.cmd(command)
+  end
+end
+
+map({ "n", "t" }, '<M-w>', bypass_terminal('tabclose'), { desc = 'Close current tab' })
+map({ "n", "t" }, '<M-t>', bypass_terminal('tabnew | term'), { desc = 'Create new tab with terminal' })
+map({ "n", "t" }, '<M-j>', bypass_terminal('tabprevious'), { desc = 'Go to previous tab' })
+map({ "n", "t" }, '<M-k>', bypass_terminal('tabnext'), { desc = 'Go to next tab' })
+map({ "n", "t" }, '<M-J>', bypass_terminal('-tabmove'), { desc = 'Move to previous tab' })
+map({ "n", "t" }, '<M-K>', bypass_terminal('+tabmove'), { desc = 'Go to next tab' })
 
 -- Function to swap the positions of two Neovim tab pages
 --- @param tab1_num number: The current display number of the first tab page to swap (1-indexed).
@@ -51,7 +57,7 @@ end
 -- Mimic harpoon style
 local tab_keys = { 'u', 'i', 'o', 'p' }
 for index, value in ipairs(tab_keys) do
-  map('n', '<M-' .. value:lower() .. '>', ':' .. index .. 'tabnext<CR>', { desc = 'Go to ' .. index .. ' tab' })
+  map({ "n", "t" }, '<M-' .. value:lower() .. '>', ':' .. index .. 'tabnext<CR>', { desc = 'Go to ' .. index .. ' tab' })
 
-  map('n', '<M-' .. value:upper() .. '>', swap_tab_positions(index), { desc = 'Move to ' .. index .. ' tab' })
+  map({ "n", "t" }, '<M-' .. value:upper() .. '>', swap_tab_positions(index), { desc = 'Move to ' .. index .. ' tab' })
 end

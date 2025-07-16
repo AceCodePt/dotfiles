@@ -98,9 +98,6 @@ map("v", ">", ">gv")
 map("v", "J", ":move '>+1<CR>gv-gv")
 map("v", "K", ":move '<-2<CR>gv-gv")
 
--- Trick from the primagen
-map("n", "<leader>v", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
-
 -- Jumping is slightly better
 map("n", "gg", function()
   vim.cmd("keepjumps normal! ggzz")
@@ -147,3 +144,35 @@ for prefix, fn in pairs({ y = actions.yank, p = actions.paste }) do
 end
 
 map('t', '<Esc>', '<C-\\><C-N>', { desc = 'Escape terminal mode' })
+
+map('v', '<leader>s', function()
+  -- Step 1: Get the selection
+
+  local selection_text
+  local current_mode = vim.fn.mode()
+  local start_pos = vim.fn.getpos("v")
+  local end_pos = vim.fn.getpos(".")
+
+  if current_mode == 'V' and start_pos[2] == end_pos[2] then
+    selection_text = vim.api.nvim_get_current_line()
+  else
+    local selection_lines = vim.fn.getregion(start_pos, end_pos, { type = current_mode })
+    if not selection_lines or #selection_lines == 0 then
+      return
+    end
+    selection_text = table.concat(selection_lines, '\n')
+  end
+
+  if selection_text == '' then
+    return
+  end
+
+  local escaped_text = vim.fn.escape(selection_text, [[\/.*^$[]~\]])
+  local final_pattern = escaped_text:gsub('\n', '\\n')
+  local cmd = "s/" .. final_pattern .. "//"
+
+  vim.fn.feedkeys(":" .. cmd, "t")
+  vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Left>', true, false, true), "t")
+end, {
+  desc = "Substitute selected text"
+})

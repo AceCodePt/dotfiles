@@ -1,0 +1,32 @@
+#!/bin/zsh
+
+# This script finds and kills a process listening on a specified port.
+
+# Function to display usage information
+usage() {
+  echo "Usage: $0 <port_number>"
+  echo "Example: $0 8080"
+  exit 1
+}
+
+# Check if a port number is provided as an argument
+if [ -z "$1" ]; then
+  echo "Error: No port number provided."
+  usage
+fi
+
+PORT="$1"
+
+# Find the Process ID (PID) listening on the specified port
+# `lsof -t -i :<port>` lists only the PID of the process using the port.
+PID=$(lsof -t -i :$PORT)
+
+# Check if a PID was found
+if [ -z "$PID" ]; then
+  echo "No process found listening on port $PORT."
+else
+  kill -9 "$PID"
+fi
+
+
+

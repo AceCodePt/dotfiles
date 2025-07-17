@@ -73,6 +73,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 export PATH=$PATH:$(go env GOPATH)/bin
 export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.local/bin/scripts"
 
 if [ -d "$HOME/Downloads/android-studio/bin" ] ; then
     export PATH="$PATH:$HOME/Downloads/android-studio/bin"

@@ -45,11 +45,6 @@ local function move_and_center(motion_char)
   end
 end
 
--- Assuming 'map' is your wrapper for vim.keymap.set
--- local map = function(modes, lhs, rhs, opts)
---   vim.keymap.set(modes, lhs, rhs, opts)
--- end
-
 map({ "n", "x" }, "j", move_and_center("j"))
 map({ "n", "x" }, "k", move_and_center("k"))
 map({ "n" }, "<C-u>", move_and_center("<C-u>"))
@@ -136,7 +131,6 @@ for prefix, fn in pairs({ y = actions.yank, p = actions.paste }) do
   end
 end
 
-
 map({ 'n', 'v' }, '<leader>v', function()
   if vim.fn.mode() == 'n' then
     -- If so, execute 'viw' to select the word under the cursor.
@@ -170,4 +164,33 @@ map({ 'n', 'v' }, '<leader>v', function()
   vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Left><Left>', true, false, true), "t")
 end, {
   desc = "Substitute selected text"
+})
+
+
+local function show_nvim_messages()
+  vim.api.nvim_command('enew')
+  vim.api.nvim_set_option_value('buftype', 'nofile', { scope = 'local' })
+  vim.api.nvim_set_option_value('bufhidden', 'wipe', { scope = 'local' })
+
+  vim.cmd('file Messages')
+
+  local result = vim.api.nvim_exec2('messages', { output = true })
+  local all_messages_string = result.output or ""
+
+  local messages_table = vim.split(all_messages_string, '\n', { plain = true, trimempty = true })
+
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, messages_table)
+  vim.cmd('setlocal nomodifiable')
+  vim.cmd('setlocal noswapfile')
+
+  vim.api.nvim_feedkeys('gg', 't', false)
+
+  vim.keymap.set('n', '<esc>', "<C-o>", {
+    buffer = vim.api.nvim_get_current_buf(),
+    desc = "Quit messages buffer"
+  })
+end
+
+map('n', '<leader>sm', show_nvim_messages, {
+  desc = "Show Neovim Messages"
 })

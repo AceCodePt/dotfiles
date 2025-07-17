@@ -168,7 +168,9 @@ nunmap T
 nmap <A-h> <backInHistory>
 nmap <A-l> <forwardInHistory>
 nmap <A-j> <previousTab>
+nmap <A-J> <moveTabBackward>
 nmap <A-k> <nextTab>
+nmap <A-K> <moveTabForward>
 nmap <A-t> <:tabnew><toExploreMode>
 nmap <A-T> <reopenTab>
 nmap <A-w> <:close>

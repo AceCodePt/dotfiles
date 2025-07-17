@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-# This script finds and kills a process listening on a specified port.
+# This script finds and kills all processes listening on a specified port.
 
 # Function to display usage information
 usage() {
@@ -17,16 +17,33 @@ fi
 
 PORT="$1"
 
-# Find the Process ID (PID) listening on the specified port
-# `lsof -t -i :<port>` lists only the PID of the process using the port.
-PID=$(lsof -t -i :$PORT)
+# Find all Process IDs (PIDs) listening on the specified port
+# `lsof -t -i :<port>` lists only the PIDs of the processes using the port.
+PIDS=$(lsof -t -i :$PORT 2>/dev/null)
 
-# Check if a PID was found
-if [ -z "$PID" ]; then
+# Check if any PIDs were found
+if [ -z "$PIDS" ]; then
   echo "No process found listening on port $PORT."
 else
-  kill -9 "$PID"
+  # Use a while loop to read each PID from the output and kill it.
+  echo "Found processes listening on port $PORT. Killing them now..."
+  
+  # The '<<< "$PIDS"' is zsh's way of piping a variable into a command.
+  # The loop reads each line (PID) into the 'pid' variable.
+  while read -r pid; do
+    echo "Killing process with PID: $pid"
+    # Using 'kill' without -9 is a good practice to allow graceful shutdown.
+    # We add '-9' as a fallback if the user wants it, but a gentle kill is better.
+    kill "$pid" 2>/dev/null
+    if [ $? -ne 0 ]; then
+      echo "Failed to kill PID $pid. Trying with 'kill -9'."
+      kill -9 "$pid" 2>/dev/null
+      if [ $? -eq 0 ]; then
+        echo "Successfully killed PID $pid with 'kill -9'."
+      else
+        echo "Failed to kill PID $pid even with 'kill -9'."
+      fi
+    fi
+  done <<< "$PIDS"
+  echo "Done."
 fi
-
-
-

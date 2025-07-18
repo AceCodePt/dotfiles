@@ -50,10 +50,11 @@ map({ "n", "t" }, '<M-w>', function()
   -- Check if there is only one tab page open
   if vim.fn.tabpagenr('$') == 1 then
     vim.cmd.quit()
-  else
-    -- Otherwise, just close the current tab
-    vim.cmd.tabclose()
+    return
   end
+  local current_buf = vim.api.nvim_get_current_buf()
+  vim.cmd.tabclose()
+  vim.cmd('silent! bd! ' .. current_buf)
 end, { desc = 'Close current tab' })
 
 map({ "n", "t" }, '<M-t>', function()

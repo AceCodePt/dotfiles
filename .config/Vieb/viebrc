@@ -174,6 +174,10 @@ nmap <A-K> <moveTabForward>
 nmap <A-t> <:tabnew><toExploreMode>
 nmap <A-T> <reopenTab>
 nmap <A-w> <:close>
+map <A-u> <:buffer 0>
+map <A-i> <:buffer 1>
+map <A-o> <:buffer 2>
+map <A-p> <:buffer 3>
 nmap gp <:screencopy>
 
 " Commands

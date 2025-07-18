@@ -81,7 +81,8 @@ vim.api.nvim_create_autocmd({ "TermEnter", "TermLeave", "TabLeave" }, {
     local job_id = vim.b.terminal_job_id
     if not job_id then return end
 
-    local running = vim.fn.jobwait({ job_id }, 0)[0] == -1
+    local jobwait = vim.fn.jobwait({ job_id }, 0)
+    local running = jobwait[1] == -1
     if not running then
       return
     end

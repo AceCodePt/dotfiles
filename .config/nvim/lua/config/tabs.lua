@@ -52,7 +52,17 @@ map({ "n", "t" }, '<M-w>', function()
     vim.cmd.quit()
     return
   end
+
   local current_buf = vim.api.nvim_get_current_buf()
+
+  -- Check if the current buffer is a terminal
+  local buf_type = vim.api.nvim_get_option_value('buftype', { buf = current_buf })
+
+  if buf_type == 'terminal' then
+    -- Send a signal to the terminal to terminate the process
+    vim.api.nvim_chan_send(vim.b[current_buf].terminal_job_id, vim.keycode '<C-c>')
+  end
+
   vim.cmd.tabclose()
   vim.cmd('silent! bd! ' .. current_buf)
 end, { desc = 'Close current tab' })

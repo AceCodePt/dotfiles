@@ -1,11 +1,10 @@
 local map = require("util.map").map
 
 local config = {
-  -- Base directory to search for projects.
   search_dir = vim.fn.expand("$HOME/Desktop/companies"),
 
-  -- Markers used by 'fd' to identify a project root.
-  root_markers = {
+  -- Simple filenames. Dots will be escaped automatically.
+  file_markers = {
     ".git",
     "package.json",
     "go.mod",
@@ -18,15 +17,51 @@ local config = {
     "Makefile",
     "Dockerfile",
   },
+
+  -- Markers that are already valid regular expressions.
+  regex_markers = {
+    ".*\\.git", -- Matches any folder ending in .git
+  },
 }
 
 
 local function show_sessionizer()
+  local function derive_session_name(project_path)
+    local parent_dir = vim.fn.fnamemodify(project_path, ":h")
+    local project_name = vim.fn.fnamemodify(project_path, ":t")
+
+    -- Check if the parent directory contains a bare git repository
+    -- We look for any directory ending in '.git'
+    local bare_repo_path = vim.fn.glob(parent_dir .. "/*.git", true, true)
+
+    if #bare_repo_path > 0 then
+      -- If a bare repo is found, use the parent directory name as the base
+      local parent_name = vim.fn.fnamemodify(parent_dir, ":t")
+      return parent_name .. "/" .. project_name
+    else
+      -- Otherwise, use the original project name
+      return project_name
+    end
+  end
   -- 1. Find all project directories using 'fd'
   -- -----------------------------------------------------------------------
-  local markers_regex = table.concat(config.root_markers, "|")
+  -- Correct implementation
+  local all_patterns = {}
+
+  for _, marker in ipairs(config.file_markers) do
+    -- The extra parentheses select only the first return value from gsub
+    table.insert(all_patterns, (marker:gsub("%.", "\\.")))
+  end
+
+  for _, marker in ipairs(config.regex_markers) do
+    table.insert(all_patterns, marker)
+  end
+
+  -- Join all patterns into the final regex string
+  local markers_regex = table.concat(all_patterns, "|")
+  -- Your 'find_cmd' using markers_regex...
   local find_cmd = string.format(
-    "fd --max-depth 4 --type f '^(%s)$' %s | xargs -I {} dirname {} | sort -u",
+    "fd --max-depth 4 -H '^(%s)$' %s -X dirname | sort -u",
     markers_regex,
     vim.fn.shellescape(config.search_dir)
   )
@@ -72,7 +107,7 @@ local function show_sessionizer()
         local selected_path = selection.value
 
         -- Derive session name from directory name (e.g., my.project -> my_project)
-        local session_name = vim.fn.fnamemodify(selected_path, ":t"):gsub("[. ]", "_")
+        local session_name = derive_session_name(selected_path)
 
         -- Check if tmux session already exists
         vim.fn.system("tmux has-session -t=" .. vim.fn.shellescape(session_name))
@@ -96,10 +131,10 @@ local function show_sessionizer()
 end
 
 
-vim.keymap.set("n", "<M-f>", show_sessionizer, { desc = "Open tmux sessionizer" })
+map({ 'n', 't' }, "<M-f>", show_sessionizer, { desc = "Open tmux sessionizer" })
 
 
-map('n', '<M-g>', function()
+map({ 'n', 't' }, '<M-g>', function()
   -- Get the current working directory from Neovim
   local cwd = vim.fn.getcwd()
 
@@ -145,4 +180,4 @@ local function switch_tmux_session()
   }):find()
 end
 
-map('n', '<M-s>', switch_tmux_session, { desc = 'Switch tmux session' })
+map({ 'n', 't' }, '<M-s>', switch_tmux_session, { desc = 'Switch tmux session' })

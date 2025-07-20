@@ -59,8 +59,15 @@ map({ "n", "t" }, '<M-w>', function()
   local buf_type = vim.api.nvim_get_option_value('buftype', { buf = current_buf })
 
   if buf_type == 'terminal' then
-    -- Send a signal to the terminal to terminate the process
-    vim.api.nvim_chan_send(vim.b[current_buf].terminal_job_id, vim.keycode '<C-c>')
+    local job_id = vim.b.terminal_job_id
+    if not job_id then return end
+
+    local jobwait = vim.fn.jobwait({ job_id }, 0)
+    local running = jobwait[1] == -1
+    if running then
+      -- Send a signal to the terminal to terminate the process
+      vim.api.nvim_chan_send(job_id, vim.keycode '<C-c>')
+    end
   end
 
   vim.cmd.tabclose()
@@ -123,7 +130,9 @@ end
 -- Mimic harpoon style
 local tab_keys = { 'u', 'i', 'o', 'p' }
 for index, value in ipairs(tab_keys) do
-  map({ "n", "t" }, '<M-' .. value:lower() .. '>', ':' .. index .. 'tabnext<CR>', { desc = 'Go to ' .. index .. ' tab' })
+  map({ "n", "t" }, '<M-' .. value:lower() .. '>', function()
+    vim.cmd(index .. 'tabnext')
+  end, { desc = 'Go to ' .. index .. ' tab' })
 
   map({ "n", "t" }, '<M-' .. value:upper() .. '>', swap_tab_positions(index), { desc = 'Move to ' .. index .. ' tab' })
 end

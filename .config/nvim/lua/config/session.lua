@@ -1,7 +1,7 @@
 local map = require("util.map").map
 
 local config = {
-  search_dir = vim.fn.expand("$HOME/Desktop/companies"),
+  search_dir = vim.fn.expand("$HOME/**/companies"),
 
   -- Simple filenames. Dots will be escaped automatically.
   file_markers = {

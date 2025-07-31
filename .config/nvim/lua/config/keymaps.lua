@@ -93,6 +93,8 @@ map("v", ">", ">gv")
 map("v", "J", ":move '>+1<CR>gv-gv")
 map("v", "K", ":move '<-2<CR>gv-gv")
 
+map({"t","i"}, "jk","<Esc>")
+
 -- Jumping is slightly better
 map("n", "gg", function()
   vim.cmd("keepjumps normal! ggzz")

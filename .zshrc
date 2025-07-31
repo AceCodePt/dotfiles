@@ -28,6 +28,30 @@ addToPathFront() {
     fi
 }
 
+# Function to create a new git worktree and branch
+# Converts '/' to '-' for the directory name
+gwadd() {
+  if [ -z "$1" ]; then
+    echo "Error: Please provide a branch name."
+    return 1
+  fi
+
+  local BRANCH_NAME="$1"
+  local DIR_NAME=${1//\//-}
+  local DIR_PATH="../$DIR_NAME"
+
+  # Check if the branch already exists
+  if git rev-parse --verify --quiet "$BRANCH_NAME" >/dev/null; then
+    # Branch EXISTS, so check it out
+    echo "Branch '$BRANCH_NAME' already exists. Creating worktree..."
+    git worktree add "$DIR_PATH" "$BRANCH_NAME"
+  else
+    # Branch does NOT exist, so create it with -b
+    echo "Branch '$BRANCH_NAME' not found. Creating new branch and worktree..."
+    git worktree add "$DIR_PATH" -b "$BRANCH_NAME"
+  fi
+}
+
 source ~/.zsh_profile
 source ~/.zsh_alias
 

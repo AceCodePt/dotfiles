@@ -59,8 +59,15 @@ map({ "n", "t" }, '<M-w>', function()
   local buf_type = vim.api.nvim_get_option_value('buftype', { buf = current_buf })
 
   if buf_type == 'terminal' then
-    -- Send a signal to the terminal to terminate the process
-    vim.api.nvim_chan_send(vim.b[current_buf].terminal_job_id, vim.keycode '<C-c>')
+    local job_id = vim.b.terminal_job_id
+    if not job_id then return end
+
+    local jobwait = vim.fn.jobwait({ job_id }, 0)
+    local running = jobwait[1] == -1
+    if running then
+      -- Send a signal to the terminal to terminate the process
+      vim.api.nvim_chan_send(job_id, vim.keycode '<C-c>')
+    end
   end
 
   vim.cmd.tabclose()
@@ -123,7 +130,94 @@ end
 -- Mimic harpoon style
 local tab_keys = { 'u', 'i', 'o', 'p' }
 for index, value in ipairs(tab_keys) do
-  map({ "n", "t" }, '<M-' .. value:lower() .. '>', ':' .. index .. 'tabnext<CR>', { desc = 'Go to ' .. index .. ' tab' })
+  map({ "n", "t" }, '<M-' .. value:lower() .. '>', function()
+    vim.cmd(index .. 'tabnext')
+  end, { desc = 'Go to ' .. index .. ' tab' })
 
   map({ "n", "t" }, '<M-' .. value:upper() .. '>', swap_tab_positions(index), { desc = 'Move to ' .. index .. ' tab' })
 end
+
+local function go_to_definition_smart()
+  -- Get the URI of the current buffer once at the start
+  local current_uri = vim.uri_from_bufnr(0)
+
+  local params = {
+    textDocument = { uri = current_uri },
+    position = {
+      line = vim.api.nvim_win_get_cursor(0)[1] - 1,
+      character = vim.api.nvim_win_get_cursor(0)[2],
+    },
+  }
+
+  local result, err = vim.lsp.buf_request_sync(0, "textDocument/definition", params, 1000)
+
+  if err or not result or vim.tbl_isempty(result) then
+    vim.notify("Definition not found", vim.log.levels.WARN)
+    return
+  end
+
+  local locations
+  if result.result then
+    locations = result.result
+  else
+    local _, inner_payload = next(result)
+    if inner_payload and inner_payload.result then
+      locations = inner_payload.result
+    end
+  end
+
+  if not locations or vim.tbl_isempty(locations) then
+    vim.notify("Definition not found (could not parse locations)", vim.log.levels.WARN)
+    return
+  end
+
+  local location = vim.islist(locations) and locations[1] or locations
+
+  if not location then
+    vim.notify("Definition not found (invalid location data)", vim.log.levels.WARN)
+    return
+  end
+
+  local target_uri, position
+  if location.targetUri then
+    target_uri = location.targetUri
+    position = location.targetSelectionRange.start
+  else
+    target_uri = location.uri
+    position = location.range.start
+  end
+
+  if not position then
+      vim.notify("Definition not found (could not parse position)", vim.log.levels.WARN)
+      return
+  end
+
+  -- NEW: Iterate through all open tabs to find a match
+  for _, tab_handle in ipairs(vim.api.nvim_list_tabpages()) do
+    local win_handle = vim.api.nvim_tabpage_get_win(tab_handle)
+    local buf_handle = vim.api.nvim_win_get_buf(win_handle)
+
+    -- Ensure the buffer is valid and has a file name before getting its URI
+    if vim.api.nvim_buf_is_loaded(buf_handle) and vim.api.nvim_buf_get_name(buf_handle) ~= "" then
+      local tab_uri = vim.uri_from_bufnr(buf_handle)
+
+      if tab_uri == target_uri then
+        -- If a match is found, switch to that tab and jump
+        vim.api.nvim_set_current_tabpage(tab_handle)
+        vim.api.nvim_win_set_cursor(0, { position.line + 1, position.character })
+        return -- We're done, so exit the function
+      end
+    end
+  end
+
+  -- If the loop completes without finding a match, create a new tab
+  local file_path = vim.uri_to_fname(target_uri)
+  vim.cmd("tabedit " .. vim.fn.fnameescape(file_path))
+  vim.api.nvim_win_set_cursor(0, { position.line + 1, position.character })
+end
+
+vim.keymap.set('n', 'gD', go_to_definition_smart, {
+  noremap = true,
+  silent = true,
+  desc = "Go to definition (reuses tab if open)"
+})

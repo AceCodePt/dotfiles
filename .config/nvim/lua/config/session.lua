@@ -5,7 +5,6 @@ local config = {
 
   -- Simple filenames. Dots will be escaped automatically.
   file_markers = {
-    ".git",
     "package.json",
     "go.mod",
     "Cargo.toml",

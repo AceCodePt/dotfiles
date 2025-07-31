@@ -189,6 +189,10 @@ local function show_nvim_messages()
     buffer = vim.api.nvim_get_current_buf(),
     desc = "Quit messages buffer"
   })
+  vim.keymap.set({ 'n', "v" }, 'q', "<C-o>", {
+    buffer = vim.api.nvim_get_current_buf(),
+    desc = "Quit messages buffer"
+  })
 end
 
 map('n', '<leader>sm', show_nvim_messages, {

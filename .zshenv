@@ -1,4 +1,4 @@
-. "$HOME/.cargo/env"
+# . "$HOME/.cargo/env"
 
 # fnm
 FNM_PATH="$HOME/.local/share/fnm"

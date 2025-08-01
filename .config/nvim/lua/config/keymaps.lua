@@ -135,7 +135,6 @@ end
 
 map({ 'n', 'v' }, '<leader>v', function()
   if vim.fn.mode() == 'n' then
-    -- If so, execute 'viw' to select the word under the cursor.
     vim.cmd('normal! viw')
   end
   local selection_text
@@ -185,13 +184,13 @@ local function show_nvim_messages()
   vim.cmd('setlocal nomodifiable')
   vim.cmd('setlocal noswapfile')
 
-  vim.api.nvim_feedkeys('gg', 't', false)
+  vim.api.nvim_feedkeys('G', 't', false)
 
-  vim.keymap.set('n', '<esc>', "<C-o>", {
+  map('n', '<esc>', "<C-o>", {
     buffer = vim.api.nvim_get_current_buf(),
     desc = "Quit messages buffer"
   })
-  vim.keymap.set({ 'n', "v" }, 'q', "<C-o>", {
+  map({ 'n', "v" }, 'q', "<C-o>", {
     buffer = vim.api.nvim_get_current_buf(),
     desc = "Quit messages buffer"
   })

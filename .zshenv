@@ -1,3 +1,10 @@
+
+export EDITOR="nvim"
+export VISUAL="$EDITOR"
+
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.local/bin/scripts"
+
 # . "$HOME/.cargo/env"
 
 # fnm

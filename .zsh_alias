@@ -1,3 +1,6 @@
 alias python='python3'
 alias pip='pip3'
 alias vim='nvim'
+alias work="cd ~/companies"
+alias ld='lazydocker'
+alias lg='lazygit'

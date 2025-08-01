@@ -52,6 +52,17 @@ gwadd() {
   fi
 }
 
+function nvim() {
+  # Check if the NVIM environment variable is set
+  if [ -n "$NVIM" ]; then
+    # If inside nvim, use nvr to open files in the current instance
+    # The --remote-wait flag makes the command wait until the buffer is closed
+    nvr --remote-wait "$@"
+  else # If not inside nvim, just run the regular nvim command
+    command nvim "$@"
+  fi
+}
+
 source ~/.zsh_profile
 source ~/.zsh_alias
 
@@ -61,11 +72,6 @@ promptinit
 prompt adam1
 
 setopt histignorealldups sharehistory
-
-# Use emacs keybindings even if our EDITOR is set to vi
-bindkey -e
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
 
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000
@@ -96,8 +102,6 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 
 export PATH=$PATH:$(go env GOPATH)/bin
-export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:$HOME/.local/bin/scripts"
 
 if [ -d "$HOME/Downloads/android-studio/bin" ] ; then
     export PATH="$PATH:$HOME/Downloads/android-studio/bin"
@@ -157,11 +161,8 @@ convert_to_webp() {
 
 
 
-alias ld='lazydocker'
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc' ]; then . '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc'; fi
 
 export PATH="$PATH:/opt/mssql-tools18/bin"
-export EDITOR="nvim"
-export VISUAL="$EDITOR"

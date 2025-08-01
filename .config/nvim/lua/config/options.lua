@@ -6,10 +6,10 @@ vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
 -- Basic settings
 vim.opt.number = false         -- Line numbers
 vim.opt.relativenumber = false -- Relative line numbers
-vim.opt.cursorline = true     -- Highlight current line
-vim.opt.wrap = true           -- Don't wrap lines
-vim.opt.scrolloff = 10        -- Keep 10 lines above/below cursor
-vim.opt.sidescrolloff = 8     -- Keep 8 columns left/right of cursor
+vim.opt.cursorline = true      -- Highlight current line
+vim.opt.wrap = true            -- Don't wrap lines
+vim.opt.scrolloff = 10         -- Keep 10 lines above/below cursor
+vim.opt.sidescrolloff = 8      -- Keep 8 columns left/right of cursor
 vim.opt.shellcmdflag = '-ic'
 
 -- Indentation

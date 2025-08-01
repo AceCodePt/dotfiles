@@ -53,34 +53,20 @@ local function show_sessionizer()
     table.insert(all_patterns, marker)
   end
   local markers_regex = table.concat(all_patterns, "|")
-  local find_cmd = string.format(
-    "fd --max-depth 4 -H '^(%s)$' %s -X dirname | sort -u",
-    markers_regex,
-    vim.fn.shellescape(config.search_dir)
-  )
-  local projects = vim.fn.systemlist(find_cmd)
-
-  if vim.v.shell_error ~= 0 or #projects == 0 then
-    vim.notify("No projects found in " .. config.search_dir, vim.log.levels.WARN)
-    return
-  end
 
   -- 2. Use tmux display-popup to run fzf
   -- -----------------------------------------------------------------------
   local temp_file = vim.fn.tempname()
-  local fzf_input = table.concat(projects, "\n")
-
-  -- This is the shell command that will run inside the popup.
-  -- It pipes the project list to fzf and writes the selection to a temp file.
-  local fzf_shell_command = string.format(
-    "printf %s | fzf --bind 'alt-j:down,alt-k:up' > %s",
-    vim.fn.shellescape(fzf_input),
+  local find_cmd = string.format(
+    "fd --max-depth 4 -H '^(%s)$' %s -X dirname | sort -u | fzf --bind 'alt-j:down,alt-k:up' > %s",
+    markers_regex,
+    vim.fn.shellescape(config.search_dir),
     vim.fn.shellescape(temp_file)
   )
 
   -- This is the final command Neovim will execute.
   -- -E makes the popup block until the command inside it finishes.
-  local tmux_popup_command = "tmux display-popup -w100% -h100% -E " .. vim.fn.shellescape(fzf_shell_command)
+  local tmux_popup_command = "tmux display-popup -w100% -h100% -E " .. vim.fn.shellescape(find_cmd)
 
   vim.fn.system(tmux_popup_command)
 
@@ -129,28 +115,16 @@ end, { desc = 'Open lazygit in tmux popup' })
 
 
 local function switch_tmux_session()
-  -- 1. Get a list of currently running tmux sessions
-  local sessions = vim.fn.systemlist("tmux list-sessions -F '#{session_name}'")
-
-  -- Exit if there are no sessions to switch to
-  if #sessions == 0 then
-    vim.notify("No running tmux sessions.", vim.log.levels.INFO)
-    return
-  end
-
-  -- 2. Use tmux display-popup to run fzf
+  -- Use a temporary file to capture fzf's output
   local temp_file = vim.fn.tempname()
-  local fzf_input = table.concat(sessions, "\n")
 
-  -- The shell command that will run inside the popup
-  local fzf_shell_command = string.format(
-    "printf '%%b' %s | fzf --bind 'alt-j:down,alt-k:up' > %s",
-    vim.fn.shellescape(fzf_input),
-    vim.fn.shellescape(temp_file)
-  )
+  -- This single command now gets the session list and pipes it directly into fzf
+  local fzf_shell_command =
+      "tmux list-sessions -F '#{session_name}' | fzf --bind 'alt-j:down,alt-k:up' > " ..
+      vim.fn.shellescape(temp_file)
 
-  -- The final command Neovim will execute
-  local tmux_popup_command = "tmux display-popup -w50% -h50% -E " .. vim.fn.shellescape(fzf_shell_command)
+  -- The tmux popup command remains the same
+  local tmux_popup_command = "tmux display-popup -w100% -h100% -E " .. vim.fn.shellescape(fzf_shell_command)
 
   vim.fn.system(tmux_popup_command)
 

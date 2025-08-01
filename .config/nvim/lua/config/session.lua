@@ -124,7 +124,7 @@ local function switch_tmux_session()
       vim.fn.shellescape(temp_file)
 
   -- The tmux popup command remains the same
-  local tmux_popup_command = "tmux display-popup -w100% -h100% -E " .. vim.fn.shellescape(fzf_shell_command)
+  local tmux_popup_command = "tmux display-popup -w50% -h50% -E " .. vim.fn.shellescape(fzf_shell_command)
 
   vim.fn.system(tmux_popup_command)
 

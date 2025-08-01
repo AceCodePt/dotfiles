@@ -1,7 +1,7 @@
 local map = require("util.map").map
 
 local config = {
-  search_dir = vim.fn.expand("$HOME/**/companies"),
+  search_dir = vim.fn.expand("$HOME/companies"),
 
   -- Simple filenames. Dots will be escaped automatically.
   file_markers = {
@@ -23,42 +23,36 @@ local config = {
   },
 }
 
+-- Corrected session name derivation from the previous analysis
+local function derive_session_name(project_path)
+  local parent_dir = vim.fn.fnamemodify(project_path, ":h")
+  local project_name = vim.fn.fnamemodify(project_path, ":t")
+
+  local bare_repo_path = vim.fn.glob(parent_dir .. "/*.git", true, true)
+
+  local raw_name
+  if #bare_repo_path > 0 then
+    local parent_name = vim.fn.fnamemodify(parent_dir, ":t")
+    raw_name = parent_name .. "/" .. project_name
+  else
+    raw_name = project_name
+  end
+
+  -- Sanitize the name for tmux: replace invalid characters (like '.') with an underscore
+  return vim.fn.substitute(raw_name, '[\\.:]', '_', 'g')
+end
 
 local function show_sessionizer()
-  local function derive_session_name(project_path)
-    local parent_dir = vim.fn.fnamemodify(project_path, ":h")
-    local project_name = vim.fn.fnamemodify(project_path, ":t")
-
-    -- Check if the parent directory contains a bare git repository
-    -- We look for any directory ending in '.git'
-    local bare_repo_path = vim.fn.glob(parent_dir .. "/*.git", true, true)
-
-    if #bare_repo_path > 0 then
-      -- If a bare repo is found, use the parent directory name as the base
-      local parent_name = vim.fn.fnamemodify(parent_dir, ":t")
-      return parent_name .. "/" .. project_name
-    else
-      -- Otherwise, use the original project name
-      return project_name
-    end
-  end
-  -- 1. Find all project directories using 'fd'
+  -- 1. Find all project directories (logic is unchanged)
   -- -----------------------------------------------------------------------
-  -- Correct implementation
   local all_patterns = {}
-
   for _, marker in ipairs(config.file_markers) do
-    -- The extra parentheses select only the first return value from gsub
     table.insert(all_patterns, (marker:gsub("%.", "\\.")))
   end
-
   for _, marker in ipairs(config.regex_markers) do
     table.insert(all_patterns, marker)
   end
-
-  -- Join all patterns into the final regex string
   local markers_regex = table.concat(all_patterns, "|")
-  -- Your 'find_cmd' using markers_regex...
   local find_cmd = string.format(
     "fd --max-depth 4 -H '^(%s)$' %s -X dirname | sort -u",
     markers_regex,
@@ -71,67 +65,55 @@ local function show_sessionizer()
     return
   end
 
-
-  -- 2. Create the Telescope picker
+  -- 2. Use tmux display-popup to run fzf
   -- -----------------------------------------------------------------------
-  local actions = require("telescope.actions")
-  local pickers = require("telescope.pickers")
-  local finders = require("telescope.finders")
-  local previewers = require("telescope.previewers")
-  local sorters = require("telescope.sorters")
+  local temp_file = vim.fn.tempname()
+  local fzf_input = table.concat(projects, "\n")
 
-  pickers.new({}, {
-    prompt_title = "tmux Sessionizer",
-    finder = finders.new_table({ results = projects }),
-    sorter = sorters.get_generic_fuzzy_sorter(),
+  -- This is the shell command that will run inside the popup.
+  -- It pipes the project list to fzf and writes the selection to a temp file.
+  local fzf_shell_command = string.format(
+    "printf %s | fzf --bind 'alt-j:down,alt-k:up' > %s",
+    vim.fn.shellescape(fzf_input),
+    vim.fn.shellescape(temp_file)
+  )
 
-    -- Bonus: Add a previewer that lists the files in the selected directory
-    previewer = previewers.new_buffer_previewer({
-      title = "Directory Contents",
-      get_buffer_by_name = function(_, entry) return entry.value end,
-      define_preview = function(self, entry, _)
-        local cmd = "ls -F " .. vim.fn.shellescape(entry.value)
-        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, vim.fn.systemlist(cmd))
-      end,
-    }),
+  -- This is the final command Neovim will execute.
+  -- -E makes the popup block until the command inside it finishes.
+  local tmux_popup_command = "tmux display-popup -w100% -h100% -E " .. vim.fn.shellescape(fzf_shell_command)
 
-    -- 3. Define the action to run on selection
-    -- ---------------------------------------------------------------------
-    attach_mappings = function(prompt_bufnr, _)
-      actions.select_default:replace(function()
-        local selection = require("telescope.actions.state").get_selected_entry()
-        actions.close(prompt_bufnr)
+  vim.fn.system(tmux_popup_command)
 
-        if not selection then return end
-        local selected_path = selection.value
+  -- Read the selection from the temp file. The `or ""` handles empty files.
+  local selected_path = vim.trim((vim.fn.readfile(temp_file)[1] or ""))
 
-        -- Derive session name from directory name (e.g., my.project -> my_project)
-        local session_name = derive_session_name(selected_path)
+  -- Clean up the temporary file
+  vim.loop.fs_unlink(temp_file)
 
-        -- Check if tmux session already exists
-        vim.fn.system("tmux has-session -t=" .. vim.fn.shellescape(session_name))
+  -- If the user cancelled fzf, the file will be empty.
+  if selected_path == "" then
+    vim.notify("No project selected.", vim.log.levels.INFO)
+    return
+  end
 
-        -- If not, create it as a new, detached session
-        if vim.v.shell_error ~= 0 then
-          local create_cmd = string.format(
-            "tmux new-session -ds %s -c %s",
-            vim.fn.shellescape(session_name),
-            vim.fn.shellescape(selected_path)
-          )
-          vim.fn.system(create_cmd)
-        end
+  -- 3. Run tmux logic with the selected path (logic is unchanged)
+  -- ---------------------------------------------------------------------
+  local session_name = derive_session_name(selected_path)
+  vim.fn.system("tmux has-session -t=" .. vim.fn.shellescape(session_name))
 
-        -- Switch the tmux client to the target session
-        vim.fn.system("tmux switch-client -t=" .. vim.fn.shellescape(session_name))
-      end)
-      return true
-    end,
-  }):find()
+  if vim.v.shell_error ~= 0 then
+    local create_cmd = string.format(
+      "tmux new-session -ds %s -c %s",
+      vim.fn.shellescape(session_name),
+      vim.fn.shellescape(selected_path)
+    )
+    vim.fn.system(create_cmd)
+  end
+
+  vim.fn.system("tmux switch-client -t=" .. vim.fn.shellescape(session_name))
 end
 
-
 map({ 'n', 't' }, "<M-f>", show_sessionizer, { desc = "Open tmux sessionizer" })
-
 
 map({ 'n', 't' }, '<M-g>', function()
   -- Get the current working directory from Neovim
@@ -146,37 +128,46 @@ map({ 'n', 't' }, '<M-g>', function()
 end, { desc = 'Open lazygit in tmux popup' })
 
 
--- Requires telescope.nvim
 local function switch_tmux_session()
-  -- 1. Get a list of all tmux session names
-  local sessions = vim.fn.systemlist('tmux list-sessions -F "#S"')
-  if vim.v.shell_error ~= 0 or #sessions == 0 then
-    vim.notify("No active tmux sessions found.", vim.log.levels.WARN, { title = 'tmux' })
+  -- 1. Get a list of currently running tmux sessions
+  local sessions = vim.fn.systemlist("tmux list-sessions -F '#{session_name}'")
+
+  -- Exit if there are no sessions to switch to
+  if #sessions == 0 then
+    vim.notify("No running tmux sessions.", vim.log.levels.INFO)
     return
   end
 
-  -- 2. Use Telescope to create a fuzzy-findable list
-  require('telescope.pickers').new({}, {
-    prompt_title = 'tmux Sessions',
-    finder = require('telescope.finders').new_table({
-      results = sessions,
-    }),
-    sorter = require('telescope.config').values.generic_sorter({}),
-    attach_mappings = function(prompt_bufnr)
-      -- 3. Define what happens when you press Enter on a selection
-      require('telescope.actions').select_default:replace(function()
-        local selection = require('telescope.actions.state').get_selected_entry()
-        require('telescope.actions').close(prompt_bufnr)
+  -- 2. Use tmux display-popup to run fzf
+  local temp_file = vim.fn.tempname()
+  local fzf_input = table.concat(sessions, "\n")
 
-        if selection then
-          -- 4. Build and run the command to switch to the selected session
-          local session_name = selection.value
-          vim.fn.system('tmux switch-client -t ' .. vim.fn.shellescape(session_name))
-        end
-      end)
-      return true
-    end,
-  }):find()
+  -- The shell command that will run inside the popup
+  local fzf_shell_command = string.format(
+    "printf '%%b' %s | fzf --bind 'alt-j:down,alt-k:up' > %s",
+    vim.fn.shellescape(fzf_input),
+    vim.fn.shellescape(temp_file)
+  )
+
+  -- The final command Neovim will execute
+  local tmux_popup_command = "tmux display-popup -w50% -h50% -E " .. vim.fn.shellescape(fzf_shell_command)
+
+  vim.fn.system(tmux_popup_command)
+
+  -- Read the selection from the temp file
+  local selected_session = vim.trim((vim.fn.readfile(temp_file)[1] or ""))
+
+  -- Clean up the temporary file
+  vim.loop.fs_unlink(temp_file)
+
+  -- If the user cancelled fzf, exit
+  if selected_session == "" then
+    vim.notify("No session selected.", vim.log.levels.INFO)
+    return
+  end
+
+  -- 3. Switch to the selected tmux session
+  vim.fn.system("tmux switch-client -t=" .. vim.fn.shellescape(selected_session))
 end
 
 map({ 'n', 't' }, '<M-s>', switch_tmux_session, { desc = 'Switch tmux session' })

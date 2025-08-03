@@ -1,8 +1,32 @@
 local map = require("util.map").map
 
-map('t', '<Esc>', '<C-\\><C-N>', { desc = 'Escape terminal mode' })
+map('t', '<Esc>',
+  function()
+    if vim.g.zsh_keymap == 'vicmd' then
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), 'n', false)
+    else
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, true, true), 'n', false)
+    end
+  end
+  , { desc = 'Escape terminal mode' })
 
 local augroup = vim.api.nvim_create_augroup("UserTerminal", { clear = true })
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = '/tmp/zsh*.zsh',
+  desc = 'Create special keymap for Zsh command editing',
+  callback = function(args)
+    map('n', '<Esc>', function()
+      local edit_buf = vim.api.nvim_get_current_buf()
+      vim.cmd.write()
+      vim.cmd('buffer #')
+      vim.api.nvim_buf_delete(edit_buf, { force = false })
+    end, {
+      buffer = args.buf,
+      desc = 'Close Zsh edit buffer'
+    })
+  end,
+})
 
 -- This is a better coping mechnizem for copy
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {

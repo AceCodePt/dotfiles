@@ -63,6 +63,17 @@ function nvim() {
   fi
 }
 
+function _update_neovim_zsh_mode () {
+  nvr -c "lua vim.g.zsh_keymap = '$KEYMAP'" &! &>/dev/null
+}
+
+zle -N zle-keymap-select _update_neovim_zsh_mode
+zle -N zle-line-init _update_neovim_zsh_mode
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'vv' edit-command-line
+
 source ~/.zsh_profile
 source ~/.zsh_alias
 

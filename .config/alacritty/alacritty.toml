@@ -298,8 +298,3 @@ chars = "\u001b[46;6u"
 key = "/"
 mods = "Control|Shift"
 chars = "\u001b[47;6u"
-
-[general]
-live_config_reload = true
-
-[terminal]

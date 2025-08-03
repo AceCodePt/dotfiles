@@ -63,12 +63,26 @@ function nvim() {
   fi
 }
 
-function _update_neovim_zsh_mode () {
+
+
+function _zsh_vi_mode_change () {
   nvr -c "lua vim.g.zsh_keymap = '$KEYMAP'" &! &>/dev/null
+
+  if [[ ${KEYMAP} == vicmd ]] ||
+       [[ $1 = 'block' ]]; then
+      echo -ne '\e[1 q'
+
+    elif [[ ${KEYMAP} == main ]] ||
+         [[ ${KEYMAP} == viins ]] ||
+         [[ ${KEYMAP} = '' ]] ||
+         [[ $1 = 'beam' ]]; then
+      echo -ne '\e[5 q'
+    fi
 }
 
-zle -N zle-keymap-select _update_neovim_zsh_mode
-zle -N zle-line-init _update_neovim_zsh_mode
+export KEYTIMEOUT=1
+zle -N zle-keymap-select _zsh_vi_mode_change
+zle -N zle-line-init _zsh_vi_mode_change
 
 autoload -Uz edit-command-line
 zle -N edit-command-line

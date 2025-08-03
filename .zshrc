@@ -53,10 +53,7 @@ gwadd() {
 }
 
 function nvim() {
-  # Check if the NVIM environment variable is set
   if [ -n "$NVIM" ]; then
-    # If inside nvim, use nvr to open files in the current instance
-    # The --remote-wait flag makes the command wait until the buffer is closed
     nvr --remote-wait "$@"
   else # If not inside nvim, just run the regular nvim command
     command nvim "$@"

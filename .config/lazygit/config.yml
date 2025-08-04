@@ -1,6 +1,6 @@
 quitOnTopLevelReturn: true
 os:
-  editCommand: "nvim"
+  edit: "nvim"
 keybinding:
   branches:
     createPullRequest: <disabled>

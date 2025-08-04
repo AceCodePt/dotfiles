@@ -63,18 +63,20 @@ function nvim() {
 
 
 function _zsh_vi_mode_change () {
-  nvr -c "lua vim.g.zsh_keymap = '$KEYMAP'" &! &>/dev/null
+  if [ -n "$NVIM" ]; then
+    nvr -c "lua vim.g.zsh_keymap = '$KEYMAP'" &! &>/dev/null
+  fi
 
   if [[ ${KEYMAP} == vicmd ]] ||
        [[ $1 = 'block' ]]; then
       echo -ne '\e[1 q'
 
-    elif [[ ${KEYMAP} == main ]] ||
-         [[ ${KEYMAP} == viins ]] ||
-         [[ ${KEYMAP} = '' ]] ||
-         [[ $1 = 'beam' ]]; then
-      echo -ne '\e[5 q'
-    fi
+  elif [[ ${KEYMAP} == main ]] ||
+       [[ ${KEYMAP} == viins ]] ||
+       [[ ${KEYMAP} = '' ]] ||
+       [[ $1 = 'beam' ]]; then
+    echo -ne '\e[5 q'
+  fi
 }
 
 export KEYTIMEOUT=1

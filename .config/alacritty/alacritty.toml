@@ -34,7 +34,7 @@ magenta = "#af87d7"
 cyan = "#60d7af"
 white = "#d8d7d7"
 
-[shell]
+[terminal.shell]
 program = "/bin/zsh"
 args = [ "--login", "-c", "exec tmux new -A -s dotfiles -c ~/dotfiles" ]
 

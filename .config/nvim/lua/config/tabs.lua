@@ -1,5 +1,9 @@
 local map = require("util.map").map
 
+
+-- Mimic harpoon style
+local tab_keys = { 'y', 'u', 'i', 'o', 'p', '[' }
+
 -- Tab display settings
 vim.opt.showtabline = 2 -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
 
@@ -127,8 +131,6 @@ local function swap_tab_positions(tab1_num)
   end
 end
 
--- Mimic harpoon style
-local tab_keys = { 'u', 'i', 'o', 'p' }
 for index, value in ipairs(tab_keys) do
   map({ "n", "t" }, '<M-' .. value:lower() .. '>', function()
     vim.cmd(index .. 'tabnext')
@@ -188,8 +190,8 @@ local function go_to_definition_smart()
   end
 
   if not position then
-      vim.notify("Definition not found (could not parse position)", vim.log.levels.WARN)
-      return
+    vim.notify("Definition not found (could not parse position)", vim.log.levels.WARN)
+    return
   end
 
   -- NEW: Iterate through all open tabs to find a match

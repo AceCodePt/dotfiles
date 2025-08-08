@@ -38,7 +38,6 @@ set favicons=session
 set followchars=alpha
 set followelement=
 set followelement+=url
-set followelement+=onclick
 set followelement+=inputs-insert
 set followelement+=inputs-click
 set followelement+=media

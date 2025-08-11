@@ -145,3 +145,9 @@ local function switch_tmux_session()
 end
 
 map({ 'n', 't' }, '<M-s>', switch_tmux_session, { desc = 'Switch tmux session' })
+
+
+
+-- local fzf_tmux = require("util.fzf_tmux")
+-- vim.keymap.set("n", "<leader>sf", fzf_tmux.find_files, { desc = "[S]earch [F]iles (fzf)" })
+-- vim.keymap.set("n", "<leader>sg", fzf_tmux.live_grep, { desc = "[S]earch by [G]rep (fzf)" })

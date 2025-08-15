@@ -22,3 +22,4 @@ case ":$PATH:" in
     ;;
 esac
 
+export PATH="$HOME/development/flutter/bin:$PATH"

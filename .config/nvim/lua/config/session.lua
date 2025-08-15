@@ -43,7 +43,7 @@ local function derive_session_name(project_path)
 end
 
 local function show_sessionizer()
-  -- 1. Find all project directories (logic is unchanged)
+  -- 1. Find all project directories
   -- -----------------------------------------------------------------------
   local all_patterns = {}
   for _, marker in ipairs(config.file_markers) do

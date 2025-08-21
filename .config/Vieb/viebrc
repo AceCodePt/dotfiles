@@ -146,7 +146,7 @@ set timeoutlen=2000
 set translateapi=auto
 set translatekey=
 set translatelang=en-us
-set translateurl=https://api-free.deepl.com/v2/
+set translateurl=https://api-free.deepl.com/
 set nouserscript
 set nouserstyle
 set vimcommand=gvim
@@ -167,8 +167,12 @@ nunmap T
 nmap <A-h> <backInHistory>
 nmap <A-l> <forwardInHistory>
 nmap <A-j> <previousTab>
+emap <A-j> <nextSuggestion>
+cmap <A-j> <nextSuggestion>
 nmap <A-J> <moveTabBackward>
 nmap <A-k> <nextTab>
+emap <A-k> <prevSuggestion>
+cmap <A-k> <prevSuggestion>
 nmap <A-K> <moveTabForward>
 nmap <A-t> <:tabnew><toExploreMode>
 nmap <A-T> <reopenTab>

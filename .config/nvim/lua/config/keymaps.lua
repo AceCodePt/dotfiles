@@ -197,3 +197,7 @@ end
 map('n', '<leader>sm', show_nvim_messages, {
   desc = "Show Neovim Messages"
 })
+
+
+vim.keymap.set('i', '<M-j>', '<C-n>', { desc = 'Go to next completion item' })
+vim.keymap.set('i', '<M-k>', '<C-p>', { desc = 'Go to previous completion item' })

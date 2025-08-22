@@ -5,3 +5,4 @@ require("config.session")
 require("config.tabs")
 
 require("plugins.theme")
+require("plugins.treesitter")

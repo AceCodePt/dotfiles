@@ -6,3 +6,5 @@ require("config.tabs")
 
 require("plugins.theme")
 require("plugins.treesitter")
+require("plugins.lsp")
+require("plugins.coding")

@@ -17,7 +17,7 @@ function get_custom_tabline()
   for i, tab_handle in ipairs(tab_handles) do
     local is_current_tab = (tab_handle == current_tab_handle)
     -- CORRECTED: Use standard highlight logic
-    local tab_highlight_name = is_current_tab and "TabLine" or "TabLineSel"
+    local tab_highlight_name = is_current_tab and "TabLineSel" or "TabLine"
     local tab_highlight_str = "%#" .. tab_highlight_name .. "#"
 
     local win_handle = vim.api.nvim_tabpage_get_win(tab_handle)
@@ -42,7 +42,7 @@ function get_custom_tabline()
     table.insert(tabs, tab_label)
   end
 
-  return table.concat(tabs, "") .. "%#TabLineSel#%T"
+  return table.concat(tabs, "") .. "%#TabLine#%T"
 end
 
 -- Set the global tabline option to use our function

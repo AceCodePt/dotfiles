@@ -20,7 +20,17 @@ for _, lang in pairs(supported_languages) do
     end
   end
 
+
+
   -- Set up the LSP server
   vim.lsp.config(lang.lsp.name, opts)
   vim.lsp.enable(lang.lsp.name)
 end
+
+vim.diagnostic.config({
+  virtual_lines = false,
+  virtual_text = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})

@@ -52,8 +52,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
     , opts)
     map('n', '<leader>q', vim.diagnostic.setloclist, opts)
-    map({ 'n', 'v' }, '<leader>yd', function()
+    map({ 'n', 'v' }, 'yd', function()
       copyDiagnosticUnderCursor(event.buf)
     end, opts)
+    map({ 'n', 'v' }, '<leader>f', function()
+      local ok, conform = pcall(require, "conform")
+      if ok then
+        conform.format()
+      end
+    end)
   end,
 })

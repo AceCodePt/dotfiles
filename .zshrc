@@ -79,6 +79,9 @@ function _zsh_vi_mode_change () {
   fi
 }
 
+
+export PATH="$PATH:$HOME/.local/bin"
+
 export KEYTIMEOUT=1
 zle -N zle-keymap-select _zsh_vi_mode_change
 zle -N zle-line-init _zsh_vi_mode_change

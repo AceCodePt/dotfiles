@@ -27,7 +27,16 @@ end
 -- LSP keymaps
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(event)
+    local client = assert(vim.lsp.get_client_by_id(event.data.client_id))
     local opts = { buffer = event.buf }
+
+
+    if client:supports_method('textDocument/completion') then
+      -- Optional: trigger autocompletion on EVERY keypress. May be slow!
+      local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+      client.server_capabilities.completionProvider.triggerCharacters = chars
+      vim.lsp.completion.enable(true, client.id, event.buf, { autotrigger = true })
+    end
 
     -- Navigation
     map('n', 'gd', vim.lsp.buf.definition, opts)
@@ -41,6 +50,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Code actions
     map('n', '<leader>ca', vim.lsp.buf.code_action, opts)
     map('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    map('i', '<M-space>', vim.lsp.completion.get, opts)
 
     -- Diagnostics
     map('n', 'gn', function()

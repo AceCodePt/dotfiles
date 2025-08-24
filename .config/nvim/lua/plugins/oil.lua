@@ -1,5 +1,5 @@
-local map = require("util.map")
-vim.pack.add("stevearc/oil.nvim")
+local map = require("util.map").map
+vim.pack.add({ { src = "https://github.com/stevearc/oil.nvim" } })
 
 local oil = require("oil")
 map("n", "<leader>e", "<CMD>Oil --float<CR>", { desc = "Open Oil" })

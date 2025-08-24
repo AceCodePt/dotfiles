@@ -58,7 +58,7 @@ local function show_sessionizer()
   -- -----------------------------------------------------------------------
   local temp_file = vim.fn.tempname()
   local find_cmd = string.format(
-    "fd --max-depth 4 -H '^(%s)$' %s -X dirname | sort -u | fzf --bind 'alt-j:down,alt-k:up' > %s",
+    "fd --max-depth 4 -H -I '^(%s)$' %s -X dirname | sort -u | fzf --bind 'alt-j:down,alt-k:up' > %s",
     markers_regex,
     vim.fn.shellescape(config.search_dir),
     vim.fn.shellescape(temp_file)

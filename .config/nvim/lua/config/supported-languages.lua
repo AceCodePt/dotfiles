@@ -2,12 +2,12 @@ local M = {
   {
     fts = "lua",
     lsp = { name = "lua_ls" },
-    ts = "lua",
+    treesitter = "lua",
     formatters = {}
   },
   {
     fts = "python",
-    ts = "python",
+    treesitter = "python",
     formatters = { "ruff" },
     lsp = {
       name = "pyright",
@@ -29,7 +29,7 @@ local M = {
   },
   {
     fts = "astro",
-    ts = "astro",
+    treesitter = "astro",
     formatters = { "prettierd", "prettier" },
     lsp = {
       name = "astro",
@@ -56,31 +56,31 @@ local M = {
   {
     fts = "css",
     lsp = { name = "cssls" },
-    ts = "css",
+    treesitter = "css",
     formatters = {}
   },
   {
     fts = "html",
     lsp = { name = "html" },
-    ts = "html",
+    treesitter = "html",
     formatters = {}
   },
   {
     fts = "go",
     lsp = { name = "gopls" },
-    ts = "go",
+    treesitter = "go",
     formatters = {}
   },
   {
     fts = "rust",
     lsp = { name = "rust_analyzer" },
-    ts = "rust",
+    treesitter = "rust",
     formatters = { "rustfmt" }
   },
   {
     fts = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
     lsp = { name = "ts_ls" },
-    ts = {
+    treesitter = {
       "javascript",
       "typescript",
       "tsx"
@@ -90,7 +90,7 @@ local M = {
   {
     fts = "json",
     lsp = { name = "jsonls" },
-    ts = "json",
+    treesitter = "json",
     formatters = {},
     config = {
       settings = {
@@ -133,19 +133,19 @@ local M = {
   {
     fts = "yaml",
     lsp = { name = "yamlls" },
-    ts = "yaml",
+    treesitter = "yaml",
     formatters = {}
   },
   {
     fts = "markdown",
     lsp = { name = "markdown_oxide" },
-    ts = "markdown",
+    treesitter = "markdown",
     formatters = {}
   },
   {
     fts = "dockerfile",
     lsp = { name = "docker_language_server" },
-    ts = "dockerfile",
+    treesitter = "dockerfile",
     formatters = {}
   },
 }

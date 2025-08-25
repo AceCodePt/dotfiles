@@ -1,12 +1,12 @@
 vim.pack.add({
-  { src = 'https://github.com/neovim/nvim-lspconfig' },
+  { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/mason-org/mason.nvim" },
 })
 
 local supported_languages = require("config.supported-languages")
 
-
 require("mason").setup({})
+
 for _, lang in pairs(supported_languages) do
   local opts = {}
 
@@ -19,8 +19,6 @@ for _, lang in pairs(supported_languages) do
       end
     end
   end
-
-
 
   -- Set up the LSP server
   vim.lsp.config(lang.lsp.name, opts)

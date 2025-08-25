@@ -8,7 +8,7 @@ local supported_languages = require("config.supported-languages")
 -- Extract the 'ts' values and flatten the list in a single line
 local ensure_installed_languages = vim.iter(supported_languages)
   :map(function(lang)
-    return lang.ts
+    return lang.treesitter
   end)
   :flatten()
   :totable()

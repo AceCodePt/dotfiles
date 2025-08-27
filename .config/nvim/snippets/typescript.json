@@ -1,6 +1,6 @@
 {
   "function": {
-    "prefix": "f",
+    "prefix": "fun",
     "body": [
       "function ${1:name}(${2:args}) {",
       "\t$0",

@@ -29,7 +29,30 @@ require("blink.cmp").setup({
   },
   completion = {
     documentation = { auto_show = true, auto_show_delay_ms = 1 },
+    list = {
+      selection = {
+        preselect = false,
+        auto_insert = true
+      }
+    },
     ghost_text = { enabled = true },
+  },
+  cmdline = {
+    keymap = {
+      preset = 'inherit',
+      ["<CR>"] = { "accept_and_enter", "fallback" },
+    },
+    completion = {
+      menu = { auto_show = true },
+      list = {
+        selection = {
+          preselect = function()
+            return not vim.fn.getcmdtype():match("^[/?]")
+          end,
+          auto_insert = true
+        }
+      },
+    },
   },
   sources = {
     default = { 'lsp', 'path', 'snippets', 'buffer' },

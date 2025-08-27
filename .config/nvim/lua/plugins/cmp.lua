@@ -1,8 +1,11 @@
+-- vim.pack.del({ "blink.cmp" })
 vim.pack.add({
-  { src = "https://github.com/Saghen/blink.cmp", tag = '1.*', }
+  { src = "https://github.com/Saghen/blink.cmp", tag = '1.*', },
+  { src = "https://github.com/L3MON4D3/LuaSnip", tag = 'v2.*' }
 })
 
 require("blink.cmp").setup({
+  snippets = { preset = 'luasnip' },
   keymap = {
     preset = 'none',
     ['<M-space>'] = { 'show', 'show_documentation', 'hide_documentation' },

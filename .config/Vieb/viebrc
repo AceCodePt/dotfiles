@@ -164,6 +164,7 @@ nunmap L
 nunmap W
 nunmap t
 nunmap T
+nunmap b
 nmap <A-h> <backInHistory>
 nmap <A-l> <forwardInHistory>
 nmap <A-j> <previousTab>
@@ -177,10 +178,11 @@ nmap <A-K> <moveTabForward>
 nmap <A-t> <:tabnew><toExploreMode>
 nmap <A-T> <reopenTab>
 nmap <A-w> <:close>
-map <A-u> <:buffer 0>
-map <A-i> <:buffer 1>
-map <A-o> <:buffer 2>
-map <A-p> <:buffer 3>
+map <A-y> <:buffer 0>
+map <A-u> <:buffer 1>
+map <A-i> <:buffer 2>
+map <A-o> <:buffer 3>
+map <A-p> <:buffer 4>
 nmap gp <:screencopy>
 
 " Commands

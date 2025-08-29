@@ -21,7 +21,7 @@ oil.setup({
     ["<C-p>"] = "actions.preview",
     ["<C-l>"] = "actions.refresh",
     ["<leader>e"] = "actions.close",
-    ["q"] = "actions.close",
+    ["<Esc>"] = "actions.close",
     ["-"] = "actions.parent",
     ["_"] = "actions.open_cwd",
     ["`"] = "actions.cd",

@@ -1,17 +1,11 @@
 vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim" },
-  { src = "https://github.com/echasnovski/mini.comment" }
+  { src = "https://github.com/numToStr/Comment.nvim" }
 })
 
-
-require("mini.comment").setup({
-  options = {
-    -- Whether to ignore blank lines when commenting
-    ignore_blank_line = true,
-  },
+require('Comment').setup({
+  ignore = '^$'
 })
-
-
 
 local supported_languages = require("config.supported-languages")
 local formatters_by_ft = {}

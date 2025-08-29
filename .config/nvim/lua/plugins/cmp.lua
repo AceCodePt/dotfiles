@@ -1,7 +1,19 @@
--- vim.pack.del({ "blink.cmp" })
+local map = require("util.map").map
 vim.pack.add({
-  { src = "https://github.com/Saghen/blink.cmp", tag = '1.*', },
-  { src = "https://github.com/L3MON4D3/LuaSnip", tag = 'v2.*' }
+  {
+    -- cd ~/.local/share/nvim/site/pack/core/opt/blink.cmp && cargo build --release
+    src = "https://github.com/Saghen/blink.cmp",
+  },
+  { src = "https://github.com/L3MON4D3/LuaSnip",          tag = "v2.*" },
+  { src = "https://github.com/folke/lazydev.nvim" },
+  { src = "https://github.com/chrisgrieser/nvim-scissors" }
+})
+
+local scissors = require("scissors")
+local snippet_dir = vim.fn.stdpath("config") .. "/snippets"
+
+require("luasnip.loaders.from_vscode").lazy_load({
+  paths = snippet_dir
 })
 
 require("blink.cmp").setup({
@@ -58,8 +70,49 @@ require("blink.cmp").setup({
     },
   },
   sources = {
-    default = { 'lsp', 'path', 'snippets', 'buffer' },
+    default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
+    providers = {
+      lazydev = {
+        name = "LazyDev",
+        module = "lazydev.integrations.blink",
+        -- make lazydev completions top priority (see `:h blink.cmp`)
+        score_offset = 100,
+      },
+    },
   },
   fuzzy = { implementation = "prefer_rust_with_warning" },
   signature = { enabled = true }
 })
+
+scissors.setup({
+  snippetDir = snippet_dir,
+
+  editSnippetPopup = {
+    keymaps = {
+      -- if not mentioned otherwise, the keymaps apply to normal mode
+      cancel = "q",
+      saveChanges = "<Esc>",
+      goBackToSearch = "<BS>",
+      deleteSnippet = "<A-BS>",
+      duplicateSnippet = "<A-d>",
+      openInFile = "<A-o>",
+      insertNextPlaceholder = "<A-p>", -- insert & normal mode
+      showHelp = "?",
+    },
+  },
+})
+
+
+map(
+  "n",
+  "<leader>se",
+  scissors.editSnippet,
+  { desc = "Snippet: Edit" }
+)
+
+map(
+  { "n", "x" },
+  "<leader>sa",
+  scissors.addNewSnippet,
+  { desc = "Snippet: Add" }
+)

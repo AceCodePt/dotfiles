@@ -1,10 +1,14 @@
 {
-  "name": "snippets",
+  "name": "personal-snippets",
   "contributes": {
     "snippets": [
       {
         "language": "lua",
         "path": "./lua.json"
+      },
+      {
+        "language": "astro",
+        "path": "./astro.json"
       },
       {
         "language": "typescript",

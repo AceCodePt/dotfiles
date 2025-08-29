@@ -1,10 +1,1 @@
-{
-  "function": {
-    "prefix": "fun",
-    "body": [
-      "function ${1:name}(${2:args}) {",
-      "\t$0",
-      "}"
-    ]
-  }
-}
+{"handler":{"prefix":"handler-astro","body":["export async function handle${1:}(Astro: AstroGlobal) {","  switch (Astro.request.method) {","    case \"GET\":","      break;","    case \"POST\":","      break;","    case \"PUT\":","      break;","    case \"PATCH\":","      break;","    case \"DELETE\":","      break;","    default:","      return { data: null, error: new Error(`Unsupported Method`) };","  }","}"]},"eaf":{"prefix":"eaf","body":["export async function ${1:}() {","  ${2:}","}"]},"exp":{"prefix":"exp","body":"export "},"try...catch(e:unknown)":{"prefix":["try","try...catch(e:unknown)"],"body":["try {","  ${1:}","}","catch(e:unknown) {","}"]},"Function Statement":{"prefix":"function","body":["function ${1:name}(${2:params}:${3:type}) {","\t$0","}"],"description":"Function Statement"},"catch":{"body":"catch((e: unknown) => {});","prefix":["catch","catch("]},"If Statement":{"prefix":"if","body":["if (${1:condition}) {","\t$0","}"],"description":"If Statement"}}

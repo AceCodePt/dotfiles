@@ -10,7 +10,7 @@
     "description": "Props"
   },
   "ImportEnv": {
-    "prefix": "envv",
+    "prefix": "impenv",
     "body": "import.meta.env.$1",
     "description": "import environment variable"
   }

@@ -50,19 +50,60 @@ local M = {
     lsp = {
       name = "astro",
       config = {
+        settings = {
+          astro = {
+            updateImportsOnFileMove = {
+              enabled = 'always'
+            }
+          }
+        },
+        capabilities = {
+          workspace = {
+            didChangeWatchedFiles = {
+              dynamicRegistration = true,
+            },
+          },
+        },
         on_attach = function(client, _)
+          local group = vim.api.nvim_create_augroup("astro_lsp_patches", { clear = true })
+          local notify = function(match, type)
+            client:notify("workspace/didChangeWatchedFiles", {
+              changes = {
+                {
+                  uri = match,
+                  type = type, -- 1 = Created, 2 = Changed, 3 = Deleted
+                },
+              },
+            })
+          end
+          vim.api.nvim_create_autocmd("User", {
+            pattern = "OilActionsPost",
+            group = group,
+            callback = function(e)
+              if e.data.actions == nil then
+                return
+              end
+              for _, action in ipairs(e.data.actions) do
+                if action.entry_type == "file" and action.type == "create" then
+                  notify(e.match, 1)
+                end
+                if action.entry_type == "file" and action.type == "delete" then
+                  local file = action.url:sub(7)
+                  local bufnr = vim.fn.bufnr(file)
+
+                  if bufnr >= 0 then
+                    vim.api.nvim_buf_delete(bufnr, { force = true })
+                    notify(e.match, 3)
+                  end
+                end
+              end
+            end,
+          })
           vim.api.nvim_create_autocmd("BufWritePost", {
             pattern = { "*.js", "*.ts" },
-            group = vim.api.nvim_create_augroup("astro_ondidchangetsorjsfile", { clear = true }),
-            callback = function(ctx)
-              client.notify("workspace/didChangeWatchedFiles", {
-                changes = {
-                  {
-                    uri = ctx.match,
-                    type = 2, -- 1 = Created, 2 = Changed, 3 = Deleted
-                  },
-                },
-              })
+            group = group,
+            callback = function(e)
+              notify(e.match, 2)
             end,
           })
         end,

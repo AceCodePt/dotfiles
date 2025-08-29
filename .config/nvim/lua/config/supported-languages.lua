@@ -50,6 +50,11 @@ local M = {
     lsp = {
       name = "astro",
       config = {
+        init_options = {
+          typescript = {
+            tsdk = 'node_modules/typescript/lib'
+          }
+        },
         settings = {
           astro = {
             updateImportsOnFileMove = {
@@ -88,13 +93,7 @@ local M = {
                   notify(e.match, 1)
                 end
                 if action.entry_type == "file" and action.type == "delete" then
-                  local file = action.url:sub(7)
-                  local bufnr = vim.fn.bufnr(file)
-
-                  if bufnr >= 0 then
-                    vim.api.nvim_buf_delete(bufnr, { force = true })
-                    notify(e.match, 3)
-                  end
+                  notify(e.match, 3)
                 end
               end
             end,

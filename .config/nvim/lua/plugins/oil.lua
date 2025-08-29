@@ -32,3 +32,24 @@ oil.setup({
     ["g\\"] = "actions.toggle_trash",
   },
 })
+
+local group = vim.api.nvim_create_augroup("remove_buffer_on_file_delete", { clear = true })
+vim.api.nvim_create_autocmd("User", {
+  pattern = "OilActionsPost",
+  group = group,
+  callback = function(e)
+    if e.data.actions == nil then
+      return
+    end
+    for _, action in ipairs(e.data.actions) do
+      if action.entry_type == "file" and action.type == "delete" then
+        local file = action.url:sub(7)
+        local bufnr = vim.fn.bufnr(file)
+
+        if bufnr >= 0 then
+          vim.api.nvim_buf_delete(bufnr, { force = true })
+        end
+      end
+    end
+  end
+})

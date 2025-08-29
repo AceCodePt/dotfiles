@@ -51,11 +51,11 @@ vim.opt.writebackup = false                       -- Don't create backup before 
 vim.opt.swapfile = false                          -- Don't create swap files
 vim.opt.undofile = true                           -- Persistent undo
 vim.opt.undodir = vim.fn.expand("~/.vim/undodir") -- Undo directory
-vim.opt.updatetime = 300  -- Faster completion
-vim.opt.timeoutlen = 500  -- Key timeout duration
-vim.opt.ttimeoutlen = 0   -- Key code timeout
-vim.opt.autoread = true   -- Auto reload files changed outside vim
-vim.opt.autowrite = false -- Don't auto save
+vim.opt.updatetime = 300                          -- Faster completion
+vim.opt.timeoutlen = 500                          -- Key timeout duration
+vim.opt.ttimeoutlen = 0                           -- Key code timeout
+vim.opt.autoread = true                           -- Auto reload files changed outside vim
+vim.opt.autowrite = false                         -- Don't auto save
 vim.opt.diffopt:append("linematch:60")
 
 -- Behavior settings
@@ -63,7 +63,7 @@ vim.opt.hidden = true                   -- Allow hidden buffers
 vim.opt.errorbells = false              -- No error bells
 vim.opt.backspace = "indent,eol,start"  -- Better backspace behavior
 vim.opt.autochdir = false               -- Don't auto change directory
-vim.opt.iskeyword:append("-")           -- Treat dash as part of word
+vim.opt.iskeyword = "@,48-57,192-255"   -- Print words
 vim.opt.path:append("**")               -- include subdirectories in search
 vim.opt.selection = "exclusive"         -- Selection behavior
 vim.opt.mouse = ""                      -- Enablemouse support

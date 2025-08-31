@@ -2,16 +2,8 @@ vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter.git", branch = "master" }
 })
 
-local supported_languages = require("config.supported-languages")
-
-
--- Extract the 'ts' values and flatten the list in a single line
-local ensure_installed_languages = vim.iter(supported_languages)
-  :map(function(lang)
-    return lang.treesitter
-  end)
-  :flatten()
-  :totable()
+local supported_languages = require("config.supported-languages.index")
+local ensure_installed_languages = supported_languages.get_treesitters()
 
 
 require('nvim-treesitter.configs').setup({

@@ -1,5 +1,5 @@
 return {
-  fts = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+  fts = { "typescript", "typescriptreact" },
   lsp = {
     name = "ts_ls",
     config = {
@@ -13,7 +13,6 @@ return {
     }
   },
   treesitter = {
-    "javascript",
     "typescript",
     "tsx"
   },

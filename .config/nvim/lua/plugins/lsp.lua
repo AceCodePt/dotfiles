@@ -3,7 +3,7 @@ vim.pack.add({
   { src = "https://github.com/mason-org/mason.nvim" },
 })
 
-local supported_languages = require("config.supported-languages")
+local supported_languages = require("config.supported-languages.index")
 
 require("mason").setup({})
 local _ = require "mason-core.functional"
@@ -28,9 +28,9 @@ local function get_lspconfig_to_package()
 end
 
 local lspconfig_to_package = get_lspconfig_to_package()
-for _, lang in pairs(supported_languages) do
+for _, lsp in pairs(supported_languages.get_lsp_by_ft()) do
   local opts = {}
-  local pkg_name = lspconfig_to_package[lang.lsp.name]
+  local pkg_name = lspconfig_to_package[lsp.name]
   local pkg = registry.get_package(pkg_name)
 
   -- ensure installed
@@ -39,18 +39,18 @@ for _, lang in pairs(supported_languages) do
   end
 
   -- Merge custom config if it exists
-  if lang.lsp.config then
-    opts = vim.tbl_deep_extend("force", opts, lang.lsp.config)
-    if lang.lsp.config.on_attach then
+  if lsp.config then
+    opts = vim.tbl_deep_extend("force", opts, lsp.config)
+    if lsp.config.on_attach then
       opts.on_attach = function(client, bufnr)
-        lang.lsp.config.on_attach(client, bufnr)
+        lsp.config.on_attach(client, bufnr)
       end
     end
   end
 
   -- Set up the LSP server
-  vim.lsp.config(lang.lsp.name, opts)
-  vim.lsp.enable(lang.lsp.name)
+  vim.lsp.config(lsp.name, opts)
+  vim.lsp.enable(lsp.name)
 end
 
 vim.diagnostic.config({

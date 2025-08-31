@@ -52,7 +52,6 @@ local M = {
       config = {
         init_options = {
           typescript = {
-            tsdk = 'node_modules/typescript/lib'
           }
         },
         settings = {

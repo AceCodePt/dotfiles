@@ -33,13 +33,26 @@ local ignore_patterns = {
 local rg_glob_args = get_rg_glob_args(ignore_patterns)
 
 --- This start a tmux popup with basic options
----@param command string
+---@param command_or_table string | table<string>
 ---@param opts? {width?: number, height?: number, prompt?: string, reload_on_change?:boolean, fzf?:boolean}
 ---@return string
-function M.tmux_popup(command, opts)
-  if command == "" then
-    error("Command must be definied")
+function M.tmux_popup(command_or_table, opts)
+  if command_or_table == "" then
+    error("Command can't be an empty string")
   end
+
+  if type(command_or_table) == "table" and #command_or_table == 0 then
+    error("Command can't be an empty table")
+  end
+
+  ---@type string
+  local command
+  if type(command_or_table) == "table" then
+    command = "echo " .. vim.fn.shellescape(table.concat(command_or_table, "\n"))
+  else
+    command = command_or_table
+  end
+
 
   opts = opts or {}
   local width = opts.width or 100

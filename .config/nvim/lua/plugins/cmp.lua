@@ -154,7 +154,7 @@ map(
     -- Run tmux popup over them
     -- get the selected item
     local selected_item = fzf_tmux.tmux_popup(snippets_prefix_only,
-      { fzf = true, prompt = "Snippet > ", width = 30, height = 30 })
+      { fzf = true, prompt = "Snippet > ", width = 50, height = 50 })
     if selected_item == "" then
       return
     end

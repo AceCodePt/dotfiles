@@ -1,7 +1,8 @@
 vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/numToStr/Comment.nvim" },
-  { src = "https://github.com/echasnovski/mini.ai" }
+  { src = "https://github.com/echasnovski/mini.ai" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" }
 })
 
 require('Comment').setup({
@@ -14,7 +15,7 @@ miniAi.setup({
   -- Table with textobject id as fields, textobject specification as values.
   -- Also use this to disable builtin textobjects. See |MiniAi.config|.
   custom_textobjects = {
-    f = miniAi.gen_spec.treesitter({ i = "@function.inner", a = "@function.outer" }),
+    F = miniAi.gen_spec.treesitter({ i = "@function.inner", a = "@function.outer" }),
     -- s = ai.gen_spec.treesitter({ i = "@function.signature.inner", a = "function.signature.outer" }),
     c = miniAi.gen_spec.treesitter({ i = "@class.inner", a = "@class.outer" }),
   },

@@ -1,6 +1,6 @@
 return {
   fts = "go",
-  lsp = { name = "gopls" },
+  lsp = { name = "gopls", config={}},
   treesitter = "go",
   formatters = {}
 }

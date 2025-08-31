@@ -2,7 +2,7 @@ vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter.git", branch = "master" }
 })
 
-local supported_languages = require("config.supported-languages.index")
+local supported_languages = require("config.supported-languages")
 local ensure_installed_languages = supported_languages.get_treesitters()
 
 

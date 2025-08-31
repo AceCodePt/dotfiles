@@ -1,8 +1,6 @@
 return {
   fts = "json",
-  lsp = { name = "jsonls" },
-  treesitter = "json",
-  formatters = {},
+  lsp = { name = "jsonls" ,
   config = {
     settings = {
       json = {
@@ -40,4 +38,7 @@ return {
       },
     },
   }
+},
+  treesitter = "json",
+  formatters = {},
 }

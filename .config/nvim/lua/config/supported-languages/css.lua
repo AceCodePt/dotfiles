@@ -1,6 +1,6 @@
 return {
   fts = "css",
-  lsp = { name = "cssls" },
+  lsp = { name = "cssls" , config = {}},
   treesitter = "css",
   formatters = {}
 }

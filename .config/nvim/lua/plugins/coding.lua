@@ -34,7 +34,7 @@ miniAi.setup({
   silent = false,
 })
 
-local supported_languages = require("config.supported-languages.index")
+local supported_languages = require("config.supported-languages")
 local formatters_by_ft = supported_languages.get_formatters_by_ft()
 
 require("conform").setup({

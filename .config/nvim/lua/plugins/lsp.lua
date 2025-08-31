@@ -10,7 +10,7 @@ local ensure_installed = {}
 require("mason").setup({})
 
 for _, lsp in pairs(supported_languages.get_lsp_by_ft()) do
-  opts = {}
+  local opts = {}
   -- Merge custom config if it exists
   if lsp.config then
     opts = vim.tbl_deep_extend("force", opts, lsp.config)
@@ -20,7 +20,7 @@ for _, lsp in pairs(supported_languages.get_lsp_by_ft()) do
       end
     end
   end
-  table.insert(ensure_installed,lsp.name)
+  table.insert(ensure_installed, lsp.name)
 
   -- Set up the LSP server
   vim.lsp.config(lsp.name, opts)
@@ -29,8 +29,8 @@ end
 
 
 require("mason-lspconfig").setup({
-    automatic_enable = false,
-    ensure_installed = ensure_installed,
+  automatic_enable = false,
+  ensure_installed = ensure_installed,
 })
 
 vim.diagnostic.config({

@@ -1,3 +1,5 @@
+local typescript_on_attach = require("config.supported-languages.typescript").lsp.config.on_attach
+
 return {
   fts = "astro",
   treesitter = "astro",
@@ -23,14 +25,15 @@ return {
           },
         },
       },
-      on_attach = function(client, _)
+      on_attach = function(client, bufnr)
+        typescript_on_attach(client, bufnr)
         local group = vim.api.nvim_create_augroup("astro_lsp_patches", { clear = true })
         local notify = function(match, type)
           client:notify("workspace/didChangeWatchedFiles", {
             changes = {
               {
                 uri = match,
-                type = type,   -- 1 = Created, 2 = Changed, 3 = Deleted
+                type = type, -- 1 = Created, 2 = Changed, 3 = Deleted
               },
             },
           })

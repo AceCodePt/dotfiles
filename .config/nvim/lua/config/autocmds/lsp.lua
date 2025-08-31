@@ -29,6 +29,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(event)
     local opts = { buffer = event.buf }
 
+    -- Unset 'formatexpr'
+    vim.bo[event.buf].formatexpr = nil
+    -- Unset 'omnifunc'
+    vim.bo[event.buf].omnifunc = nil
+
     -- Navigation
     map('n', 'gd', vim.lsp.buf.definition, opts)
     map('n', 'gs', vim.lsp.buf.declaration, opts)

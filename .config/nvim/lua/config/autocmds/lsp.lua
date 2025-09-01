@@ -64,6 +64,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
       local ok, conform = pcall(require, "conform")
       if ok then
         conform.format()
+      else
+        -- Fallback to regular format
+        vim.lsp.buf.format()
       end
     end)
   end,

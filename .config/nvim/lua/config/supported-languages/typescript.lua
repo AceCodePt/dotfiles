@@ -1,4 +1,5 @@
 local map = require("util.map").map
+local open_and_run_terminal_command = require("util.terminal").open_and_run_terminal_command
 
 local priorities = {
   "Change spelling to '[^']+'",
@@ -36,6 +37,9 @@ return {
           },
         },
       },
+      ---comment
+      --- @param client vim.lsp.Client
+      --- @param bufnr number
       on_attach = function(client, bufnr)
         local nmap = function(keys, func, desc)
           if desc then
@@ -72,7 +76,7 @@ return {
 
           local package = string.gsub(string.match(row["message"], "'.+'"), "'", "")
 
-          vim.cmd(":TermExec cmd='ni " .. package .. "' go_back=0<cr>")
+          open_and_run_terminal_command("ni " .. package)
         end, "Install package")
 
         nmap("<leader>m", function()
@@ -80,69 +84,76 @@ return {
           local params = vim.lsp.util.make_range_params(0, "utf-8")
           params.context = {
             triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked,
-            diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
+            diagnostics = vim.diagnostic.get(bufnr)
           }
 
-          vim.lsp.buf_request(bufnr, "textDocument/codeAction", params, function(err, results, _, _)
-            if err then
-              vim.notify("Error fetching code actions: " .. err.message, vim.log.levels.ERROR)
-              return
-            end
-            if results == nil or vim.tbl_isempty(results) then
-              vim.notify("No code actions available.", vim.log.levels.INFO)
-              return
-            end
+          local code_action_result = client:request_sync('textDocument/codeAction', params, 2000, bufnr)
 
-            local mapped = vim.iter(results)
-                :filter(function(item)
-                  -- -- Remove filtered items
-                  return not vim.iter(filters):any(function(filter_item)
-                    return string.find(item.title, filter_item) ~= nil
-                  end)
+          if not code_action_result then
+            return
+          end
+
+          local err = code_action_result.err
+          local results = code_action_result.result
+
+          if err then
+            vim.notify("Error fetching code actions: " .. err.message, vim.log.levels.ERROR)
+            return
+          end
+          if results == nil or vim.tbl_isempty(results) then
+            vim.notify("No code actions available.", vim.log.levels.INFO)
+            return
+          end
+
+          local mapped = vim.iter(results)
+              :filter(function(item)
+                -- -- Remove filtered items
+                return not vim.iter(filters):any(function(filter_item)
+                  return string.find(item.title, filter_item) ~= nil
                 end)
-                :map(function(item)
-                  local priorities_iter = vim.iter(ipairs(priorities))
-                  local priority_item = priorities_iter
-                      :filter(function(_, priority_text)
-                        return string.find(item.title, priority_text) ~= nil
-                      end)
-                      :totable()[1]
+              end)
+              :map(function(item)
+                local priorities_iter = vim.iter(ipairs(priorities))
+                local priority_item = priorities_iter
+                    :filter(function(_, priority_text)
+                      return string.find(item.title, priority_text) ~= nil
+                    end)
+                    :totable()[1]
 
-                  local priority = priority_item and (100 + #priorities - priority_item[1]) or 0
+                local priority = priority_item and (100 + #priorities - priority_item[1]) or 0
 
-                  -- Check if item.command exists before modifying it
-                  if item.command then
-                    item.command["priority"] = priority
-                    return item.command
-                  end
-                  -- Some code actions might be structured differently
-                  return item
-                end)
-                :filter(function(item) -- Ensure we only have items with a command
-                  return item.command ~= nil
-                end)
-                :totable()
+                -- Check if item.command exists before modifying it
+                if item.command then
+                  item.command["priority"] = priority
+                  return item.command
+                end
+                -- Some code actions might be structured differently
+                return item
+              end)
+              :filter(function(item) -- Ensure we only have items with a command
+                return item.command ~= nil
+              end)
+              :totable()
 
-            if vim.tbl_isempty(mapped) then
-              vim.notify("No actionable items found after filtering.", vim.log.levels.INFO)
-              return
+          if vim.tbl_isempty(mapped) then
+            vim.notify("No actionable items found after filtering.", vim.log.levels.INFO)
+            return
+          end
+
+          table.sort(mapped, function(a, b)
+            if a.priority == b.priority then
+              return #a.title < #b.title
             end
-
-            table.sort(mapped, function(a, b)
-              if a.priority == b.priority then
-                return #a.title < #b.title
-              end
-              return a.priority > b.priority
-            end)
-
-            local selected_command = mapped[1]
-
-            if selected_command then
-              if client then
-                client:exec_cmd(selected_command, { bufnr = bufnr })
-              end
-            end
+            return a.priority > b.priority
           end)
+
+          local selected_command = mapped[1]
+
+          if selected_command then
+            if client then
+              client:exec_cmd(selected_command, { bufnr = bufnr })
+            end
+          end
         end, "[M]agic Fix")
       end
     }

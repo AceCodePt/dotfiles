@@ -2,6 +2,7 @@ local map = require("util.map").map
 local actions = require("util.actions")
 local create_nvim_keybind_callback = require("util.expression").create_nvim_keybind_callback
 local converter = require('util.case_converter')
+local feedkeys = vim.fn.feedkeys
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -154,11 +155,11 @@ map({ 'n', 'v' }, '<leader>v', function()
 
   local escaped_text = vim.fn.escape(selection_text, [[\/.*^$[]~\]])
   local final_pattern = escaped_text:gsub('\n', '\\n')
-  local cmd = "%s/" .. final_pattern .. "//g"
+  local cmd = "%s/" .. final_pattern .. "//gc"
 
-  vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), "n")
-  vim.fn.feedkeys(":" .. cmd, "t")
-  vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Left><Left>', true, false, true), "t")
+  feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), "n")
+  feedkeys(":" .. cmd, "t")
+  feedkeys(vim.api.nvim_replace_termcodes('<Left><Left><Left>', true, false, true), "t")
 end, {
   desc = "Substitute selected text"
 })

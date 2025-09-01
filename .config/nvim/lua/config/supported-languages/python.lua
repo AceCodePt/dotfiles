@@ -3,11 +3,11 @@ local map = require("util.map").map
 local M = {}
 
 --- Extracts and cleans the function signature from the LSP hover response.
--- Instead of flattening the signature into one line, this version preserves
--- newlines and returns a table of strings, where each string is a line.
--- @param client The LSP client object.
--- @param bufnr The buffer number.
--- @return A table of strings representing the lines of the signature, or nil.
+--- Instead of flattening the signature into one line, this version preserves
+--- newlines and returns a table of strings, where each string is a line.
+--- @param client vim.lsp.Client The LSP client object.
+--- @param bufnr number The buffer number.
+--- @return string | nil table of strings representing the lines of the signature, or nil.
 function M.get_function_return_value(client, bufnr)
   -- Prepare and send the hover request to the LSP server.
   local params = vim.lsp.util.make_position_params(0, client.offset_encoding)

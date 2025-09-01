@@ -199,10 +199,5 @@ map('n', '<leader>sm', show_nvim_messages, {
 })
 
 
-map('n', '<M-space>', function()
-  vim.api.nvim_command('startinsert!')
-  vim.lsp.completion.get()
-end, { desc = "trying to vim.lsp.completion" })
-
 map('i', '<M-j>', '<C-n>', { desc = 'Go to next completion item' })
 map('i', '<M-k>', '<C-p>', { desc = 'Go to previous completion item' })

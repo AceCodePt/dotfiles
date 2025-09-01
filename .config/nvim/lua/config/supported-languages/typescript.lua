@@ -1,4 +1,4 @@
- local map = require("util.map").map
+local map = require("util.map").map
 
 local priorities = {
   "Change spelling to '[^']+'",

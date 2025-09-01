@@ -6,8 +6,8 @@ return {
       settings = {
         Lua = {
           completion = {
-            callSnippet = "Disable",    -- Fallback, just in case
-            keywordSnippet = "Disable", -- Also disable keyword snippets
+            callSnippet = "Disable",
+            keywordSnippet = "Disable",
           },
           diagnostics = {
             -- Get the language server to recognize the `vim` global

@@ -1,4 +1,5 @@
 local map = require("util.map").map
+local open_and_run_terminal_command = require("util.terminal").open_and_run_terminal_command
 
 map('t', '<Esc>',
   function()
@@ -55,20 +56,6 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     vim.fn.setreg("+", new_str)
   end,
 })
-
--- Helper function to open a terminal and execute a command
-local function open_and_run_terminal_command(command)
-  vim.cmd('tabnew')
-  -- Open the terminal in the new split and execute the command
-  -- The 'term://' prefix indicates a terminal buffer
-  -- The command after 'term://' will be executed immediately.
-  vim.cmd('terminal ' .. command)
-  -- Optional: Go back to normal mode after the command runs
-  -- This is often preferred if the command is short-lived.
-  -- If you want to interact with the terminal after, remove this line.
-  -- vim.cmd('startinsert') -- If you want to be in insert mode
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), 'n', false)
-end
 
 -- Made vim enter with some sick npm commands
 vim.api.nvim_create_autocmd("VimEnter", {

@@ -1,1 +1,1 @@
-{"notifyinspect":{"body":"vim.notify(vim.inspect(${1:}))","prefix":"notifyinspect"}}
+{"notifyinspect":{"body":"vim.notify(vim.inspect(${1:}))","prefix":"notifyinspect"},"mod":{"body":["local M = {}","${1:}","return M"],"prefix":"mod"}}

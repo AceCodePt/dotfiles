@@ -112,8 +112,6 @@ end, { desc = "Go to previous blank line without adding to jumplist" })
 
 
 -- Quick config editing
-map("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
-
 map('v', '<leader>ccc', converter.convert_selection_to_camel, { desc = 'Convert to camelCase' })
 map('v', '<leader>ccp', converter.convert_selection_to_pascal, { desc = 'Convert to PascalCase' })
 map('v', '<leader>ccs', converter.convert_selection_to_snake, { desc = 'Convert to snake_case' })

@@ -8,8 +8,8 @@ local spec = {}
 
 
 local function fn_plugin_config(plugin_name, plugin_dir_config)
-  local plugin_config = plugin_dir_config .. "." .. plugin_name
   return function()
+    local plugin_config = plugin_dir_config .. "." .. plugin_name
     local ok, _ = pcall(require, plugin_config)
     if not ok then
       error("Didn't find, " .. plugin_config)
@@ -24,14 +24,13 @@ function M.get_lazy_spec()
     local plugin_path = plugins_dir_definition .. "." .. plugin_name
     local ok, mod = pcall(require, plugin_path)
     if ok then
-      if not mod.opts then
-        mod.opts = fn_plugin_config(plugin_name, plugins_dir_config)
+      if not mod.config then
+        mod.config = fn_plugin_config(plugin_name, plugins_dir_config)
       end
       table.insert(spec, mod)
     end
   end
 
-  vim.notify(vim.inspect(spec))
   return spec
 end
 

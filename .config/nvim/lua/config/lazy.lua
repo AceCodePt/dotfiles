@@ -1,5 +1,3 @@
-local get_lazy_spec = require("config.check").get_lazy_spec
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -17,12 +15,13 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
+local get_lazy_spec = require("config.check").get_lazy_spec
 local spec = get_lazy_spec()
 
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = spec,
+  install = { colorscheme = { "tokyonight" } },
 
   -- automatically check for plugin updates
   checker = { enabled = false },

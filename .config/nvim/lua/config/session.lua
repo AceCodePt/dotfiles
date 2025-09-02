@@ -2,7 +2,9 @@ local map = require("util.map").map
 local fzf_tmux = require("util.fzf_tmux")
 
 local config = {
-  search_dir = vim.fn.expand("$HOME/companies"),
+  search_dirs = vim.fn.shellescape(vim.fn.expand("$HOME/companies")) ..
+      " " .. vim.fn.shellescape(vim.fn.expand("$HOME/stuff")),
+
 
   -- Simple filenames. Dots will be escaped automatically.
   file_markers = {
@@ -60,7 +62,7 @@ local function show_sessionizer()
   local find_cmd = string.format(
     "fd --max-depth 4 -H -I '^(%s)$' %s -X dirname | sort -u",
     markers_regex,
-    vim.fn.shellescape(config.search_dir)
+    config.search_dirs
   )
 
   local selected_path = fzf_tmux.tmux_popup(find_cmd, { fzf = true })

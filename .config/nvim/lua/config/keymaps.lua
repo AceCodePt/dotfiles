@@ -166,7 +166,7 @@ end, {
 
 
 local function show_nvim_messages()
-  vim.api.nvim_command('enew')
+  vim.api.nvim_cmd({ cmd = 'enew' }, {})
   vim.api.nvim_set_option_value('buftype', 'nofile', { scope = 'local' })
   vim.api.nvim_set_option_value('bufhidden', 'wipe', { scope = 'local' })
 

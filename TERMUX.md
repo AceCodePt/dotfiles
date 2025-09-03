@@ -11,7 +11,7 @@ exec $SHELL
 ```
 
 ```bash
-pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl wget fzf rust lazygit which stow pass getconf build-essential libffi zlib golang -y
+pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl wget fzf rust lazygit which stow pass getconf build-essential libffi zlib golang nodejs -y
 
 git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit
@@ -21,22 +21,16 @@ stow --adopt .
 cd ../
 
 
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 curl -fsSL https://pyenv.run | bash
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 source ~/.zshenv
-
-unset PREFIX
-nvm install 22
-nvm use 22
 
 pyenv install 3.12
 pyenv global 3.12
 pip3 install pipx
 
-pipx install neovim-remote
-pipx install trash-cli
-pnpm install -g yarn
+pipx install neovim-remote trash-cli
+npm install -g yarn @antfu/ni
 ```
 
 # Install font

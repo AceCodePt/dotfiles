@@ -11,7 +11,7 @@ exec $SHELL
 ```bash
 pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl wget fzf rust lazygit which stow pass getconf -y
 
-git clone git@github.com:AceCodePt/dotfiles.git ~/
+git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit
 chmod +x ~/dotfiles/.git/hooks/post-commit
 stow --adopt -R .

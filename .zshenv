@@ -5,14 +5,16 @@ export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:$HOME/.local/bin/scripts"
 
 export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
+if [[ -d $PYENV_ROOT/bin ]]; then
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init - zsh)"
+fi
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 if [ -s "$NVM_DIR/nvm.sh" ]; then
   unset $PREFIX
   \. "$NVM_DIR/nvm.sh" # This loads nvm
-end
+fi
 
 # fnm
 FNM_PATH="$HOME/.local/share/fnm"

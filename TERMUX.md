@@ -11,7 +11,7 @@ exec $SHELL
 ```
 
 ```bash
-pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl wget fzf rust lazygit which stow pass getconf -y
+pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl wget fzf rust lazygit which stow pass getconf build-essential libffi-dev libssl-dev zlib-dev -y
 
 git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit
@@ -26,11 +26,12 @@ curl -fsSL https://pyenv.run | bash
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 source ~/.zshenv
 
+unset PREFIX
 nvm install 22
 nvm use 22
 
-pyenv install 3.13
-pyenv global 3.13
+pyenv install 3.12
+pyenv global 3.12
 pip3 install pipx
 
 pipx install neovim-remote

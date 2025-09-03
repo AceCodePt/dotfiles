@@ -1,7 +1,7 @@
 ```bash
 cd ~
 pkg update -y
-pkg upgrade -y
+yes | pkg upgrade -y
 pkg install zsh termux-api -y
 chsh -s zsh
 termux-setup-storage

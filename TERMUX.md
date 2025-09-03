@@ -6,7 +6,10 @@ pkg install zsh -y
 chsh -s zsh
 SHELL=zsh
 exec $SHELL
-pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl wget fzf xsel libssl rust lazygit lazydocker which stow pass -y
+```
+
+```bash
+pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl wget fzf rust lazygit which stow pass -y
 
 git clone git@github.com:AceCodePt/dotfiles.git ~/
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit
@@ -30,6 +33,9 @@ pnpm install -g yarn
 ```
 
 # Install font
-```
-https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hack.zip
+```bash
+curl -o Hack.zip -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hack.zip
+unzip Hack.zip -d Hack-Nerd-Font
+mkdir -p ~/.termux
+cp Hack-Nerd-Font/HackNerdFont-Regular.ttf ~/.termux/font.ttf
 ```

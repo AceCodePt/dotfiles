@@ -2,8 +2,10 @@
 cd ~
 pkg update -y
 pkg upgrade -y
-pkg install zsh -y
+pkg install zsh termux-api -y
 chsh -s zsh
+termux-setup-storage
+cp -R ~/storage/shared/.ssh ~/
 SHELL=zsh
 exec $SHELL
 ```

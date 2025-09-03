@@ -4,7 +4,9 @@ export VISUAL="$EDITOR"
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:$HOME/.local/bin/scripts"
 
-# . "$HOME/.cargo/env"
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
 
 # fnm
 FNM_PATH="$HOME/.local/share/fnm"

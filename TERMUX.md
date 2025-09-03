@@ -16,7 +16,9 @@ pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl
 git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit
 chmod +x ~/dotfiles/.git/hooks/post-commit
-stow --adopt -R --dir=~/dotfiles --target=~ .
+cd ./dotfiles
+stow --adopt .
+cd ../
 
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash

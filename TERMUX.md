@@ -16,7 +16,7 @@ pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl
 git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit
 chmod +x ~/dotfiles/.git/hooks/post-commit
-stow --adopt -R .
+stow --adopt -R --dir=~/dotfiles --target=~ .
 
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
@@ -29,8 +29,10 @@ nvm use 22
 
 pyenv install 3.13
 pyenv global 3.13
+pip3 install pipx
 
-pip3 install neovim-remote
+pipx install neovim-remote
+pipx install trash-cli
 pnpm install -g yarn
 ```
 

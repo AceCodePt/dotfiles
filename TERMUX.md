@@ -11,7 +11,7 @@ exec $SHELL
 ```
 
 ```bash
-pkg install git make cmake ninja termux-tools gettext libtool unzip ripgrep curl wget fzf rust lazygit which stow pass getconf build-essential libffi zlib golang nodejs -y
+pkg install git termux-tools unzip ripgrep curl wget fzf rust lazygit which stow pass getconf zlib golang nodejs neovim -y
 
 git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit
@@ -31,6 +31,7 @@ pip3 install pipx
 
 pipx install neovim-remote trash-cli
 npm install -g yarn @antfu/ni
+
 ```
 
 # Install font

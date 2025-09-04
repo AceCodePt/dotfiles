@@ -20,17 +20,12 @@ cd ./dotfiles
 stow --adopt .
 cd ../
 
-
-curl -fsSL https://pyenv.run | bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
 source ~/.zshenv
 
-pyenv install 3.12
-pyenv global 3.12
 pip3 install pipx
 
 pipx install neovim-remote trash-cli
-npm install -g yarn @antfu/ni
+npm install -g pnpm yarn @antfu/ni
 
 ```
 

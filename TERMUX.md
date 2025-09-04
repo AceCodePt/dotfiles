@@ -28,3 +28,10 @@ pipx install neovim-remote trash-cli
 npm install -g pnpm yarn @antfu/ni
 
 ```
+
+### for unsupported mason languages
+```bash
+curl -o /data/data/com.termux/files/usr/bin/install-in-mason  https://raw.githubusercontent.com/Amirulmuuminin/setup-mason-for-termux/main/install-in-mason
+chmod +x /data/data/com.termux/files/usr/bin/install-in-mason
+install-in-mason lua-language-server
+```

@@ -28,11 +28,3 @@ pipx install neovim-remote trash-cli
 npm install -g pnpm yarn @antfu/ni
 
 ```
-
-# Install font
-```bash
-curl -o Hack.zip -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hack.zip
-unzip Hack.zip -d Hack-Nerd-Font
-mkdir -p ~/.termux
-cp Hack-Nerd-Font/HackNerdFont-Regular.ttf ~/.termux/font.ttf
-```

@@ -11,7 +11,7 @@ exec $SHELL
 ```
 
 ```bash
-pkg install git termux-tools unzip ripgrep curl wget fzf rust lazygit which stow pass getconf zlib golang nodejs neovim -y
+pkg install git termux-tools build-essential unzip ripgrep curl wget fzf rust lazygit which stow pass getconf zlib golang nodejs neovim -y
 
 git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit

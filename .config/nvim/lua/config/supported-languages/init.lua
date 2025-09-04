@@ -75,7 +75,9 @@ function M.get_lsp_by_ft()
 
   -- Iterate over the list of found file paths to filter out index.lua and process the names
   for ft, mod in pairs(mod_by_ft) do
-    lsp_by_ft[ft] = mod.lsp
+    if mod.lsp then
+      lsp_by_ft[ft] = mod.lsp
+    end
   end
   return lsp_by_ft
 end

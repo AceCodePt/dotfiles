@@ -15,6 +15,7 @@ pkg install git tmux termux-tools build-essential unzip ripgrep curl wget fzf ru
 
 git config --global user.email "ace.code.pt@gmail.com"
 git config --global user.name "Sagi Carmel"
+npm config set cache -g /data/data/com.termux/files/home/.npm
 
 git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit

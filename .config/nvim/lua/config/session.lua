@@ -60,7 +60,7 @@ local function show_sessionizer()
   -- 2. Use tmux display-popup to run fzf
   -- -----------------------------------------------------------------------
   local find_cmd = string.format(
-    "fd --max-depth 4 -H -I '^(%s)$' %s -X dirname | sort -u",
+    "$HOME/.local/bin/fd --max-depth 4 -H -I '^(%s)$' %s -X dirname | sort -u",
     markers_regex,
     config.search_dirs
   )

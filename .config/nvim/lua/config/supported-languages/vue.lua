@@ -3,6 +3,5 @@ return {
   treesitter = "vue",
   formatters = { "prettierd", "prettier" },
   lsp = {
-    name = "vuels",
   },
 }

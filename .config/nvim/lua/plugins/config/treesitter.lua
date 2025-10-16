@@ -11,7 +11,7 @@ require('nvim-treesitter.configs').setup({
   modules = {},
   highlight = {
     enable = true,
-    additional_vim_regex_highlighting = false,
+    additional_vim_regex_highlighting = { 'astro' },
   },
   indent = {
     enable = true

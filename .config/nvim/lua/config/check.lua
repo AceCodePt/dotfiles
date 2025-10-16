@@ -3,7 +3,7 @@ local M = {}
 
 local plugins_dir_definition = "plugins"
 local plugins_dir_config = "plugins.config"
-local dir = vim.fn.stdpath("config") .."/lua/".. plugins_dir_definition
+local dir = vim.fn.stdpath("config") .. "/lua/" .. plugins_dir_definition
 local spec = {}
 
 

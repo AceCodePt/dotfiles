@@ -40,8 +40,8 @@ local function get_module_by_ft()
 
   -- Iterate over the list of found file paths to filter out index.lua and process the names
   for _, file_name in ipairs(lua_files) do
-    -- Exclude the 'index.lua' file
-    if file_name ~= "index.lua" then
+    -- Exclude the 'init.lua' file
+    if file_name ~= "init.lua" then
       local name_without_suffix = string.gsub(file_name, "%.lua$", "")
       local mod_name = "config.supported-languages." .. name_without_suffix
       local ok, mod = pcall(require, mod_name)

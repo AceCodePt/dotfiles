@@ -48,6 +48,35 @@ end
 -- Set the global tabline option to use our function
 vim.opt.tabline = "%!v:lua.get_custom_tabline()"
 
+local function is_buffer_open_in_any_tab(win_id, buf_id)
+  local tabpages = vim.api.nvim_list_tabpages()
+
+  for _, tabpage_id in ipairs(tabpages) do
+    local windows = vim.api.nvim_tabpage_list_wins(tabpage_id)
+
+    for _, current_win_id in ipairs(windows) do
+      local current_buf_id = vim.api.nvim_win_get_buf(current_win_id)
+
+      if current_buf_id == buf_id and current_win_id ~= win_id then
+        return true
+      end
+    end
+  end
+
+  -- 7. If the loops complete without finding a match, the buffer is not open
+  return false
+end
+
+local function has_multiple_windows()
+  -- 0 is the ID for the current tabpage
+  local window_list = vim.api.nvim_tabpage_list_wins(0)
+
+  -- The '#' operator in Lua gets the length of a list/table.
+  local window_count = #window_list
+
+  -- A tab has multiple windows (splits) if the count is > 1.
+  return window_count > 1
+end
 
 
 map({ "n", "t" }, '<M-w>', function()
@@ -57,10 +86,11 @@ map({ "n", "t" }, '<M-w>', function()
     return
   end
 
-  local current_buf = vim.api.nvim_get_current_buf()
+  local current_buf_id = vim.api.nvim_get_current_buf()
+  local current_window_id = vim.api.nvim_get_current_win()
 
   -- Check if the current buffer is a terminal
-  local buf_type = vim.api.nvim_get_option_value('buftype', { buf = current_buf })
+  local buf_type = vim.api.nvim_get_option_value('buftype', { buf = current_buf_id })
 
   if buf_type == 'terminal' then
     local job_id = vim.b.terminal_job_id
@@ -74,8 +104,12 @@ map({ "n", "t" }, '<M-w>', function()
     end
   end
 
-  vim.cmd.tabclose()
-  vim.cmd('silent! bd! ' .. current_buf)
+  if not has_multiple_windows() then
+    vim.cmd.tabclose()
+  end
+  if not is_buffer_open_in_any_tab(current_window_id, current_buf_id) then
+    vim.cmd('silent! bd! ' .. current_buf_id)
+  end
 end, { desc = 'Close current tab' })
 
 map({ "n", "t" }, '<M-t>', function()

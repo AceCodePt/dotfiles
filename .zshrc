@@ -52,43 +52,13 @@ gwadd() {
   fi
 }
 
-function nvim() {
-  if [ -n "$NVIM" ]; then
-    nvr --remote-wait "$@"
-  else # If not inside nvim, just run the regular nvim command
-    command nvim "$@"
-  fi
-}
-
-
-
-function _zsh_vi_mode_change () {
-  if [ -n "$NVIM" ]; then
-    nvr -c "lua vim.g.zsh_keymap = '$KEYMAP'" &! &>/dev/null
-  fi
-
-  if [[ ${KEYMAP} == vicmd ]] ||
-       [[ $1 = 'block' ]]; then
-      echo -ne '\e[1 q'
-
-  elif [[ ${KEYMAP} == main ]] ||
-       [[ ${KEYMAP} == viins ]] ||
-       [[ ${KEYMAP} = '' ]] ||
-       [[ $1 = 'beam' ]]; then
-    echo -ne '\e[5 q'
-  fi
-}
-
 
 export PATH="$PATH:$HOME/.local/bin"
 
 export KEYTIMEOUT=1
-zle -N zle-keymap-select _zsh_vi_mode_change
-zle -N zle-line-init _zsh_vi_mode_change
-
 autoload -Uz edit-command-line
 zle -N edit-command-line
-bindkey -M vicmd 'vv' edit-command-line
+bindkey -M vicmd 'V' edit-command-line
 
 source ~/.zsh_profile
 source ~/.zsh_alias

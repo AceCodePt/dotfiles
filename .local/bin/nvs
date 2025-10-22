@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export NVIM_LISTEN_ADDRESS="/tmp/nvim.sock"
+
+if [[ -n "$NVIM_LISTEN_ADDRESS" ]] && [[ $# -gt 0 ]]; then
+  /usr/bin/nvim --server "$NVIM_LISTEN_ADDRESS" --remote "$@"
+else
+  /usr/bin/nvim "$@"
+fi

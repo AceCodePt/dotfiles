@@ -3,7 +3,8 @@ local fzf_tmux = require("util.fzf_tmux")
 
 local config = {
   search_dirs = vim.fn.shellescape(vim.fn.expand("$HOME/companies")) ..
-      " " .. vim.fn.shellescape(vim.fn.expand("$HOME/stuff")),
+      " " .. vim.fn.shellescape(vim.fn.expand("$HOME/stuff")) ..
+      " " .. vim.fn.shellescape(vim.fn.expand("$HOME/dotfiles")),
 
 
   -- Simple filenames. Dots will be escaped automatically.
@@ -60,7 +61,7 @@ local function show_sessionizer()
   -- 2. Use tmux display-popup to run fzf
   -- -----------------------------------------------------------------------
   local find_cmd = string.format(
-    "$HOME/.local/bin/fd --max-depth 4 -H -I '^(%s)$' %s -X dirname | sort -u",
+    "fd --max-depth 4 -H -I '^(%s)$' %s -X dirname | sort -u",
     markers_regex,
     config.search_dirs
   )

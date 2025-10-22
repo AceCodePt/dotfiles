@@ -114,7 +114,7 @@ end
 -- Replicates Telescope's `live_grep` with a preview window.
 function M.live_grep()
   -- The rg command is now constructed with \! escaped globs.
-  local rg_reload_cmd = "rg --vimgrep -u --hidden " .. rg_glob_args .. " {q} || true"
+  local rg_reload_cmd = "rg --vimgrep -u --hidden " .. rg_glob_args .. " {q} "
 
   local selected_line = M.tmux_popup(rg_reload_cmd,
     { fzf = true, prompt = "Grep Files > ", width = 80, height = 80, reload_on_change = true })

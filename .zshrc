@@ -56,6 +56,8 @@ gwadd() {
 export PATH="$PATH:$HOME/.local/bin"
 
 export KEYTIMEOUT=1
+
+export NVIM_LISTEN_ADDRESS=/tmp/nvim.sock
 autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd 'V' edit-command-line

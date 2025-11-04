@@ -56,7 +56,7 @@ return {
           end,
         })
         vim.api.nvim_create_autocmd("BufWritePost", {
-          pattern = { "*.js", "*.ts" },
+          pattern = { "*.js", "*.ts", "*.svg", "*.astro" },
           group = group,
           callback = function(e)
             notify(e.match, 2)

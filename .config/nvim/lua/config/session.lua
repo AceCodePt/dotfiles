@@ -61,12 +61,12 @@ local function show_sessionizer()
   -- 2. Use tmux display-popup to run fzf
   -- -----------------------------------------------------------------------
   local find_cmd = string.format(
-    "fd --max-depth 4 -H -I '^(%s)$' %s -X dirname | sort -u",
+    "fd --max-depth 4 -H -I '^(%s)$' %s -X dirname | sort -u | sed \"s|^$HOME/||\"",
     markers_regex,
     config.search_dirs
   )
 
-  local selected_path = fzf_tmux.tmux_popup(find_cmd, { fzf = true })
+  local selected_path = vim.fn.expand("$HOME") .. '/' .. fzf_tmux.tmux_popup(find_cmd, { fzf = true })
 
   -- If the user cancelled fzf, the file will be empty.
   if selected_path == "" then

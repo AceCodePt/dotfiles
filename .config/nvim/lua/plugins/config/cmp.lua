@@ -7,6 +7,13 @@ require("luasnip.loaders.from_vscode").lazy_load({
   paths = snippet_dir
 })
 
+local source_priority = {
+  snippets = 4,
+  lsp = 3,
+  path = 2,
+  buffer = 1
+}
+
 require("blink.cmp").setup({
   snippets = { preset = 'luasnip' },
   keymap = {
@@ -66,12 +73,39 @@ require("blink.cmp").setup({
       lazydev = {
         name = "LazyDev",
         module = "lazydev.integrations.blink",
-        -- make lazydev completions top priority (see `:h blink.cmp`)
         score_offset = 100,
+      },
+      lsp = {
+        name = 'LSP',
+        module = 'blink.cmp.sources.lsp',
+        transform_items = function(_, items)
+          return vim.tbl_filter(function(item)
+            return item.kind ~= require('blink.cmp.types').CompletionItemKind.Keyword
+          end, items)
+        end,
+      },
+      path = {
+        opts = {
+          get_cwd = function(_)
+            return vim.fn.getcwd()
+          end,
+        },
       },
     },
   },
-  fuzzy = { implementation = "prefer_rust" },
+  fuzzy = {
+    implementation = 'lua',
+    frecency = { enabled = false },
+    proximity = { enabled = false },
+    sorts = { function(a, b)
+      local a_priority = source_priority[a.source_id]
+      local b_priority = source_priority[b.source_id]
+      if a_priority ~= b_priority then return a_priority > b_priority end
+    end,
+      'score',
+      'sort_text'
+    }
+  },
   signature = { enabled = true }
 })
 

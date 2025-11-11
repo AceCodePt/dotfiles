@@ -1,3 +1,4 @@
+local map = require("util.map").map
 local M = {}
 
 --- Simple utility for opening and running a terminal command
@@ -32,28 +33,20 @@ function M.open_and_run_terminal_command(command, params)
 
   -- 4. Get the buffer number that will host the terminal
   local term_bufnr = vim.api.nvim_get_current_buf()
-
-  -- 5. Open the terminal and run the command
-  if exit_on_success then
-    -- If we need to auto-close, we must use termopen() to get the exit callback
-    local on_exit_callback = function(job_id, exit_code, event)
-      if exit_code == 0 then
-        -- Schedule the buffer delete to run safely in the main loop
-        vim.schedule(function()
-          -- Check if buffer still exists before trying to delete
-          if vim.api.nvim_buf_is_valid(term_bufnr) then
-            vim.api.nvim_buf_delete(term_bufnr, { force = false })
-          end
-        end)
+  local on_exit_callback = function(job_id, exit_code, event)
+    local exit_terminal = function()
+      if vim.api.nvim_buf_is_valid(term_bufnr) then
+        vim.api.nvim_buf_delete(term_bufnr, { force = false })
       end
     end
-    
-    -- termopen starts the job in the *current* buffer
-    vim.fn.termopen(command, { on_exit = on_exit_callback })
-  else
-    -- Otherwise, the simple vim.cmd is fine
-    vim.cmd('terminal ' .. command)
+    if exit_on_success and exit_code == 0 then
+      vim.schedule(exit_terminal)
+    else
+      map("n", "q", exit_terminal, { bufnr = term_bufnr })
+      map("n", "<Esc>", exit_terminal, { bufnr = term_bufnr })
+    end
   end
+  vim.fn.jobstart(command, { on_exit = on_exit_callback, term = true })
 
   -- 6. Go back to normal mode from terminal mode
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), 'n', false)

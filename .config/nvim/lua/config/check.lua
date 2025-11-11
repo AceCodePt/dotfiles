@@ -12,7 +12,7 @@ local function fn_plugin_config(plugin_name, plugin_dir_config)
     local plugin_config = plugin_dir_config .. "." .. plugin_name
     local ok, _ = pcall(require, plugin_config)
     if not ok then
-      error("Didn't find, " .. plugin_config)
+      vim.notify(vim.inspect(_))
     end
   end
 end

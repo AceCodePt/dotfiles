@@ -105,7 +105,7 @@ vim.api.nvim_create_autocmd({ "TermEnter", "TermLeave", "TabLeave" }, {
 
     local proc_path = string.format("/proc/%d/cwd", pid)
 
-    local ok, term_dir = pcall(vim.loop.fs_readlink, proc_path)
+    local ok, term_dir = pcall(vim.uv.fs_readlink, proc_path)
 
     if ok and term_dir and term_dir ~= vim.fn.getcwd(-1) then
       vim.cmd.tcd({ args = { term_dir } })

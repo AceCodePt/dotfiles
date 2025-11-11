@@ -6,6 +6,10 @@ return {
       json = {
         -- Schemas https://www.schemastore.org
         schemas = {
+            {
+            fileMatch = { "opencode.json*" },
+              url = "https://opencodsoe.ai/config.json",
+            },
           {
             fileMatch = { "package.json" },
             url = "https://json.schemastore.org/package.json",

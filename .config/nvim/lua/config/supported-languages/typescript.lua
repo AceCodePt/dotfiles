@@ -67,7 +67,7 @@ return {
           if #env_files > 0 then
             params = params .. '--env-file=' .. env_files[1]
           end
-          open_and_run_terminal_command("node " .. params .. " " .. current_file_path)
+          open_and_run_terminal_command("pnpx tsx " .. params .. " " .. current_file_path)
         end, "Node run")
 
         nmap("<leader>i", function()

@@ -58,9 +58,12 @@ return {
           client:exec_cmd(params)
         end, "[O]rganize [I]mports")
 
-        nmap("<leader>i", function()
-          -- textDocument/diagnostic
+        nmap("<leader>nn", function ()
+          local current_file_path = vim.fn.expand('%:p')
+          open_and_run_terminal_command("node " .. current_file_path)
+        end, "Node run")
 
+        nmap("<leader>i", function()
           local tbl = vim.lsp.diagnostic.get_line_diagnostics(bufnr)
 
           local row = vim.iter(tbl)

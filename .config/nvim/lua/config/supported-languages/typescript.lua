@@ -58,9 +58,16 @@ return {
           client:exec_cmd(params)
         end, "[O]rganize [I]mports")
 
-        nmap("<leader>nn", function ()
+        nmap("<leader>nn", function()
           local current_file_path = vim.fn.expand('%:p')
-          open_and_run_terminal_command("node " .. current_file_path)
+          local params = ''
+          local env_files = vim.fn.glob('.env*', true, true, true)
+
+
+          if #env_files > 0 then
+            params = params .. '--env-file=' .. env_files[1]
+          end
+          open_and_run_terminal_command("node " .. params .. " " .. current_file_path)
         end, "Node run")
 
         nmap("<leader>i", function()

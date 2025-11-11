@@ -78,7 +78,9 @@ function M.tmux_popup(command_or_table, opts)
     )
   end
 
-  local fzf_command = string.format("%s" .. popup_command,
+  local current_cwd = vim.fn.getcwd(-1)
+  local fzf_command = string.format("cd %s && %s" .. popup_command,
+    current_cwd,
     command
   )
 

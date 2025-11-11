@@ -67,7 +67,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end
 
     map('n', '<leader>nd', function()
-      open_and_run_terminal_command('nr dev')
+      open_and_run_terminal_command('nr dev', { location = "start", unfocus = true })
     end, { desc = "[N]PM [D]ev" })
 
     map('n', '<leader>ns', function()
@@ -75,7 +75,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end, { desc = "[N]PM [S]tart" })
 
     map('n', '<leader>ni', function()
-      open_and_run_terminal_command('ni')
+      open_and_run_terminal_command('ni', { exit_on_success = true })
     end, { desc = "[N]PM [I]nstall" })
   end,
 })

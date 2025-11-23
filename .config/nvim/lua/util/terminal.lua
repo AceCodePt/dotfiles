@@ -34,6 +34,9 @@ function M.open_and_run_terminal_command(command, params)
   -- 4. Get the buffer number that will host the terminal
   local term_bufnr = vim.api.nvim_get_current_buf()
   local on_exit_callback = function(job_id, exit_code, event)
+    if not vim.api.nvim_buf_is_valid(term_bufnr) then
+      return
+    end
     local exit_terminal = function()
       if vim.api.nvim_buf_is_valid(term_bufnr) then
         vim.api.nvim_buf_delete(term_bufnr, { force = false })
@@ -42,8 +45,8 @@ function M.open_and_run_terminal_command(command, params)
     if exit_on_success and exit_code == 0 then
       vim.schedule(exit_terminal)
     else
-      map("n", "q", exit_terminal, { bufnr = term_bufnr })
-      map("n", "<Esc>", exit_terminal, { bufnr = term_bufnr })
+      map("n", "q", exit_terminal, { buffer = term_bufnr })
+      map("n", "<Esc>", exit_terminal, { buffer = term_bufnr })
     end
   end
   vim.fn.jobstart(command, { on_exit = on_exit_callback, term = true })

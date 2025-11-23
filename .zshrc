@@ -150,3 +150,6 @@ if [ -f '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc' ];
 
 export PATH="$PATH:/opt/mssql-tools18/bin"
 eval "$(mise activate zsh)"
+
+# opencode
+export PATH=/home/sagi/.opencode/bin:$PATH

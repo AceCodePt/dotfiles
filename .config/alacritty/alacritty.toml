@@ -1,43 +1,44 @@
 [window]
 decorations = "none"
-startup_mode = "Maximized"
 dynamic_padding = true
-
-  [window.dimensions]
-  columns = 80
-  lines = 30
-
-  [window.padding]
-  x = 250
-  y = 150
-
-[scrolling]
-history = 0
 
 [font]
 size = 18
 
-  [font.normal]
-  family = "Hack Nerd Font"
+[env]
+TERM = "xterm-256color"
 
 [colors.primary]
-background = "#000000"
-foreground = "#d8d7d7"
+background = '#1a1b26'
+foreground = '#a9b1d6'
 
+# Normal colors
 [colors.normal]
-black = "#555555"
-red = "#d15c5c"
-green = "#afd75f"
-yellow = "#d1d05c"
-blue = "#5eabd3"
-magenta = "#af87d7"
-cyan = "#60d7af"
-white = "#d8d7d7"
+black = '#32344a'
+red = '#f7768e'
+green = '#9ece6a'
+yellow = '#e0af68'
+blue = '#7aa2f7'
+magenta = '#ad8ee6'
+cyan = '#449dab'
+white = '#787c99'
+
+# Bright colors
+[colors.bright]
+black = '#444b6a'
+red = '#ff7a93'
+green = '#b9f27c'
+yellow = '#ff9e64'
+blue = '#7da6ff'
+magenta = '#bb9af7'
+cyan = '#0db9d7'
+white = '#acb0d0'
+
+[colors.selection]
+background = '#7aa2f7'
 
 [terminal.shell]
 program = "/bin/zsh"
-args = [ "--login", "-c", "exec tmux new -A -s dotfiles -c ~/dotfiles" ]
-
 
 [[keyboard.bindings]]
 key = "Return"

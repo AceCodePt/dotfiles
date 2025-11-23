@@ -62,7 +62,7 @@ local function show_sessionizer()
   -- 2. Use tmux display-popup to run fzf
   -- -----------------------------------------------------------------------
   local find_cmd = string.format(
-    "fd --max-depth 3 -E 'node_modules' -H -I '^(%s)$' %s -X dirname | sort -u | sed \"s|^$HOME/||\"",
+    "fd --max-depth 4 -E 'node_modules' -H -I '^(%s)$' %s -X dirname | sort -u | sed \"s|^$HOME/||\"",
     markers_regex,
     config.search_dirs
   )

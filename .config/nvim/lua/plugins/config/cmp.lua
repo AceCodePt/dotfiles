@@ -96,13 +96,13 @@ require("blink.cmp").setup({
   fuzzy = {
     implementation = 'lua',
     frecency = { enabled = false },
-    proximity = { enabled = false },
-    sorts = { function(a, b)
-      local a_priority = source_priority[a.source_id]
-      local b_priority = source_priority[b.source_id]
-      if a_priority ~= b_priority then return a_priority > b_priority end
-    end,
+    sorts = {
       'score',
+      function(a, b)
+        local a_priority = source_priority[a.source_id]
+        local b_priority = source_priority[b.source_id]
+        if a_priority ~= b_priority then return a_priority > b_priority end
+      end,
       'sort_text'
     }
   },

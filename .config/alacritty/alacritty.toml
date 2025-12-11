@@ -8,6 +8,9 @@ size = 18
 [env]
 TERM = "xterm-256color"
 
+[bell]
+command = { program = "paplay", args = ["/usr/share/sounds/freedesktop/stereo/dialog-information.oga"] }
+
 [colors.primary]
 background = '#1a1b26'
 foreground = '#a9b1d6'

@@ -60,6 +60,7 @@ vim.opt.diffopt:append("linematch:60")
 
 -- Behavior settings
 vim.opt.hidden = true                   -- Allow hidden buffers
+vim.opt.belloff = ''                    -- Give me bell
 vim.opt.errorbells = false              -- No error bells
 vim.opt.backspace = "indent,eol,start"  -- Better backspace behavior
 vim.opt.autochdir = false               -- Don't auto change directory

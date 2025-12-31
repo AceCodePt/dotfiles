@@ -1,4 +1,4 @@
 return {
-  url = "https://github.com/iamcco/markdown-preview.nvim",
-  build = "cd app && yarn install",
+  'MeanderingProgrammer/render-markdown.nvim',
+  dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
 }

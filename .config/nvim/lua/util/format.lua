@@ -1,7 +1,7 @@
 local M = {}
-function M.format()
+function M.format(bufnr)
   local conform = require("conform")
-  conform.format({ async = true, lsp_format = "first" })
+  conform.format({ async = true, bufnr = bufnr })
 end
 
 ---@param text string

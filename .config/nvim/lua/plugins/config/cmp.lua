@@ -19,7 +19,6 @@ require("blink.cmp").setup({
   keymap = {
     preset = 'none',
     ['<M-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-    ['<M-e>'] = { 'hide' },
     ['<CR>'] = { 'accept', 'fallback' },
     ['<Tab>'] = {
       function(cmp)
@@ -115,8 +114,8 @@ scissors.setup({
   editSnippetPopup = {
     keymaps = {
       -- if not mentioned otherwise, the keymaps apply to normal mode
-      cancel = "q",
-      saveChanges = "<Esc>",
+      cancel = "<Esc>",
+      saveChanges = ":w",
       goBackToSearch = "<BS>",
       deleteSnippet = "<A-BS>",
       duplicateSnippet = "<A-d>",
@@ -125,11 +124,12 @@ scissors.setup({
       showHelp = "?",
     },
   },
+  jsonFormatter = "jq",
 })
 
 
 map(
-  "n",
+  { "n", "v" },
   "<leader>se",
   function()
     -- Grab items from scissors

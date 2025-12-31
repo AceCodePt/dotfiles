@@ -1,7 +1,7 @@
 return {
   fts = "svelte",
   treesitter = "svelte",
-  formatters = { "prettierd", "prettier" },
+  formatters = { "biome", "biome-organize-imports" },
   lsp = {
     name = "svelte",
   },

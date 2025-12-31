@@ -26,12 +26,23 @@ local filters = {
 }
 
 return {
-  fts = { "typescript", "typescriptreact" },
+  fts = { "typescript", "typescriptreact", "astro" },
   lsp = {
-    name = "ts_ls",
+    name = "vtsls",
     config = {
+      settings = {
+        ["js/ts"] = {
+          implicitProjectConfig = {
+            lib = { "ES2024" },
+            target = "ESNext"
+          }
+        },
+      },
       capabilities = {
         workspace = {
+          typescript = {
+            lib = { "ES2024" },
+          },
           didChangeWatchedFiles = {
             dynamicRegistration = true,
           },
@@ -48,14 +59,15 @@ return {
 
           map("n", keys, func, { buffer = bufnr, desc = desc })
         end
-        nmap("<leader>oi", function()
-          local params = {
-            command = "_typescript.organizeImports",
-            arguments = { vim.api.nvim_buf_get_name(0) },
-            title = "",
-          }
 
-          client:exec_cmd(params)
+        nmap("<leader>oi", function()
+          vim.lsp.buf.code_action({
+            context = {
+              only = { "source.organizeImports" },
+              diagnostics = {}
+            },
+            apply = true,
+          })
         end, "[O]rganize [I]mports")
 
         nmap("<leader>nn", function()
@@ -67,7 +79,7 @@ return {
           if #env_files > 0 then
             params = params .. '--env-file=' .. env_files[1]
           end
-          open_and_run_terminal_command("pnpx tsx " .. params .. " " .. current_file_path)
+          open_and_run_terminal_command("tsx " .. params .. " " .. current_file_path)
         end, "Node run")
 
         nmap("<leader>i", function()
@@ -172,5 +184,5 @@ return {
     "typescript",
     "tsx"
   },
-  formatters = { "prettierd", "prettier" }
+  formatters = { "biome", "biome-organize-imports", stop_after_first = false, lsp_format = "never" },
 }

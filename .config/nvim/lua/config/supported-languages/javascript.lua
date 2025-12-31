@@ -1,7 +1,7 @@
 return {
   fts = { "javascript", "javascriptreact" },
   lsp = {
-    name = "ts_ls",
+    name = "vtsls",
     config = {
       capabilities = {
         workspace = {
@@ -16,5 +16,5 @@ return {
     "javascript",
     "tsx"
   },
-  formatters = { "prettierd", "prettier" }
+  formatters = { "biome", "biome-organize-imports", stop_after_first = false, lsp_format = "never" },
 }

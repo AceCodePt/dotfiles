@@ -3,14 +3,10 @@ local typescript_on_attach = require("config.supported-languages.typescript").ls
 return {
   fts = "astro",
   treesitter = "astro",
-  formatters = { "prettierd", "prettier" },
+  formatters = { "biome", "biome-organize-imports", stop_after_first = false, lsp_format = "never" },
   lsp = {
     name = "astro",
     config = {
-      init_options = {
-        typescript = {
-        }
-      },
       settings = {
         astro = {
           updateImportsOnFileMove = {

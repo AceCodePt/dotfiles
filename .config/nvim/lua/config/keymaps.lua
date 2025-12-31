@@ -200,3 +200,7 @@ map('n', '<leader>sm', show_nvim_messages, {
 
 map('i', '<M-j>', '<C-n>', { desc = 'Go to next completion item' })
 map('i', '<M-k>', '<C-p>', { desc = 'Go to previous completion item' })
+
+
+map('t', '<M-BS>', [[<C-\><C-n>]], { desc = 'Exit terminal' })
+map('t', '<M-\\>', [[<C-\><C-n>]], { desc = 'Exit terminal' })

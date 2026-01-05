@@ -1,1 +1,31 @@
-{"name":"personal-snippets","contributes":{"snippets":[{"path":"./lua.json","language":"lua"},{"path":"./astro.json","language":"astro"},{"path":"./typescript.json","language":"typescript"},{"path":"./javascript.json","language":["javascript"]}]}}
+{
+  "contributes": {
+    "snippets": [
+      {
+        "language": "lua",
+        "path": "./lua.json"
+      },
+      {
+        "language": "astro",
+        "path": "./astro.json"
+      },
+      {
+        "language": "typescript",
+        "path": "./typescript.json"
+      },
+      {
+        "language": [
+          "javascript"
+        ],
+        "path": "./javascript.json"
+      },
+      {
+        "language": [
+          "typescriptreact"
+        ],
+        "path": "./typescriptreact.json"
+      }
+    ]
+  },
+  "name": "personal-snippets"
+}

@@ -79,7 +79,7 @@ local function has_multiple_windows()
 end
 
 
-map({ "n", "t" }, '<M-w>', function()
+map({ "n", "t", "v" }, '<M-w>', function()
   -- Check if there is only one tab page open
   if vim.fn.tabpagenr('$') == 1 then
     vim.cmd.quit()
@@ -167,7 +167,10 @@ end
 
 for index, value in ipairs(tab_keys) do
   map({ "n", "t" }, '<M-' .. value:lower() .. '>', function()
-    vim.cmd(index .. 'tabnext')
+    local total_tabs = vim.fn.tabpagenr('$')
+
+    -- Fallback to the last tab
+    vim.cmd(math.min(total_tabs, index) .. 'tabnext')
   end, { desc = 'Go to ' .. index .. ' tab' })
 
   map({ "n", "t" }, '<M-' .. value:upper() .. '>', swap_tab_positions(index), { desc = 'Move to ' .. index .. ' tab' })

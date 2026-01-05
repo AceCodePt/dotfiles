@@ -92,9 +92,9 @@ local function show_sessionizer()
   vim.fn.system("tmux switch-client -t=" .. vim.fn.shellescape(session_name))
 end
 
-map({ 'n', 't' }, "<M-f>", show_sessionizer, { desc = "Open tmux sessionizer" })
+map({ 'n', 't' }, "<M-a>", show_sessionizer, { desc = "Open tmux sessionizer" })
 
-map({ 'n', 't' }, '<M-g>', function()
+map({ 'n', 't' }, '<M-d>', function()
   fzf_tmux.tmux_popup("lazygit")
 end, { desc = 'Open lazygit in tmux popup' })
 
@@ -117,5 +117,5 @@ end
 
 map({ 'n', 't' }, '<M-s>', switch_tmux_session, { desc = 'Switch tmux session' })
 
-vim.keymap.set("n", "<leader>sf", fzf_tmux.find_files, { desc = "[S]earch [F]iles (fzf)" })
-vim.keymap.set("n", "<leader>sg", fzf_tmux.live_grep, { desc = "[S]earch by [G]rep (fzf)" })
+map({ "n", 't' }, "<M-f>", fzf_tmux.find_files, { desc = "[S]earch [F]iles (fzf)" })
+map({ "n", 't' }, "<M-g>", fzf_tmux.live_grep, { desc = "[S]earch by [G]rep (fzf)" })

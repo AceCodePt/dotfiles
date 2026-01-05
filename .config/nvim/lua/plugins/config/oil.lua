@@ -1,7 +1,7 @@
 local map = require("util.map").map
 
 local oil = require("oil")
-map("n", "<M-e>", "<CMD>Oil <CR>", { desc = "Open Oil" })
+map({ "n", "t" }, "<M-e>", "<CMD>Oil <CR>", { desc = "Open Oil" })
 oil.setup({
   experimental_watch_for_changes = true,
   prompt_save_on_select_new_entry = false,

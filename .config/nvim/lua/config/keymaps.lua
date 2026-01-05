@@ -193,7 +193,7 @@ local function show_nvim_messages()
   })
 end
 
-map('n', '<leader>sm', show_nvim_messages, {
+map('n', '<M-m>', show_nvim_messages, {
   desc = "Show Neovim Messages"
 })
 

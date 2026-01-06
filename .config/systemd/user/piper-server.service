@@ -1,0 +1,11 @@
+[Unit]
+Description=Piper TTS Server
+After=network.target
+
+[Service]
+ExecStart=%h/.local/bin/piper-server.sh
+Restart=on-failure
+WorkingDirectory=%h/.local/bin
+
+[Install]
+WantedBy=default.target

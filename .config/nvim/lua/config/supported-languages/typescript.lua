@@ -70,7 +70,7 @@ return {
           })
         end, "[O]rganize [I]mports")
 
-        nmap("<leader>nn", function()
+        nmap("<M-n><M-n>", function()
           local current_file_path = vim.fn.expand('%:p')
           local params = ''
           local env_files = vim.fn.glob('.env*', true, true, true)

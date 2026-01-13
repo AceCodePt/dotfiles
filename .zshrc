@@ -154,6 +154,6 @@ eval "$(mise activate zsh)"
 # opencode
 export PATH=/home/sagi/.opencode/bin:$PATH
 
-alias speak="./.local/bin/speak.sh"
+alias speak="$HOME/.local/bin/speak.sh"
 
 . "$HOME/.local/share/../bin/env"

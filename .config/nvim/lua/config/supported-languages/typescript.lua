@@ -30,7 +30,17 @@ return {
   lsp = {
     name = "vtsls",
     config = {
+      filetypes = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "astro",
+      },
       settings = {
+        vtsls = {
+          autoUseWorkspaceTsdk = true,
+        },
         ["js/ts"] = {
           implicitProjectConfig = {
             lib = { "ES2024" },
@@ -45,6 +55,18 @@ return {
           },
           didChangeWatchedFiles = {
             dynamicRegistration = true,
+          },
+        },
+      },
+      init_options = {
+        plugins = {
+          {
+            name = "@astrojs/ts-plugin",
+            -- Point to the location inside your project or global node_modules
+            -- In many configs, just the name is enough if "typescript.tsserver.pluginPaths" is set correctly,
+            -- but specifying the location is safer.
+            location = "./node_modules/@astrojs/ts-plugin",
+            languages = { "typescript", "astro" }
           },
         },
       },
@@ -182,6 +204,7 @@ return {
   },
   treesitter = {
     "typescript",
+    "astro",
     "tsx"
   },
   formatters = { "biome", "biome-organize-imports", stop_after_first = false, lsp_format = "never" },

@@ -1,10 +1,13 @@
-export const NotificationPlugin = async ({ project, client, $, directory, worktree }) => {
+import { Plugin } from "@opencode-ai/plugin";
+
+export const NotificationPlugin: Plugin = async ({ $, directory }) => {
   return {
     event: async ({ event }) => {
       // Send notification on session completion
       if (event.type === "session.idle") {
-        await $`hyprctl notify 1 10000 0 "fontsize:35 OpenCode task done\!" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga`
+        const folder = directory.split("/").at(-1)!;
+        await $`hyprctl notify 1 10000 0 "fontsize:35 OpenCode ${folder} task done!" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga`;
       }
     },
-  }
-}
+  };
+};

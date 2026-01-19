@@ -4,12 +4,3 @@ require("config.autocmds")
 require("config.session")
 require("config.tabs")
 require("config.lazy")
-
-
--- require("plugins.theme")
--- require("plugins.treesitter")
--- require("plugins.oil")
--- require("plugins.lsp")
--- require("plugins.coding")
--- require("plugins.cmp")
--- require("plugins.markdown")

@@ -28,8 +28,6 @@ addToPathFront() {
     fi
 }
 
-# Function to create a new git worktree and branch
-# Converts '/' to '-' for the directory name
 gwadd() {
   if [ -z "$1" ]; then
     echo "Error: Please provide a branch name."
@@ -40,16 +38,26 @@ gwadd() {
   local DIR_NAME=${1//\//-}
   local DIR_PATH="../$DIR_NAME"
 
-  # Check if the branch already exists
+  # 1. Cleanup stale directory if it exists but isn't a registered worktree
+  # This prevents 'git worktree add' from failing due to an existing folder
+  if [ -d "$DIR_PATH" ] && ! git worktree list | grep -q "$DIR_NAME"; then
+    echo "⚠️  Cleaning up stale directory: $DIR_PATH"
+    rm -rf "$DIR_PATH"
+  fi
+
+  # 2. Create/Add the worktree
   if git rev-parse --verify --quiet "$BRANCH_NAME" >/dev/null; then
-    # Branch EXISTS, so check it out
-    echo "Branch '$BRANCH_NAME' already exists. Creating worktree..."
+    echo "🌿 Branch '$BRANCH_NAME' already exists. Adding worktree..."
     git worktree add "$DIR_PATH" "$BRANCH_NAME"
   else
-    # Branch does NOT exist, so create it with -b
-    echo "Branch '$BRANCH_NAME' not found. Creating new branch and worktree..."
+    echo "✨ Creating new branch '$BRANCH_NAME' and worktree..."
     git worktree add "$DIR_PATH" -b "$BRANCH_NAME"
   fi
+
+  # 3. Provide absolute path for the Agent/User to switch context
+  local ABS_PATH=$(cd "$DIR_PATH" && pwd)
+  echo "✅ Worktree initialized at: $ABS_PATH"
+  echo "👉 ACTION: cd $ABS_PATH"
 }
 
 

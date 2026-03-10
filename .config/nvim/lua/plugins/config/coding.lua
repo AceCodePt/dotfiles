@@ -37,3 +37,11 @@ require("conform").setup({
     lsp_format = "fallback",
   },
 })
+
+
+require('camouflage').setup({
+  yank = {
+    confirm = false,         -- Require confirmation before copying
+    auto_clear_seconds = 30, -- Auto-clear clipboard
+  },
+})

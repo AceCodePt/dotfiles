@@ -40,6 +40,7 @@ return {
       settings = {
         vtsls = {
           autoUseWorkspaceTsdk = true,
+          noErrorTruncation = true
         },
         ["js/ts"] = {
           implicitProjectConfig = {
@@ -207,5 +208,5 @@ return {
     "astro",
     "tsx"
   },
-  formatters = { "biome", "biome-organize-imports", stop_after_first = false, lsp_format = "never" },
+  formatters = { "prettier", stop_after_first = false, lsp_format = "never" },
 }

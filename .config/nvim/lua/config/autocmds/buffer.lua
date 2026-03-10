@@ -48,7 +48,7 @@ local function say(text)
   if not text or text:match("^%s*$") then return end
 
   -- 1. Shellescape the text so special characters don't break the shell
-  local safe_text = vim.fn.shellescape(text)
+  local safe_text = vim.fn.shellescape(text:sub(1,40))
 
   -- 2. Run inside an interactive zsh shell (-i) to load aliases
   local cmd = {
@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "ModeChanged" }, {
       local mode = vim.api.nvim_get_mode().mode
 
       -- Check if we are in any Visual mode
-      if not mode:match("^[vV\22]") then
+      if not mode:match("^[vV\22i]") then
         local cursor = vim.api.nvim_win_get_cursor(0)
         local row = cursor[1] - 1
         local col = cursor[2]
@@ -93,9 +93,12 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "ModeChanged" }, {
               [vim.diagnostic.severity.HINT]  = "Hint",
             }
             local type = severity_map[diag.severity] or "Diagnostic"
-            say(type .. ": " .. diag.message)
+            debounce_speak(function()
+              say(type .. ": " .. diag.message)
+            end)
           end
         end
+        return
       end
 
       -- Debounce: Only speak if the user stops expanding selection for X ms

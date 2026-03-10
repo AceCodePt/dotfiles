@@ -114,8 +114,8 @@ scissors.setup({
   editSnippetPopup = {
     keymaps = {
       -- if not mentioned otherwise, the keymaps apply to normal mode
-      cancel = "<Esc>",
-      saveChanges = ":w",
+      cancel = ":q",
+      saveChanges = "<Esc>",
       goBackToSearch = "<BS>",
       deleteSnippet = "<A-BS>",
       duplicateSnippet = "<A-d>",

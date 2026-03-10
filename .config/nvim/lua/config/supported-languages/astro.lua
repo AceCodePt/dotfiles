@@ -3,7 +3,7 @@ local typescript_on_attach = require("config.supported-languages.typescript").ls
 return {
   fts = "astro",
   treesitter = "astro",
-  formatters = { "biome", "biome-organize-imports", stop_after_first = false, lsp_format = "never" },
+  formatters = { "prettier", stop_after_first = false, lsp_format = "never" },
   lsp = {
     name = "astro",
     config = {

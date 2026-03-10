@@ -1,1 +1,6 @@
-{}
+{
+  "onchangetargetvalue": {
+    "body": "onChange={(e) => setInputStr(e.target.value)}",
+    "prefix": "onchangetargetvalue"
+  }
+}

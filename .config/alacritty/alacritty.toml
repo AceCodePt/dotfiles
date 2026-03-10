@@ -3,7 +3,7 @@ decorations = "none"
 dynamic_padding = true
 
 [font]
-size = 24
+size = 22
 
 [env]
 TERM = "xterm-256color"
@@ -308,3 +308,6 @@ chars = "\u001b[46;6u"
 key = "/"
 mods = "Control|Shift"
 chars = "\u001b[47;6u"
+
+[terminal]
+osc52 = "CopyPaste"

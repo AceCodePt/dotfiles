@@ -40,6 +40,9 @@ require("conform").setup({
 
 
 require('camouflage').setup({
+  pwned = {
+    enabled = false,               -- Feature toggle
+  },
   yank = {
     confirm = false,         -- Require confirmation before copying
     auto_clear_seconds = 30, -- Auto-clear clipboard

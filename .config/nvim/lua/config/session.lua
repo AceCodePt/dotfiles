@@ -98,6 +98,10 @@ map({ 'n', 't' }, '<M-d>', function()
   fzf_tmux.tmux_popup("lazygit")
 end, { desc = 'Open lazygit in tmux popup' })
 
+map({ 'n', 't' }, '<M-l>', function()
+  fzf_tmux.tmux_popup("lazydocker")
+end, { desc = 'Open lazygit in tmux popup' })
+
 
 local function switch_tmux_session()
   -- This single command now gets the session list and pipes it directly into fzf

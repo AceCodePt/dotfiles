@@ -1,0 +1,94 @@
+#!/bin/bash
+# delete-branch-with-worktree - Delete a git branch and its associated worktree
+# Usage: delete-branch-with-worktree <branch-name>
+#
+# This script:
+# 1. Finds and removes the worktree for the branch
+# 2. Runs project-specific cleanup hook (if exists)
+# 3. Deletes the branch
+#
+# Project-specific cleanup:
+#   Create a file at: <project-root>/hooks/pre-branch-delete
+#   It will receive: BRANCH_NAME, WORKTREE_PATH as environment variables
+
+set -e
+
+BRANCH_NAME="$1"
+
+if [ -z "$BRANCH_NAME" ]; then
+  echo "❌ Error: Branch name required"
+  echo "Usage: $0 <branch-name>"
+  exit 1
+fi
+
+echo ""
+echo "🗑️  Deleting branch: $BRANCH_NAME"
+echo ""
+
+# Get project root
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo "")"
+
+# For bare repos or if we're not in a git repo
+if [ -z "$PROJECT_ROOT" ] || [ "$(basename "$PROJECT_ROOT")" = ".git" ]; then
+  # Try to get the common git directory
+  GIT_COMMON_DIR="$(git rev-parse --git-common-dir 2>/dev/null || echo "")"
+  if [ -n "$GIT_COMMON_DIR" ]; then
+    PROJECT_ROOT="$(dirname "$GIT_COMMON_DIR")"
+  fi
+fi
+
+# Find worktree for this branch
+WORKTREE_PATH=""
+if git worktree list &>/dev/null; then
+  WORKTREE_PATH=$(git worktree list --porcelain | grep -A 2 "branch refs/heads/$BRANCH_NAME" | grep "^worktree" | cut -d' ' -f2 || echo "")
+fi
+
+# Step 1: Remove worktree if found
+if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then
+  echo "📁 Removing worktree: $WORKTREE_PATH"
+  
+  if git worktree remove "$WORKTREE_PATH" --force 2>/dev/null; then
+    echo "✅ Worktree removed"
+  else
+    echo "⚠️  Git worktree remove failed, removing directory manually..."
+    rm -rf "$WORKTREE_PATH"
+    echo "✅ Worktree removed manually"
+  fi
+  echo ""
+else
+  echo "ℹ️  No worktree found for this branch"
+  echo ""
+fi
+
+# Step 2: Run project-specific cleanup hook (if exists)
+if [ -n "$PROJECT_ROOT" ]; then
+  CLEANUP_HOOK="$PROJECT_ROOT/hooks/pre-branch-delete"
+  
+  if [ -x "$CLEANUP_HOOK" ]; then
+    echo "🔧 Running project cleanup hook..."
+    
+    export BRANCH_NAME="$BRANCH_NAME"
+    export WORKTREE_PATH="$WORKTREE_PATH"
+    
+    # Run in foreground (not background) to ensure cleanup completes
+    if bash "$CLEANUP_HOOK"; then
+      echo "✅ Cleanup hook completed"
+    else
+      echo "⚠️  Cleanup hook failed (continuing anyway)"
+    fi
+    echo ""
+  fi
+fi
+
+# Step 3: Delete the branch
+echo "🗑️  Deleting branch: $BRANCH_NAME"
+if git branch -D "$BRANCH_NAME" 2>/dev/null; then
+  echo "✅ Branch deleted"
+else
+  echo "❌ Failed to delete branch"
+  exit 1
+fi
+
+echo ""
+echo "✅ Complete!"
+echo ""

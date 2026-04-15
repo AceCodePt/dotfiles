@@ -9,3 +9,12 @@ customCommands:
     command: "gh pr create --base '{{.CheckedOutBranch.Name}}' --head '{{.SelectedLocalBranch.Name}}'  --web"
     context: 'localBranches'
     description: 'Create PR (non-interactive): current -> selected'
+  - key: 'D'
+    prompts:
+      - type: 'confirm'
+        title: 'Delete branch and cleanup'
+        body: 'Delete {{.SelectedLocalBranch.Name}} and remove worktree?'
+    command: "bash ~/.config/lazygit/scripts/delete-branch-with-worktree '{{.SelectedLocalBranch.Name}}'"
+    context: 'localBranches'
+    description: 'Delete branch + worktree + cleanup'
+    loadingText: 'Deleting branch and cleaning up...'

@@ -3,13 +3,15 @@
 # Usage: delete-branch-with-worktree <branch-name>
 #
 # This script:
-# 1. Finds and removes the worktree for the branch
-# 2. Runs project-specific cleanup hook (if exists)
+# 1. Runs pre-branch-delete hook (if exists) - for cleanup before deletion
+# 2. Removes the worktree for the branch
 # 3. Deletes the branch
+# 4. Runs post-branch-delete hook (if exists) - for tasks after deletion
 #
-# Project-specific cleanup:
-#   Create a file at: <project-root>/hooks/pre-branch-delete
-#   It will receive: BRANCH_NAME, WORKTREE_PATH as environment variables
+# Project-specific hooks:
+#   <project-root>/hooks/pre-branch-delete  - Runs before deletion (e.g., database cleanup)
+#   <project-root>/hooks/post-branch-delete - Runs after deletion (e.g., notifications)
+#   Both receive: BRANCH_NAME, WORKTREE_PATH as environment variables
 
 set -e
 
@@ -43,24 +45,7 @@ if git worktree list &>/dev/null; then
   WORKTREE_PATH=$(git worktree list --porcelain | grep -A 2 "branch refs/heads/$BRANCH_NAME" | grep "^worktree" | cut -d' ' -f2 || echo "")
 fi
 
-# Step 1: Remove worktree if found
-if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then
-  echo "📁 Removing worktree: $WORKTREE_PATH"
-  
-  if git worktree remove "$WORKTREE_PATH" --force 2>/dev/null; then
-    echo "✅ Worktree removed"
-  else
-    echo "⚠️  Git worktree remove failed, removing directory manually..."
-    rm -rf "$WORKTREE_PATH"
-    echo "✅ Worktree removed manually"
-  fi
-  echo ""
-else
-  echo "ℹ️  No worktree found for this branch"
-  echo ""
-fi
-
-# Step 2: Run project-specific cleanup hook (if exists)
+# Step 1: Run project-specific cleanup hook (if exists)
 if [ -n "$PROJECT_ROOT" ]; then
   CLEANUP_HOOK="$PROJECT_ROOT/hooks/pre-branch-delete"
   
@@ -80,6 +65,22 @@ if [ -n "$PROJECT_ROOT" ]; then
   fi
 fi
 
+# Step 2: Remove worktree if found
+if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then
+  echo "📁 Removing worktree: $WORKTREE_PATH"
+  
+  if git worktree remove "$WORKTREE_PATH" --force 2>/dev/null; then
+    echo "✅ Worktree removed"
+  else
+    echo "⚠️  Git worktree remove failed, removing directory manually..."
+    rm -rf "$WORKTREE_PATH"
+    echo "✅ Worktree removed manually"
+  fi
+fi
+
+echo ""
+
+
 # Step 3: Delete the branch
 echo "🗑️  Deleting branch: $BRANCH_NAME"
 if git branch -D "$BRANCH_NAME" 2>/dev/null; then
@@ -90,5 +91,25 @@ else
 fi
 
 echo ""
+
+# Step 4: Run post-branch-delete hook (if exists)
+if [ -n "$PROJECT_ROOT" ]; then
+  POST_HOOK="$PROJECT_ROOT/hooks/post-branch-delete"
+  
+  if [ -x "$POST_HOOK" ]; then
+    echo "🔧 Running post-delete hook..."
+    
+    export BRANCH_NAME="$BRANCH_NAME"
+    export WORKTREE_PATH="$WORKTREE_PATH"
+    
+    if bash "$POST_HOOK"; then
+      echo "✅ Post-delete hook completed"
+    else
+      echo "⚠️  Post-delete hook failed"
+    fi
+    echo ""
+  fi
+fi
+
 echo "✅ Complete!"
 echo ""

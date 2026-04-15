@@ -1,6 +1,6 @@
 local map = require("util.map").map
 local fzf_tmux = require("util.fzf_tmux")
-local scissors = require("scissors")
+-- local scissors = require("scissors")
 local snippet_dir = vim.fn.stdpath("config") .. "/snippets"
 
 require("luasnip.loaders.from_vscode").lazy_load({
@@ -108,90 +108,90 @@ require("blink.cmp").setup({
   signature = { enabled = true }
 })
 
-scissors.setup({
-  snippetDir = snippet_dir,
+-- scissors.setup({
+--   snippetDir = snippet_dir,
 
-  editSnippetPopup = {
-    keymaps = {
-      -- if not mentioned otherwise, the keymaps apply to normal mode
-      cancel = ":q",
-      saveChanges = "<Esc>",
-      goBackToSearch = "<BS>",
-      deleteSnippet = "<A-BS>",
-      duplicateSnippet = "<A-d>",
-      openInFile = "<A-o>",
-      insertNextPlaceholder = "<A-p>", -- insert & normal mode
-      showHelp = "?",
-    },
-  },
-  jsonFormatter = "jq",
-})
+--   editSnippetPopup = {
+--     keymaps = {
+--       -- if not mentioned otherwise, the keymaps apply to normal mode
+--       cancel = ":q",
+--       saveChanges = "<Esc>",
+--       goBackToSearch = "<BS>",
+--       deleteSnippet = "<A-BS>",
+--       duplicateSnippet = "<A-d>",
+--       openInFile = "<A-o>",
+--       insertNextPlaceholder = "<A-p>", -- insert & normal mode
+--       showHelp = "?",
+--     },
+--   },
+--   jsonFormatter = "jq",
+-- })
 
 
-map(
-  { "n", "v" },
-  "<leader>se",
-  function()
-    -- Grab items from scissors
-    local convert = require("scissors.vscode-format.convert-object")
-    local u = require("scissors.utils")
-    local vb = require("scissors.vscode-format.validate-bootstrap")
-    local editInPopup = require("scissors.3-edit-popup").editInPopup
-    local snippetDir = require("scissors.config").config.snippetDir
+-- map(
+--   { "n", "v" },
+--   "<leader>se",
+--   function()
+--     -- Grab items from scissors
+--     local convert = require("scissors.vscode-format.convert-object")
+--     local u = require("scissors.utils")
+--     local vb = require("scissors.vscode-format.validate-bootstrap")
+--     local editInPopup = require("scissors.3-edit-popup").editInPopup
+--     local snippetDir = require("scissors.config").config.snippetDir
 
-    -- GUARD
-    if not vb.validate(snippetDir) then return end
-    local packageJsonExist = u.fileExists(snippetDir .. "/package.json")
-    if not packageJsonExist then
-      u.notify(
-        "Your snippet directory is missing a `package.json`.\n"
-        .. "The file can be bootstrapped by adding a new snippet via:\n"
-        .. ":ScissorsAddNewSnippet",
-        "warn"
-      )
-      return
-    end
+--     -- GUARD
+--     if not vb.validate(snippetDir) then return end
+--     local packageJsonExist = u.fileExists(snippetDir .. "/package.json")
+--     if not packageJsonExist then
+--       u.notify(
+--         "Your snippet directory is missing a `package.json`.\n"
+--         .. "The file can be bootstrapped by adding a new snippet via:\n"
+--         .. ":ScissorsAddNewSnippet",
+--         "warn"
+--       )
+--       return
+--     end
 
-    -- GET ALL SNIPPETS
-    local bufferFt = vim.bo.filetype
-    local allSnippets = {} ---@type Scissors.SnippetObj[]
-    local snippets_prefix_only = {} ---@type table<string>
-    for _, absPath in pairs(convert.getSnippetfilePathsForFt(bufferFt)) do
-      local filetypeSnippets = convert.readVscodeSnippetFile(absPath, bufferFt)
-      vim.list_extend(allSnippets, filetypeSnippets)
-    end
-    for _, absPath in pairs(convert.getSnippetfilePathsForFt("all")) do
-      local globalSnippets = convert.readVscodeSnippetFile(absPath, "plaintext")
-      vim.list_extend(allSnippets, globalSnippets)
-    end
+--     -- GET ALL SNIPPETS
+--     local bufferFt = vim.bo.filetype
+--     local allSnippets = {} ---@type Scissors.SnippetObj[]
+--     local snippets_prefix_only = {} ---@type table<string>
+--     for _, absPath in pairs(convert.getSnippetfilePathsForFt(bufferFt)) do
+--       local filetypeSnippets = convert.readVscodeSnippetFile(absPath, bufferFt)
+--       vim.list_extend(allSnippets, filetypeSnippets)
+--     end
+--     for _, absPath in pairs(convert.getSnippetfilePathsForFt("all")) do
+--       local globalSnippets = convert.readVscodeSnippetFile(absPath, "plaintext")
+--       vim.list_extend(allSnippets, globalSnippets)
+--     end
 
-    for index, item in ipairs(allSnippets) do
-      table.insert(snippets_prefix_only, index .. ") " .. table.concat(item.prefix, ", "))
-    end
+--     for index, item in ipairs(allSnippets) do
+--       table.insert(snippets_prefix_only, index .. ") " .. table.concat(item.prefix, ", "))
+--     end
 
-    -- GUARD
-    if #allSnippets == 0 then
-      u.notify("No snippets found for filetype: " .. bufferFt, "warn")
-      return
-    end
+--     -- GUARD
+--     if #allSnippets == 0 then
+--       u.notify("No snippets found for filetype: " .. bufferFt, "warn")
+--       return
+--     end
 
-    -- Run tmux popup over them
-    -- get the selected item
-    local selected_item = fzf_tmux.tmux_popup(snippets_prefix_only,
-      { fzf = true, prompt = "Snippet > ", width = 50, height = 50 })
-    if selected_item == "" then
-      return
-    end
-    local number = tonumber(string.match(selected_item, "^%d+"))
-    local snippet = allSnippets[number]
-    editInPopup(snippet, "update")
-  end,
-  { desc = "Snippet: Edit" }
-)
+--     -- Run tmux popup over them
+--     -- get the selected item
+--     local selected_item = fzf_tmux.tmux_popup(snippets_prefix_only,
+--       { fzf = true, prompt = "Snippet > ", width = 50, height = 50 })
+--     if selected_item == "" then
+--       return
+--     end
+--     local number = tonumber(string.match(selected_item, "^%d+"))
+--     local snippet = allSnippets[number]
+--     editInPopup(snippet, "update")
+--   end,
+--   { desc = "Snippet: Edit" }
+-- )
 
-map(
-  { "n", "x" },
-  "<leader>sa",
-  scissors.addNewSnippet,
-  { desc = "Snippet: Add" }
-)
+-- map(
+--   { "n", "x" },
+--   "<leader>sa",
+--   scissors.addNewSnippet,
+--   { desc = "Snippet: Add" }
+-- )

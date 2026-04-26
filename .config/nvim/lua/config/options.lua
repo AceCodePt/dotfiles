@@ -10,6 +10,8 @@ vim.opt.cursorline = true      -- Highlight current line
 vim.opt.wrap = true            -- Don't wrap lines
 vim.opt.scrolloff = 10         -- Keep 10 lines above/below cursor
 vim.opt.sidescrolloff = 8      -- Keep 8 columns left/right of cursor
+vim.o.scrollback = -1      -- I can and should scroll back 100000
+vim.o.history = 10000
 vim.opt.shellcmdflag = '-ic'
 
 -- Indentation

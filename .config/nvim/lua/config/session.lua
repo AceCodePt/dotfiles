@@ -98,7 +98,7 @@ map({ 'n', 't' }, '<M-d>', function()
   fzf_tmux.tmux_popup("lazygit")
 end, { desc = 'Open lazygit in tmux popup' })
 
-map({ 'n', 't' }, '<M-l>', function()
+map({ 'n', 't' }, '<M-r>', function()
   fzf_tmux.tmux_popup("lazydocker")
 end, { desc = 'Open lazygit in tmux popup' })
 

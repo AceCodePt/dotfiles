@@ -12,17 +12,18 @@ Configured in `~/.config/lazygit/config.yml` to run when pressing `D` on a branc
 
 ### What it does
 
-1. **Finds and removes worktree** - Automatically detects and removes the worktree for the branch
-2. **Runs project cleanup** - Calls `<project-root>/hooks/pre-branch-delete` if it exists
+1. **Runs pre-branch-delete hook** - Calls `<project-root>/hooks/pre-branch-delete` if it exists
+2. **Removes worktree** - Automatically detects and removes the worktree for the branch
 3. **Deletes the branch** - Removes the git branch
+4. **Runs post-branch-delete hook** - Calls `<project-root>/hooks/post-branch-delete` if it exists
 
-### Project-specific cleanup
+### Project-specific hooks
 
-To add custom cleanup (e.g., database deletion), create:
+#### Pre-delete hook (cleanup before deletion)
 
-```bash
-<project-root>/hooks/pre-branch-delete
-```
+Create: `<project-root>/hooks/pre-branch-delete`
+
+**Use for:** Database cleanup, resource deallocation, etc.
 
 **Environment variables provided:**
 
@@ -38,6 +39,27 @@ To add custom cleanup (e.g., database deletion), create:
 # Delete task-specific database
 DB_NAME="myproject_${BRANCH_NAME//-/_}"
 docker exec postgres psql -U postgres -c "DROP DATABASE ${DB_NAME};"
+```
+
+#### Post-delete hook (tasks after deletion)
+
+Create: `<project-root>/hooks/post-branch-delete`
+
+**Use for:** Notifications, logging, cleanup verification, etc.
+
+**Environment variables provided:**
+
+- `BRANCH_NAME` - The branch that was deleted
+- `WORKTREE_PATH` - Path where the worktree was (now removed)
+
+**Example:**
+
+```bash
+#!/bin/bash
+# hooks/post-branch-delete
+
+# Log the deletion
+echo "$(date): Deleted branch $BRANCH_NAME" >> .git/branch-deletions.log
 ```
 
 ### Benefits

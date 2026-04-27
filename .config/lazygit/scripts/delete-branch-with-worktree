@@ -27,22 +27,22 @@ echo ""
 echo "🗑️  Deleting branch: $BRANCH_NAME"
 echo ""
 
-# Get project root
-PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo "")"
-
-# For bare repos or if we're not in a git repo
-if [ -z "$PROJECT_ROOT" ] || [ "$(basename "$PROJECT_ROOT")" = ".git" ]; then
-  # Try to get the common git directory
-  GIT_COMMON_DIR="$(git rev-parse --git-common-dir 2>/dev/null || echo "")"
-  if [ -n "$GIT_COMMON_DIR" ]; then
-    PROJECT_ROOT="$(dirname "$GIT_COMMON_DIR")"
-  fi
+# Get project root (parent directory containing all worktrees)
+GIT_COMMON_DIR="$(git rev-parse --git-common-dir 2>/dev/null || echo "")"
+if [ -n "$GIT_COMMON_DIR" ]; then
+  # For bare repos: /path/to/repo.git -> /path/to
+  # For worktrees: /path/to/repo.git/worktrees/name -> /path/to
+  PROJECT_ROOT="$(dirname "$GIT_COMMON_DIR")"
+else
+  # Fallback to show-toplevel
+  PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo "")"
 fi
 
 # Find worktree for this branch
 WORKTREE_PATH=""
 if git worktree list &>/dev/null; then
-  WORKTREE_PATH=$(git worktree list --porcelain | grep -A 2 "branch refs/heads/$BRANCH_NAME" | grep "^worktree" | cut -d' ' -f2 || echo "")
+  # Use simple grep on worktree list output (format: path hash [branch])
+  WORKTREE_PATH=$(git worktree list | grep "\[$BRANCH_NAME\]" | awk '{print $1}' || echo "")
 fi
 
 # Step 1: Run project-specific cleanup hook (if exists)

@@ -1,0 +1,47 @@
+#!/bin/bash
+# delete-branch-sync-async - Delete branch+worktree sync, hooks async
+# Usage: delete-branch-sync-async <branch-name>
+
+BRANCH_NAME="$1"
+
+if [ -z "$BRANCH_NAME" ]; then
+  echo "Error: Branch name required"
+  exit 1
+fi
+
+echo "🗑️  Deleting branch: $BRANCH_NAME"
+
+# Find worktree
+WORKTREE_PATH=$(git worktree list | grep "\[$BRANCH_NAME\]" | awk '{print $1}' || echo "")
+
+PROJECT_ROOT=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+[ -n "$PROJECT_ROOT" ] && PROJECT_ROOT=$(dirname "$PROJECT_ROOT")
+
+# Sync: Remove worktree
+if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then
+  echo "📁 Removing worktree..."
+  git worktree remove "$WORKTREE_PATH" --force 2>/dev/null || rm -rf "$WORKTREE_PATH"
+  echo "✅ Worktree removed"
+fi
+
+# Sync: Delete branch
+if git branch -D "$BRANCH_NAME" 2>/dev/null; then
+  echo "✅ Branch deleted"
+else
+  echo "❌ Failed to delete branch"
+  exit 1
+fi
+
+# Async: Run hooks in background
+(
+  export BRANCH_NAME="$BRANCH_NAME"
+  export WORKTREE_PATH="$WORKTREE_PATH"
+  if [ -n "$PROJECT_ROOT" ]; then
+    PRE_HOOK="$PROJECT_ROOT/hooks/pre-branch-delete"
+    POST_HOOK="$PROJECT_ROOT/hooks/post-branch-delete"
+    [ -x "$PRE_HOOK" ] && bash "$PRE_HOOK" 2>/dev/null
+    [ -x "$POST_HOOK" ] && bash "$POST_HOOK" 2>/dev/null
+  fi
+) & disown
+
+echo "✅ Complete!"

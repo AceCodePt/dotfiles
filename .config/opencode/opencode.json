@@ -3,7 +3,6 @@
 	"theme": "system",
 	"autoupdate": false,
 	"plugin": [
-		"@ex-machina/opencode-anthropic-auth",
-		"@tarquinen/opencode-dcp@latest"
+		"@ex-machina/opencode-anthropic-auth"
 	]
 }

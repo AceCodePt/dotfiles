@@ -3,23 +3,24 @@ import { Plugin } from "@opencode-ai/plugin";
 export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
   return {
     event: async ({ event }) => {
+      if (event.type !== "session.idle") {
+        return;
+      }
+
       // 1. Extract the session ID from the event payload
-      const sessionId =
-        (event as any).properties?.sessionID || (event as any).sessionID;
+      const sessionId = event.properties.sessionID;
 
       // 2. Fetch the session details to verify its origin directory
-      if (sessionId) {
-        try {
-          const session = await client.session.get({ path: { id: sessionId } });
+      try {
+        const session = await client.session.get({ path: { id: sessionId } });
 
-          // If this event belongs to a session running in a different folder, ignore it
-          if (session.data?.directory !== directory) {
-            return;
-          }
-        } catch (error) {
-          // Fail gracefully if the session data can't be fetched (e.g., it was just deleted)
+        // This is a subagent running because it has a parentID
+        if (session.data?.parentID) {
           return;
         }
+      } catch (error) {
+        // Fail gracefully if the session data can't be fetched (e.g., it was just deleted)
+        return;
       }
 
       const folder = directory.split("/").at(-1)!;

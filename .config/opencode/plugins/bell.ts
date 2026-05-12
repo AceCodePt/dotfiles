@@ -1,9 +1,19 @@
-import { Plugin } from "@opencode-ai/plugin";
+import { type Plugin } from "@opencode-ai/plugin";
+import { type Event } from "@opencode-ai/sdk";
 
 export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
   return {
-    event: async ({ event }) => {
-      if (event.type !== "session.idle") {
+    event: async ({
+      event,
+    }: {
+      event:
+        | Event
+        | {
+            type: "permission.asked";
+            properties: { sessionID: string };
+          };
+    }) => {
+      if (event.type !== "permission.asked" && event.type !== "session.idle") {
         return;
       }
 

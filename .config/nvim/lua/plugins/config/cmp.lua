@@ -124,7 +124,6 @@ scissors.setup({
       showHelp = "?",
     },
   },
-  jsonFormatter = "jq",
 })
 
 

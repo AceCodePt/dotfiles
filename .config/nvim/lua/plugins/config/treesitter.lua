@@ -1,19 +1,18 @@
 local supported_languages = require("config.supported-languages")
 local ensure_installed_languages = supported_languages.get_treesitters()
 
+local ts = require('nvim-treesitter')
 
-require('nvim-treesitter.configs').setup({
-  -- A list of parser names, or "all" (the listed parsers MUST always be installed)
-  ensure_installed = ensure_installed_languages,
-  sync_install = false,
-  auto_install = false,
-  ignore_install = {},
-  modules = {},
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = { 'astro' },
-  },
-  indent = {
-    enable = true
-  }
+ts.install(ensure_installed_languages)
+
+-- Enable highlighting
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function(args)
+    local bufnr = args.buf
+    local ft = vim.bo[bufnr].filetype
+    local lang = vim.treesitter.language.get_lang(ft)
+    if lang then
+      pcall(vim.treesitter.start, bufnr, lang)
+    end
+  end,
 })

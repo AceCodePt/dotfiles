@@ -19,15 +19,12 @@ export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
 
       // 1. Extract the session ID from the event payload
       const sessionId = event.properties.sessionID;
+      let isSubagent = false;
 
       // 2. Fetch the session details to verify its origin directory
       try {
         const session = await client.session.get({ path: { id: sessionId } });
-
-        // This is a subagent running because it has a parentID
-        if (session.data?.parentID) {
-          return;
-        }
+        isSubagent = !!session.data?.parentID;
       } catch (error) {
         // Fail gracefully if the session data can't be fetched (e.g., it was just deleted)
         return;
@@ -41,7 +38,7 @@ export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
       }
 
       // 4. Notify on session completion (your original logic)
-      if (event.type === "session.idle") {
+      if (event.type === "session.idle" && !isSubagent) {
         await $`hyprctl notify 1 10000 "rgb(50fa7b)" "fontsize:35 OpenCode: ${folder} task done!" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga`;
       }
     },

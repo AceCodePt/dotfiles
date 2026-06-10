@@ -10,7 +10,7 @@ vim.opt.cursorline = true      -- Highlight current line
 vim.opt.wrap = true            -- Don't wrap lines
 vim.opt.scrolloff = 10         -- Keep 10 lines above/below cursor
 vim.opt.sidescrolloff = 8      -- Keep 8 columns left/right of cursor
-vim.o.scrollback = -1      -- I can and should scroll back 100000
+vim.o.scrollback = -1          -- I can and should scroll back 100000
 vim.o.history = 10000
 vim.opt.shellcmdflag = '-ic'
 
@@ -29,21 +29,21 @@ vim.opt.hlsearch = false  -- Don't highlight search results
 vim.opt.incsearch = true  -- Show matches as you type
 
 -- Visual settings
-vim.opt.termguicolors = true                      -- Enable 24-bit colors
-vim.opt.signcolumn = "yes"                        -- Always show sign column
-vim.opt.colorcolumn = "100"                       -- Show column at 100 characters
-vim.opt.showmatch = true                          -- Highlight matching brackets
-vim.opt.matchtime = 2                             -- How long to show matching bracket
-vim.opt.cmdheight = 1                             -- Command line height
-vim.opt.completeopt = "menuone,noinsert,noselect" -- Completion options
-vim.opt.showmode = false                          -- Don't show mode in command line
-vim.opt.pumheight = 10                            -- Popup menu height
-vim.opt.pumblend = 10                             -- Popup menu transparency
-vim.opt.winblend = 0                              -- Floating window transparency
-vim.opt.conceallevel = 0                          -- Don't hide markup
-vim.opt.concealcursor = ""                        -- Don't hide cursor line markup
-vim.opt.lazyredraw = false                        -- Don't redraw during macros
-vim.opt.synmaxcol = 300                           -- Syntax highlighting limit
+vim.opt.termguicolors = true                                        -- Enable 24-bit colors
+vim.opt.signcolumn = "yes"                                          -- Always show sign column
+vim.opt.colorcolumn = "100"                                         -- Show column at 100 characters
+vim.opt.showmatch = true                                            -- Highlight matching brackets
+vim.opt.matchtime = 2                                               -- How long to show matching bracket
+vim.opt.cmdheight = 1                                               -- Command line height
+vim.opt.completeopt = { "menu", "menuone", "noselect", "noinsert" } -- Completion options
+vim.opt.showmode = false                                            -- Don't show mode in command line
+vim.opt.pumheight = 10                                              -- Popup menu height
+vim.opt.pumblend = 10                                               -- Popup menu transparency
+vim.opt.winblend = 0                                                -- Floating window transparency
+vim.opt.conceallevel = 0                                            -- Don't hide markup
+vim.opt.concealcursor = ""                                          -- Don't hide cursor line markup
+vim.opt.lazyredraw = false                                          -- Don't redraw during macros
+vim.opt.synmaxcol = 300                                             -- Syntax highlighting limit
 vim.opt.redrawtime = 10000
 vim.opt.maxmempattern = 20000
 
@@ -61,15 +61,28 @@ vim.opt.autowrite = false                         -- Don't auto save
 vim.opt.diffopt:append("linematch:60")
 
 -- Behavior settings
-vim.opt.hidden = true                   -- Allow hidden buffers
-vim.opt.belloff = ''                    -- Give me bell
-vim.opt.errorbells = false              -- No error bells
-vim.opt.backspace = "indent,eol,start"  -- Better backspace behavior
-vim.opt.autochdir = false               -- Don't auto change directory
-vim.opt.iskeyword = "@,48-57,192-255"   -- Print words
-vim.opt.path:append("**")               -- include subdirectories in search
-vim.opt.selection = "exclusive"         -- Selection behavior
-vim.opt.mouse = ""                      -- Enablemouse support
+vim.opt.hidden = true                  -- Allow hidden buffers
+vim.opt.belloff = ''                   -- Give me bell
+vim.opt.errorbells = false             -- No error bells
+vim.opt.backspace = "indent,eol,start" -- Better backspace behavior
+vim.opt.autochdir = false              -- Don't auto change directory
+vim.opt.iskeyword = "@,48-57,192-255"  -- Print words
+vim.opt.path:append("**")              -- include subdirectories in search
+vim.opt.selection = "exclusive"        -- Selection behavior
+vim.opt.mouse = ""                     -- Enablemouse support
+-- Force Neovim to use raw Wayland pipes, avoiding terminal query lags
+vim.g.clipboard = {
+  name = 'wayland-aggressive',
+  copy = {
+    ['+'] = { 'wl-copy', '--foreground', '--type', 'text/plain' },
+    ['*'] = { 'wl-copy', '--foreground', '--type', 'text/plain' },
+  },
+  paste = {
+    ['+'] = { 'wl-paste', '--no-newline' },
+    ['*'] = { 'wl-paste', '--no-newline' },
+  },
+  -- cache_enabled = 1, -- CRITICAL: Stops Neovim from re-querying the OS on every single movement/action
+}
 vim.opt.clipboard:append("unnamedplus") -- Use system clipboard
 vim.opt.modifiable = true               -- Allow buffer modifications
 vim.opt.encoding = "UTF-8"              -- Set encoding

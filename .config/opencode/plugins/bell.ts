@@ -33,11 +33,11 @@ export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
       const folder = directory.split("/").at(-1)!;
 
       // 3. Notify when the AI is waiting for your permission
-      if (event.type === ("permission.asked" as any)) {
+      if (event.type === "permission.asked") {
         await $`hyprctl notify 1 10000 "rgb(ff5555)" "fontsize:35 OpenCode: Permission Required in ${folder}" && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga`;
       }
 
-      // 4. Notify on session completion (your original logic)
+      // 4. Notify on session completion
       if (event.type === "session.idle" && !isSubagent) {
         await $`hyprctl notify 1 10000 "rgb(50fa7b)" "fontsize:35 OpenCode: ${folder} task done!" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga`;
       }

@@ -4,6 +4,8 @@
 	"keybinds": {
 		"messages_half_page_up": "pgup,shift+up",
 		"messages_half_page_down": "pgdown,shift+down",
+    "messages_page_up": "none",
+    "messages_page_down": "none",
 		"session_child_cycle": "right",
 		"session_child_cycle_reverse": "left",
 		"session_parent": "up",

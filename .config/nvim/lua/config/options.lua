@@ -78,8 +78,8 @@ vim.g.clipboard = {
     ['*'] = { 'wl-copy', '--foreground', '--type', 'text/plain' },
   },
   paste = {
-    ['+'] = { 'wl-paste', '--no-newline' },
-    ['*'] = { 'wl-paste', '--no-newline' },
+    ['+'] = { 'wl-paste', '--no-newline', '--type', 'text/plain' },
+    ['*'] = { 'wl-paste', '--no-newline', '--type', 'text/plain' },
   },
   -- cache_enabled = 1, -- CRITICAL: Stops Neovim from re-querying the OS on every single movement/action
 }

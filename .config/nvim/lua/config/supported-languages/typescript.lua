@@ -105,6 +105,19 @@ return {
           open_and_run_terminal_command("tsx " .. params .. " " .. current_file_path)
         end, "Node run")
 
+
+        nmap("<M-n><M-w>", function()
+          local current_file_path = vim.fn.expand('%:p')
+          local params = ''
+          local env_files = vim.fn.glob('.env*', true, true, true)
+
+
+          if #env_files > 0 then
+            params = params .. '--env-file=' .. env_files[1]
+          end
+          open_and_run_terminal_command("tsx " .. params .. " --watch " .. current_file_path)
+        end, "Node Watch")
+
         nmap("<leader>i", function()
           local tbl = vim.lsp.diagnostic.get_line_diagnostics(bufnr)
 

@@ -70,6 +70,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
       open_and_run_terminal_command('nr dev', { location = "start", unfocus = true })
     end, { desc = "[N]PM [D]ev" })
 
+    map({ 'n', 't' }, '<M-n><M-t>', function()
+      open_and_run_terminal_command('nr test', { location = "next", unfocus = false })
+    end, { desc = "[N]PM [D]ev" })
+
     map({ 'n', 't' }, '<M-n><M-s>', function()
       open_and_run_terminal_command('nr start')
     end, { desc = "[N]PM [S]tart" })

@@ -77,6 +77,22 @@
     ],
     "prefix": "for"
   },
+  "for..in": {
+    "body": [
+      "for(const ${1:} in ${2:obj}) {",
+      "  ${3:}",
+      "}"
+    ],
+    "prefix": "for..in"
+  },
+  "for..of": {
+    "body": [
+      "for(const ${1:} of ${2:obj}) {",
+      "  ${3:}",
+      "}"
+    ],
+    "prefix": "for..of"
+  },
   "handler": {
     "body": [
       "export async function handle${1:}(Astro: AstroGlobal) {",
@@ -129,6 +145,14 @@
   "return": {
     "body": "return ",
     "prefix": "return"
+  },
+  "test(": {
+    "body": "test(\"\", () => {});",
+    "prefix": "test("
+  },
+  "throw new error": {
+    "body": "throw new Error(${1:});",
+    "prefix": "throw new error"
   },
   "try...catch(e:unknown)": {
     "body": [

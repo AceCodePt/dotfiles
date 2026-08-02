@@ -1,0 +1,3 @@
+[global]
+# Hide the "export +TF_VAR_..." dump; keep it empty to silence entirely
+log_format = ""

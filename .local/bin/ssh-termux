@@ -1,4 +1,0 @@
-#!/bin/bash
-# If Termux API socket exists locally, forward it over SSH using MagicDNS; otherwise run standard SSH
-[ -S "$PREFIX/var/run/termux-api.sock" ] && set -- -R "/tmp/termux-api-${USER}.sock:$PREFIX/var/run/termux-api.sock" "$@"
-exec ssh "$@"

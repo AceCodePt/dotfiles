@@ -34,8 +34,12 @@ gwadd() {
     return 1
   fi
 
-  local BRANCH_NAME="$1"
-  local DIR_NAME=${1//\//-}
+  local RAW="$1"
+  local SANITIZED="${(L)RAW}"
+  SANITIZED="${SANITIZED//[^a-z0-9]/-}"
+
+  local BRANCH_NAME="$SANITIZED"
+  local DIR_NAME="$SANITIZED"
   local DIR_PATH="../$DIR_NAME"
 
   # 1. Cleanup stale directory if it exists but isn't a registered worktree
@@ -49,6 +53,11 @@ gwadd() {
   if git rev-parse --verify --quiet "$BRANCH_NAME" >/dev/null; then
     echo "🌿 Branch '$BRANCH_NAME' already exists. Adding worktree..."
     git worktree add "$DIR_PATH" "$BRANCH_NAME"
+    if ! git config "branch.$BRANCH_NAME.remote" >/dev/null 2>&1; then
+      echo "⚙️  Setting upstream tracking for '$BRANCH_NAME' -> 'origin/$BRANCH_NAME'..."
+      git branch --set-upstream-to="origin/$BRANCH_NAME" "$BRANCH_NAME" 2>/dev/null || \
+        echo "⚠️  Could not set upstream (origin/$BRANCH_NAME may not exist yet)."
+    fi
   else
     echo "✨ Creating new branch '$BRANCH_NAME' and worktree..."
     git worktree add "$DIR_PATH" -b "$BRANCH_NAME"

@@ -14,8 +14,15 @@ echo "🗑️  Deleting branch: $BRANCH_NAME"
 # Find worktree
 WORKTREE_PATH=$(git worktree list | grep "\[$BRANCH_NAME\]" | awk '{print $1}' || echo "")
 
-PROJECT_ROOT=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
-[ -n "$PROJECT_ROOT" ] && PROJECT_ROOT=$(dirname "$PROJECT_ROOT")
+GIT_COMMON_DIR=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+PROJECT_ROOT=""
+if [ -n "$GIT_COMMON_DIR" ]; then
+  case "$(basename "$GIT_COMMON_DIR")" in
+    *.git) PROJECT_ROOT="$GIT_COMMON_DIR" ;;
+    .git)  PROJECT_ROOT="$(dirname "$GIT_COMMON_DIR")" ;;
+    *)     PROJECT_ROOT="$GIT_COMMON_DIR" ;;
+  esac
+fi
 
 # Sync: Remove worktree
 if [ -n "$WORKTREE_PATH" ] && [ -d "$WORKTREE_PATH" ]; then

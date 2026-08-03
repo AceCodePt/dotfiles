@@ -9,7 +9,7 @@ function M.open_and_run_terminal_command(command, params)
   params = params or {}
 
   -- Get all parameters, setting defaults
-  local location = params.location or 'next'
+  local location = params.location or 'prev'
   local unfocus = params.unfocus == true
   local exit_on_success = params.exit_on_success == true
 

@@ -21,6 +21,7 @@ git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
 echo "exec stow --adopt -R ." > ~/dotfiles/.git/hooks/post-commit
 chmod +x ~/dotfiles/.git/hooks/post-commit
 cd ./dotfiles
+git checkout termux
 stow --adopt .
 cd ../
 
@@ -38,4 +39,12 @@ npm install -g pnpm yarn @antfu/ni
 curl -o /data/data/com.termux/files/usr/bin/install-in-mason  https://raw.githubusercontent.com/Amirulmuuminin/setup-mason-for-termux/main/install-in-mason
 chmod +x /data/data/com.termux/files/usr/bin/install-in-mason
 install-in-mason lua-language-server
+```
+
+### keeping termux up to date with main
+The phone tracks the `termux` branch; the laptop tracks `main`.
+To pull in shared changes from main:
+```bash
+cd ~/dotfiles
+git merge main
 ```

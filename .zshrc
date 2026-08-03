@@ -1,27 +1,3 @@
-convert_latest_recording_to_mp4() {
-  dir=~/Videos/Recordings
-  latest_file=$(ls -t "$dir" | head -n 1)
-
-  if [ -z "$latest_file" ]; then
-    echo "No files found in $dir"
-    return 1
-  fi
-
-  full_path="$dir/$latest_file"
-  extension="${latest_file##*.}"
-  filename="${latest_file%.*}"
-  output_file="$dir/$filename.mp4"
-
-  # Skip if it's already an mp4
-  if [ "$extension" = "mp4" ]; then
-    echo "The newest file is already an MP4: $latest_file"
-    return 0
-  fi
-
-  echo "Converting '$latest_file' to '$output_file'..."
-  ffmpeg -i "$full_path" -c:v libx264 -preset fast -crf 23 -c:a aac -b:a 128k "$output_file"
-}
-
 addToPathFront() {
     if [[ "$PATH" != *"$1"* ]]; then
         export PATH=$1:$PATH
@@ -78,8 +54,7 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd 'V' edit-command-line
 
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
+eval "$(fzf --zsh)"
 
 source ~/.zsh_profile
 source ~/.zsh_alias
@@ -101,26 +76,8 @@ setopt EXTENDED_HISTORY
 
 
 
-export PATH=$PATH:$(go env GOPATH)/bin
+export PATH="$PATH:$HOME/go/bin"
 
-if [ -d "$HOME/Downloads/android-studio/bin" ] ; then
-    export PATH="$PATH:$HOME/Downloads/android-studio/bin"
-fi
-
-
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# deno
-export DENO_INSTALL="$HOME/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
-
-# The next lines enables shell command completion for Stripe
-fpath=(~/.stripe $fpath)
 autoload -Uz compinit && compinit -i
 
 mcd() { mkdir -p "$@" 2> >(sed s/mkdir/mcd/ 1>&2) && cd "$_"; }
@@ -145,14 +102,14 @@ convert_to_webp() {
   # Main loop - Iterate over all files
   for file in *; do
     if [ -f "$file" ]; then # Ensure it's a regular file
-      case "${file##*.}" in 
+      case "${file##*.}" in
         png|jpg|jpeg)
           output_file="${file%.*}.webp"
           cwebp -q "$quality" "$file" -o "$output_file"
           echo "$file converted to $output_file"
           ;;
-        *) 
-          echo "Skipping file $file (unsupported extension)" 
+        *)
+          echo "Skipping file $file (unsupported extension)"
           ;;
       esac
     fi
@@ -160,21 +117,11 @@ convert_to_webp() {
 }
 
 
-eval "$(direnv hook zsh)"
+command -v direnv >/dev/null && eval "$(direnv hook zsh)"
+command -v mise >/dev/null && eval "$(mise activate zsh)"
 
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc' ]; then . '/home/sagi/Desktop/companies/jutomate/google-cloud-sdk/path.zsh.inc'; fi
-
-export PATH="$PATH:/opt/mssql-tools18/bin"
-eval "$(mise activate zsh)"
-
-export PATH="/home/sagi/.cargo/bin:$PATH"
-
-# opencode
-export PATH=/home/sagi/.opencode/bin:$PATH
-
-alias speak="$HOME/.local/bin/speak.sh"
-
-. "$HOME/.local/share/../bin/env"
-
+# Termux
+alias shared='cd ~/storage/shared'
+alias clip='termux-clipboard-set'
+alias paste='termux-clipboard-get'
+alias bat='termux-battery-status'

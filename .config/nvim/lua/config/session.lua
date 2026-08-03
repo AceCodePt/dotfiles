@@ -4,7 +4,8 @@ local fzf_tmux = require("util.fzf_tmux")
 local config = {
   search_dirs = vim.fn.shellescape(vim.fn.expand("$HOME/companies")) ..
       " " .. vim.fn.shellescape(vim.fn.expand("$HOME/stuff")) ..
-      " " .. vim.fn.shellescape(vim.fn.expand("$HOME/dotfiles")),
+      " " .. vim.fn.shellescape(vim.fn.expand("$HOME/dotfiles")) ..
+      " " .. vim.fn.shellescape(vim.fn.expand("$HOME/termux")),
 
 
   -- Simple filenames. Dots will be escaped automatically.
@@ -67,13 +68,15 @@ local function show_sessionizer()
     config.search_dirs
   )
 
-  local selected_path = vim.fn.expand("$HOME") .. '/' .. fzf_tmux.tmux_popup(find_cmd, { fzf = true })
+  local project = fzf_tmux.tmux_popup(find_cmd, { fzf = true })
 
   -- If the user cancelled fzf, the file will be empty.
-  if selected_path == "" then
+  if project == "" then
     vim.notify("No project selected.", vim.log.levels.INFO)
     return
   end
+
+  local selected_path = vim.fn.expand("$HOME") .. '/' .. project
 
   -- 3. Run tmux logic with the selected path (logic is unchanged)
   -- ---------------------------------------------------------------------

@@ -151,6 +151,7 @@ convert_to_webp() {
 }
 
 
+eval "$(direnv hook zsh)"
 
 
 # The next line updates PATH for the Google Cloud SDK.

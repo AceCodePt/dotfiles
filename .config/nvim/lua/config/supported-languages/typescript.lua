@@ -221,5 +221,5 @@ return {
     "astro",
     "tsx"
   },
-  formatters = { "prettier", stop_after_first = false, lsp_format = "never" },
+  formatters = { "prettierd", stop_after_first = false, lsp_format = "never" },
 }

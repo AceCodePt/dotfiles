@@ -7,12 +7,6 @@ require("luasnip.loaders.from_vscode").lazy_load({
   paths = snippet_dir
 })
 
-local source_priority = {
-  snippets = 4,
-  lsp = 3,
-  path = 2,
-  buffer = 1
-}
 
 require("blink.cmp").setup({
   snippets = { preset = 'luasnip' },
@@ -55,7 +49,16 @@ require("blink.cmp").setup({
       ["<CR>"] = { "accept_and_enter", "fallback" },
     },
     completion = {
-      menu = { auto_show = true },
+      menu = {
+        auto_show = true,
+        draw = {
+          columns = {
+            { "kind_icon" },
+            { "label",      "label_description", gap = 1 },
+            { "source_name" },
+          },
+        },
+      },
       list = {
         selection = {
           preselect = function()
@@ -77,32 +80,45 @@ require("blink.cmp").setup({
       lsp = {
         name = 'LSP',
         module = 'blink.cmp.sources.lsp',
-        transform_items = function(_, items)
+        score_offset = 30,
+        transform_items = function(ctx, items)
+          local Kind = require('blink.cmp.types').CompletionItemKind
+          local function norm(s) return (s or ""):gsub("%s+", "") end
           return vim.tbl_filter(function(item)
-            return item.kind ~= require('blink.cmp.types').CompletionItemKind.Keyword
+            if item.kind == Kind.Keyword then return false end
+            local te = item.textEdit
+            if not te then return true end
+            local range = te.range or te.replace or te.insert
+            if not range or range.start.line ~= range["end"].line then return true end
+            local typed   = norm(ctx.line:sub(range.start.character + 1, ctx.cursor[2]))
+            local newText = norm(te.newText or item.insertText or item.label)
+            return newText:sub(1, #typed) == typed
           end, items)
         end,
       },
       path = {
+        score_offset = 20,
         opts = {
           get_cwd = function(_)
             return vim.fn.getcwd()
           end,
         },
       },
+      snippets = {
+        score_offset = 30,
+      },
+      buffer = {
+        score_offset = 10,
+      },
     },
   },
   fuzzy = {
-    implementation = 'lua',
+    implementation = 'prefer_rust',
     frecency = { enabled = false },
     sorts = {
+      'exact',
       'score',
-      function(a, b)
-        local a_priority = source_priority[a.source_id]
-        local b_priority = source_priority[b.source_id]
-        if a_priority ~= b_priority then return a_priority > b_priority end
-      end,
-      'sort_text'
+      'sort_text',
     }
   },
   signature = { enabled = true }

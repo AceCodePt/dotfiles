@@ -78,8 +78,12 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd 'V' edit-command-line
 
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
+for _fzf in /usr/share/fzf/key-bindings.zsh /usr/share/doc/fzf/examples/key-bindings.zsh; do
+  [ -f "$_fzf" ] && source "$_fzf" && break
+done
+for _fzf in /usr/share/fzf/completion.zsh /usr/share/doc/fzf/examples/completion.zsh; do
+  [ -f "$_fzf" ] && source "$_fzf" && break
+done
 
 source ~/.zsh_profile
 source ~/.zsh_alias

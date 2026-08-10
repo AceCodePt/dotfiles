@@ -26,3 +26,8 @@ case ":$PATH:" in
 esac
 
 export PATH="$HOME/development/flutter/bin:$PATH"
+
+# cargo
+if [ -d "$HOME/.cargo/bin" ]; then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi

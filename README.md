@@ -48,6 +48,14 @@ sudo pacman -S --needed \
   wl-clipboard kitty alacritty fontconfig
 ```
 
+> **nvim-treesitter** on `main` requires `tree-sitter-cli` (≥ 0.26.1) to
+> compile parsers, plus a C compiler (`cc`). Install it with your package
+> manager, or via cargo when available:
+>
+> ```bash
+> cargo install tree-sitter-cli
+> ```
+
 Run `zsh` as the default shell:
 
 ```bash

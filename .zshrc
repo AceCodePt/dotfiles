@@ -59,8 +59,13 @@ gwadd() {
         echo "⚠️  Could not set upstream (origin/$BRANCH_NAME may not exist yet)."
     fi
   else
-    echo "✨ Creating new branch '$BRANCH_NAME' and worktree..."
-    git worktree add "$DIR_PATH" -b "$BRANCH_NAME"
+    if git rev-parse --verify --quiet "origin/$BRANCH_NAME" >/dev/null; then
+      echo "🌿 Remote branch 'origin/$BRANCH_NAME' found. Creating worktree from it..."
+      git worktree add "$DIR_PATH" -b "$BRANCH_NAME" "origin/$BRANCH_NAME"
+    else
+      echo "✨ Creating new branch '$BRANCH_NAME' and worktree..."
+      git worktree add "$DIR_PATH" -b "$BRANCH_NAME"
+    fi
   fi
 
   # 3. Provide absolute path for the Agent/User to switch context

@@ -39,15 +39,17 @@ else
   exit 1
 fi
 
-# Async: Run hooks in background
+# Async: Run hooks in background (output streams to lazygit)
 (
   export BRANCH_NAME="$BRANCH_NAME"
   export WORKTREE_PATH="$WORKTREE_PATH"
   if [ -n "$PROJECT_ROOT" ]; then
     PRE_HOOK="$PROJECT_ROOT/hooks/pre-branch-delete"
     POST_HOOK="$PROJECT_ROOT/hooks/post-branch-delete"
-    [ -x "$PRE_HOOK" ] && bash "$PRE_HOOK" 2>/dev/null
-    [ -x "$POST_HOOK" ] && bash "$POST_HOOK" 2>/dev/null
+    [ -x "$PRE_HOOK" ] && bash "$PRE_HOOK"
+    [ -x "$POST_HOOK" ] && bash "$POST_HOOK"
+  else
+    echo "PROJECT_ROOT not resolved, hooks skipped"
   fi
 ) & disown
 

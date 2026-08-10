@@ -1,10 +1,40 @@
 {
-	"$schema": "https://opencode.ai/config.json",
-	"theme": "system",
-	"autoupdate": false,
-	"lsp": true,
-	"plugin": ["@ex-machina/opencode-anthropic-auth"],
-	"experimental": {
-		"batch_tool": false
-	}
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "system",
+  "autoupdate": false,
+  "lsp": true,
+  "plugin": [
+    "@ex-machina/opencode-anthropic-auth"
+  ],
+  "experimental": {
+    "batch_tool": false
+  },
+  "permission": {
+    "edit": {
+      "**/.orchestration/**": "deny",
+      "$HOME/.config/opencode/opencode.json": "deny"
+    },
+    "skill": {
+      "ask-matt": "ask",
+      "claude-handoff": "ask",
+      "grill-me": "ask",
+      "grill-with-docs": "ask",
+      "handoff": "ask",
+      "implement": "ask",
+      "improve-codebase-architecture": "ask",
+      "loop-me": "ask",
+      "setup-matt-pocock-skills": "ask",
+      "setup-ts-deep-modules": "ask",
+      "teach": "ask",
+      "to-questionnaire": "ask",
+      "to-spec": "ask",
+      "to-tickets": "ask",
+      "triage": "ask",
+      "wait-what": "ask",
+      "wayfinder": "ask",
+      "writing-beats": "ask",
+      "writing-fragments": "ask",
+      "writing-shape": "ask"
+    }
+  }
 }

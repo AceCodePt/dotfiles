@@ -27,6 +27,11 @@ esac
 
 export PATH="$HOME/development/flutter/bin:$PATH"
 
+# mise shims - keep toolchain bins (go, node, rust, ...) on PATH for
+# non-interactive shells too (mason/LSP subprocesses, cron, ssh commands).
+# `mise activate` in .zshrc only covers interactive shells.
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
 # cargo
 if [ -d "$HOME/.cargo/bin" ]; then
   export PATH="$HOME/.cargo/bin:$PATH"

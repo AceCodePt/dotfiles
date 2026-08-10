@@ -1,103 +1,102 @@
-# regular update
+# dotfiles
+
+My personal dotfiles. Managed with [GNU Stow](https://www.gnu.org/software/stow/)
+and applied automatically on every commit via a `post-commit` hook.
+
+## Target environment
+
+- **OS:** Arch Linux
+- **Wayland compositor:** Hyprland (via [Omarchy](https://github.com/omarchy-linux/omarchy))
+
+> Note: Hyprland/Omarchy config lives under `~/.config/hypr/` and is managed by
+> Omarchy itself, so it is intentionally **not** stowed from this repo. Any Hyprland
+> tweaks should be made through Omarchy, not here.
+
+## How this repo works
+
+Clone into `~/dotfiles` and stow everything into your home directory:
+
 ```bash
-sudo apt-get update
+git clone git@github.com:AceCodePt/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+stow --adopt .
 ```
 
-# Better terminal
-```bash
-sudo apt install zsh
-chsh -s $(which zsh)
-```
+To keep things in sync without thinking about it, a `post-commit` hook re-stows
+the tree after every commit. It's already tracked in the repo at
+`.git/hooks/post-commit`:
 
-# Automatic Stow on commit
-In .git/hooks/post-commit
 ```bash
 #!/bin/sh
-exec stow --adopt -R .
+stow --adopt -R .
 ```
 
-# basic stuff
+If you don't already have it enabled, copy it into place:
+
 ```bash
-sudo apt-get install ripgrep
-sudo apt install curl
-sudo apt install fzf
+echo -e '#!/bin/sh\nexec stow --adopt -R .' > ~/dotfiles/.git/hooks/post-commit
+chmod +x ~/dotfiles/.git/hooks/post-commit
 ```
 
-# install neovim
+## Required packages (Arch)
+
+Install these with `pacman` (or your preferred AUR helper) before stowing:
+
 ```bash
-sudo apt install neovim
+sudo pacman -S --needed \
+  stow git zsh neovim tmux ripgrep fzf curl lazygit direnv \
+  wl-clipboard kitty alacritty fontconfig
 ```
 
-# install clipboard tool
+Run `zsh` as the default shell:
+
 ```bash
-sudo apt-get install xsel
+chsh -s "$(which zsh)"
 ```
 
-# swap capslock and escape
-```bash
-sudo nano /etc/default/keyboard
-```
-change -> `XKBOPTIONS="caps:swapescape"`
+### Language toolchains
 
-# pretty esenital stuff
-```bash
-sudo apt install git
-sudo apt install build-essential libssl-dev
-```
+These are managed by version managers (not by these dotfiles directly):
 
-# install rust
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
+- **Node:** [fnm](https://github.com/Schniz/fnm) — `curl -fsSL https://fnm.vercel.app/install | bash`
+- **Rust:** [rustup](https://rustup.rs) — `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+- **Python:** [pyenv](https://github.com/pyenv/pyenv)
+- **Package managers:** pnpm, bun, deno — see `.zshenv` for PATH entries
 
-# node version manager
-```bash
-SHELL=/bin/zsh
-curl -fsSL https://fnm.vercel.app/install | bash
-```
+A lot of these are wired up on shell startup via `.zshenv` / `.zshrc` — the PATH
+entries and `eval` hooks are only activated when the relevant binary exists, so
+missing tools won't break shell startup.
 
-# lazy git
-```bash
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-tar xf lazygit.tar.gz lazygit
-sudo install lazygit /usr/local/bin
-rm -rf lazygit
-rm -rf lazygit.tar.gz
+## What's in here
 
-fnm install 22 
-```
+| Path | What |
+|------|------|
+| `.zshrc` | Shell config: history, prompt, fzf, custom functions (`gwadd`, `mcd`, `convert_to_webp`, `convert_latest_recording_to_mp4`) |
+| `.zshenv` | PATH setup for `~/.local/bin`, pyenv, fnm, pnpm, flutter |
+| `.zsh_profile` | Prepends local `scripts/` and a custom nvim bin to PATH |
+| `.zsh_alias` | Short aliases (`vim=nvim`, `lg=lazygit`, `ld=lazydocker`, ...) |
+| `.config/nvim/` | Neovim config (Lua, lazy.nvim-based) |
+| `.config/tmux/tmux.conf` | tmux config (prefix `M-;`, status bar off, focus events) |
+| `.config/kitty/`, `.config/alacritty/` | Terminal emulators |
+| `.config/lazygit/` | lazygit config |
+| `.config/direnv/` | direnv config |
+| `.config/fontconfig/` | Fontconfig tweaks |
+| `.config/opencode/` | [opencode](https://opencode.ai) AI coding agent config |
+| `.config/Vieb/` | Vieb (vim-like browser) config |
+| `.config/systemd/` | User systemd units |
+| `.local/bin/` | Personal scripts (`speak.sh`, `scripts/tmux-sessionizer`, `scripts/kill-by-port`, ...) |
+| `.termux/` | Legacy Termux config (see `TERMUX.md`) |
 
-# Install font
-```
-https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hack.zip
-```
+### Leftover i3 config
 
-# Install PNPM
-```bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
-echo 'export PNPM_HOME="/home/sagi/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac' >> ~/.zshrc
-```
+`.config/i3/` is a leftover from the old i3 setup and is **not used anymore** —
+Hyprland/Omarchy handles window management now. Kept only for reference; safe to
+ignore (and eventually delete).
 
-# Install tiling Manager
-```bash
-sudo apt install i3
-```
+## Notes
 
-# Install Docker
-```bash
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt install docker.io
-sudo apt-get install docker-compose-plugin
-systemctl start docker
-systemctl enable docker
-sudo chmod 666 /var/run/docker.sock
-```
-
-
-
+- `~/.config/hypr/`, `waybar`, `walker`, `mako`, etc. are managed by Omarchy
+  and intentionally excluded from this repo.
+- The `wl-copy` placeholder at the repo root is just a stub; install
+  `wl-clipboard` from the Arch repos for clipboard support.
+- See `TERMUX.md` for setting these dotfiles up on an Android device via Termux.

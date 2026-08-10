@@ -4,6 +4,7 @@ local ensure_installed_languages = supported_languages.get_treesitters()
 local ts = require('nvim-treesitter')
 
 ts.install(ensure_installed_languages)
+ts.update(ensure_installed_languages)
 
 -- Enable highlighting
 vim.api.nvim_create_autocmd('FileType', {

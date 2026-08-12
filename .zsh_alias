@@ -4,3 +4,4 @@ alias vim='nvim'
 alias work="cd ~/companies"
 alias ld='lazydocker'
 alias lg='lazygit'
+alias tagent='tmux new-session -A -s agent "ssh -t sagi@cloud-agent tmux new-session -A -s main"'

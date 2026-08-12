@@ -6,7 +6,7 @@ export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
   const notify = (cmd: TemplateStringsArray) => {
     const text = cmd.join("");
     const remotePrefix =
-      "export XDG_RUNTIME_DIR=/run/user/$(id -u) && HYPRLAND_INSTANCE_SIGNATURE=$(ls /run/user/$(id -u)/hypr 2>/dev/null | head -n1) && ";
+      "export XDG_RUNTIME_DIR=/run/user/$(id -u) && HYPRLAND_INSTANCE_SIGNATURE=$(ls /run/user/$(id -u)/hypr 2>/dev/null | head -n1) ";
     const full = clientIp ? remotePrefix + text : text;
     const run = clientIp ? $`ssh ${clientIp} ${full}` : $`sh -c ${full}`;
     return run.quiet().nothrow().catch(() => {});
@@ -41,15 +41,16 @@ export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
       }
 
       const folder = directory.split("/").at(-1)!;
+      const label = clientIp ? `ssh:${folder}` : folder;
 
       // 3. Notify when the AI is waiting for your permission
       if (event.type === "permission.asked") {
-        notify`hyprctl notify 1 10000 "rgb(ff5555)" "fontsize:35 OpenCode: Permission Required in ${folder}" && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga`;
+        notify`hyprctl notify 1 10000 "rgb(ff5555)" "fontsize:35 OpenCode: Permission Required in ${label}" && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga`;
       }
 
       // 4. Notify on session completion
       if (event.type === "session.idle" && !isSubagent) {
-        notify`hyprctl notify 1 10000 "rgb(50fa7b)" "fontsize:35 OpenCode: ${folder} task done!" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga`;
+        notify`hyprctl notify 1 10000 "rgb(50fa7b)" "fontsize:35 OpenCode: ${label} task done!" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga`;
       }
     },
   };

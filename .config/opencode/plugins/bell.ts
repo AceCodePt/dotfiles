@@ -3,8 +3,14 @@ import { type Event } from "@opencode-ai/sdk";
 
 export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
   const clientIp = process.env.SSH_CLIENT?.split(" ")[0];
-  const notify = (cmd: TemplateStringsArray) =>
-    (clientIp ? $`ssh ${clientIp} ${cmd}` : $`${cmd}`).catch(() => {});
+  const notify = (cmd: TemplateStringsArray) => {
+    const text = cmd.join("");
+    const remotePrefix =
+      "export XDG_RUNTIME_DIR=/run/user/$(id -u) && HYPRLAND_INSTANCE_SIGNATURE=$(ls /run/user/$(id -u)/hypr 2>/dev/null | head -n1) && ";
+    const full = clientIp ? remotePrefix + text : text;
+    const run = clientIp ? $`ssh ${clientIp} ${full}` : $`sh -c ${full}`;
+    return run.quiet().nothrow().catch(() => {});
+  };
 
   return {
     event: async ({

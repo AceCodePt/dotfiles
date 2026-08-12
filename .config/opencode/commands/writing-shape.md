@@ -78,4 +78,4 @@ Append to the article file as each block is agreed. Re-read the file from disk b
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/writing-shape/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/writing-shape/SKILL.md -->

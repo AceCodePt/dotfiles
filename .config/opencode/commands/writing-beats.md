@@ -66,4 +66,4 @@ The article ends when the journey is complete — not when the pile is empty. Mo
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/writing-beats/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/writing-beats/SKILL.md -->

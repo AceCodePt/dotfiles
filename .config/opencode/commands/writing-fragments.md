@@ -78,4 +78,4 @@ The user can say "cut the last one", "rewrite that one sharper", "merge those tw
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/writing-fragments/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/writing-fragments/SKILL.md -->

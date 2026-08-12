@@ -6,4 +6,4 @@ Wait — I don't understand where you've got to here. Re-pitch that: give me a l
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/wait-what/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/wait-what/SKILL.md -->

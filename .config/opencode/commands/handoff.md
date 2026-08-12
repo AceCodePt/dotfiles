@@ -14,4 +14,4 @@ If the user passed arguments, treat them as a description of what the next sessi
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/handoff/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/handoff/SKILL.md -->

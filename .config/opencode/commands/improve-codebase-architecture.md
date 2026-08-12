@@ -53,7 +53,7 @@ End the report with a **Top recommendation** section: which candidate you'd tack
 
 **ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting the ADR. Mark it clearly in the card (e.g. a warning callout: _"contradicts ADR-0007 — but worth reopening because…"_). Don't list every theoretical refactor an ADR forbids.
 
-See [HTML-REPORT.md](~/.agents/skills/improve-codebase-architecture/HTML-REPORT.md) for the full HTML scaffold, diagram patterns, and styling guidance.
+See [HTML-REPORT.md](~/.config/opencode/flows/improve-codebase-architecture/HTML-REPORT.md) for the full HTML scaffold, diagram patterns, and styling guidance.
 
 Do NOT propose interfaces yet. After the file is written, ask the user: "Which of these would you like to explore?"
 
@@ -70,4 +70,4 @@ Side effects happen inline as decisions crystallize — run the `/domain-modelin
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/improve-codebase-architecture/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/improve-codebase-architecture/SKILL.md -->

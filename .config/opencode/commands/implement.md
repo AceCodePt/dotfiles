@@ -14,4 +14,4 @@ Commit your work to the current branch.
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/implement/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/implement/SKILL.md -->

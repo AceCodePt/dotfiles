@@ -6,4 +6,4 @@ Run a `/grilling` session, using the `/domain-modeling` skill.
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/grill-with-docs/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/grill-with-docs/SKILL.md -->

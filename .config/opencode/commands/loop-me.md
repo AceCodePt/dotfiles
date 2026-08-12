@@ -30,4 +30,4 @@ A workflow spec is done when an implementer agent could build it without asking 
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/loop-me/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/loop-me/SKILL.md -->

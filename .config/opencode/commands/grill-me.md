@@ -6,4 +6,4 @@ Run a `/grilling` session.
 
 User's arguments: $ARGUMENTS
 
-<!-- Source: ~/.agents/skills/grill-me/SKILL.md -->
+<!-- Source: ~/.config/opencode/flows/grill-me/SKILL.md -->

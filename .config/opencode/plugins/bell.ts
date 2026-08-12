@@ -2,6 +2,10 @@ import { type Plugin } from "@opencode-ai/plugin";
 import { type Event } from "@opencode-ai/sdk";
 
 export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
+  const clientIp = process.env.SSH_CLIENT?.split(" ")[0];
+  const notify = (cmd: TemplateStringsArray) =>
+    (clientIp ? $`ssh ${clientIp} ${cmd}` : $`${cmd}`).catch(() => {});
+
   return {
     event: async ({
       event,
@@ -34,12 +38,12 @@ export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
 
       // 3. Notify when the AI is waiting for your permission
       if (event.type === "permission.asked") {
-        await $`hyprctl notify 1 10000 "rgb(ff5555)" "fontsize:35 OpenCode: Permission Required in ${folder}" && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga`;
+        notify`hyprctl notify 1 10000 "rgb(ff5555)" "fontsize:35 OpenCode: Permission Required in ${folder}" && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga`;
       }
 
       // 4. Notify on session completion
       if (event.type === "session.idle" && !isSubagent) {
-        await $`hyprctl notify 1 10000 "rgb(50fa7b)" "fontsize:35 OpenCode: ${folder} task done!" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga`;
+        notify`hyprctl notify 1 10000 "rgb(50fa7b)" "fontsize:35 OpenCode: ${folder} task done!" && paplay /usr/share/sounds/freedesktop/stereo/complete.oga`;
       }
     },
   };

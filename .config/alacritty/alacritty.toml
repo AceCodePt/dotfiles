@@ -4,6 +4,7 @@ dynamic_padding = true
 
 [font]
 size = 22
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 
 [env]
 TERM = "xterm-256color"

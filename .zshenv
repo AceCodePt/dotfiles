@@ -36,3 +36,5 @@ export PATH="$HOME/.local/share/mise/shims:$PATH"
 if [ -d "$HOME/.cargo/bin" ]; then
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
+
+export LANG=en_US.UTF-8

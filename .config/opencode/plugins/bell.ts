@@ -1,27 +1,83 @@
 import { type Plugin } from "@opencode-ai/plugin";
 import { type Event } from "@opencode-ai/sdk";
 
-const REMOTE_TARGET = "u0_a409@100.99.127.99";
-const REMOTE_PORT = "8022";
-const TERMUX_BIN = "/data/data/com.termux/files/usr/bin/termux-notification";
+const PHONE_USER = "u0_a409";
+const PHONE_PORT = "8022";
+const PHONE_HOST = "galaxy-s24-ultra";
+
+const OMARCHY_USER = "sagi";
+const OMARCHY_PORT = "22";
+const OMARCHY_HOST = "omarchy";
 
 const SOUNDS = {
   permission: "/usr/share/sounds/freedesktop/stereo/message-new-instant.oga",
   done: "/usr/share/sounds/freedesktop/stereo/complete.oga",
 } as const;
 
-export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
-  const isRemote = !!process.env.SSH_CLIENT;
+type Peer = { ip: string | null; online: boolean };
 
-  const notify = (message: string, color: string, sound: string) => {
-    const esc = (s: string) => s.replace(/["\\]/g, "\\$&");
-    const termux = `termux-notification --title "OpenCode" --content "${esc(message)}" --sound`;
-    const hyprland = `HYPRLAND_INSTANCE_SIGNATURE=$(ls /run/user/$(id -u)/hypr 2>/dev/null | head -n1) hyprctl notify 1 10000 "${color}" "fontsize:35 OpenCode: ${esc(message)}" && paplay ${sound}`;
-    const script = `export XDG_RUNTIME_DIR=/run/user/$(id -u); if [ -x ${TERMUX_BIN} ]; then ${termux}; else ${hyprland}; fi`;
-    const run = isRemote
-      ? $`ssh -p ${REMOTE_PORT} -o BatchMode=yes -o ConnectTimeout=3 ${REMOTE_TARGET} ${script}`
-      : $`sh -c ${script}`;
-    return run.quiet().nothrow().catch(() => {});
+type Shell = {
+  (strings: TemplateStringsArray, ...expr: unknown[]): Shell;
+  quiet(): Shell;
+  nothrow(): Shell;
+  text(encoding?: BufferEncoding): Promise<string>;
+};
+
+async function resolvePeers($: Shell): Promise<Map<string, Peer>> {
+  const out = new Map<string, Peer>();
+  try {
+    const text = await $`tailscale status --json`.quiet().nothrow().text();
+    const parsed = JSON.parse(text);
+    for (const peer of Object.values(parsed.Peer ?? {})) {
+      const p = peer as {
+        DNSName: string;
+        TailscaleIPs?: string[];
+        Online?: boolean;
+      };
+      const name = (p.DNSName || "").split(".")[0];
+      if (!name) {
+        continue;
+      }
+      out.set(name, {
+        ip: Array.isArray(p.TailscaleIPs) && p.TailscaleIPs.length
+          ? p.TailscaleIPs[0]
+          : null,
+        online: !!p.Online,
+      });
+    }
+  } catch {
+    // tailscale unavailable: no targets to notify
+  }
+  return out;
+}
+
+export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
+  const esc = (s: string) => s.replace(/["\\]/g, "\\$&");
+
+  const notify = async (message: string, color: string, sound: string) => {
+    const folder = directory.split("/").at(-1)!;
+    const label = folder && folder !== "." ? folder : "opencode";
+    const text = `${label}: ${message}`;
+    const peers = await resolvePeers($);
+
+    const phone = peers.get(PHONE_HOST);
+    if (phone?.online && phone.ip) {
+      const termux = `termux-notification --title "OpenCode" --content "${esc(text)}" --sound`;
+      const remote = `export XDG_RUNTIME_DIR=/run/user/$(id -u); if [ -x /data/data/com.termux/files/usr/bin/termux-notification ]; then ${termux}; fi`;
+      $`ssh -p ${PHONE_PORT} -o BatchMode=yes -o ConnectTimeout=3 ${PHONE_USER}@${phone.ip} ${remote}`
+        .quiet().nothrow().catch(() => {});
+    }
+
+    const omarchy = peers.get(OMARCHY_HOST);
+    if (omarchy?.online && omarchy.ip) {
+      const remote =
+        `export XDG_RUNTIME_DIR=/run/user/$(id -u); ` +
+        `if command -v notify-send >/dev/null 2>&1; then ` +
+        `notify-send "OpenCode" "${esc(text)}"; ` +
+        `else echo "${esc(text)}" >> ~/.orch-notifications.log; fi`;
+      $`ssh -p ${OMARCHY_PORT} -o BatchMode=yes -o ConnectTimeout=3 ${OMARCHY_USER}@${omarchy.ip} ${remote}`
+        .quiet().nothrow().catch(() => {});
+    }
   };
 
   return {
@@ -51,21 +107,17 @@ export const NotificationPlugin: Plugin = async ({ $, directory, client }) => {
       }
 
       const folder = directory.split("/").at(-1)!;
-      const label = isRemote ? `ssh:${folder}` : folder;
+      const label = folder && folder !== "." ? folder : "opencode";
 
       // Notify when the AI is waiting for your permission
       if (event.type === "permission.asked") {
-        notify(
-          `Permission Required in ${label}`,
-          "rgb(ff5555)",
-          SOUNDS.permission,
-        );
+        await notify(`Permission Required in ${label}`, "rgb(ff5555)", SOUNDS.permission);
         return;
       }
 
       // Notify on session completion
       if (!isSubagent) {
-        notify(`${label} task done!`, "rgb(50fa7b)", SOUNDS.done);
+        await notify(`${label} task done!`, "rgb(50fa7b)", SOUNDS.done);
       }
     },
   };

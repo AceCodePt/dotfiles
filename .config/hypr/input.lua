@@ -52,10 +52,12 @@ hl.config({
   },
 })
 
--- Flip scroll direction on external mice (natural scrolling).
+-- Flip scroll direction on the touchpad (natural scrolling).
 hl.config({
   input = {
-    natural_scroll = false,
+    touchpad = {
+      natural_scroll = true,
+    },
   },
 })
 

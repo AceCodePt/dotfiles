@@ -34,7 +34,7 @@ o.bind("SUPER + SHIFT + T", "Activity", "omarchy-launch-tui btop")
 
 -- Keyboard layout switch (overrides default SUPER+L "Toggle workspace layout").
 hl.unbind("SUPER + L")
-o.bind("SUPER + L", "Switch Languages", "hyprctl switchxkblayout at-translated-set-2-keyboard next")
+o.bind("SUPER + L", "Switch Languages", "hyprctl switchxkblayout all next")
 
 -- Brightness.
 o.bind("SUPER + F1", "Lower Brightness", "brightnessctl set 1%-")

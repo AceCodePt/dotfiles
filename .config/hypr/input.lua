@@ -44,10 +44,18 @@
 --   },
 -- })
 
+-- US + Hebrew layouts, toggle with Left Alt + Right Alt.
+hl.config({
+  input = {
+    kb_layout = "us,il",
+    kb_options = "compose:caps",
+  },
+})
+
 -- Flip scroll direction on external mice (natural scrolling).
 hl.config({
   input = {
-    natural_scroll = true,
+    natural_scroll = false,
   },
 })
 

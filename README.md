@@ -8,9 +8,9 @@ and applied automatically on every commit via a `post-commit` hook.
 - **OS:** Arch Linux
 - **Wayland compositor:** Hyprland (via [Omarchy](https://github.com/omarchy-linux/omarchy))
 
-> Note: Hyprland/Omarchy config lives under `~/.config/hypr/` and is managed by
-> Omarchy itself, so it is intentionally **not** stowed from this repo. Any Hyprland
-> tweaks should be made through Omarchy, not here.
+> Note: Hyprland/Omarchy config is stowed from this repo at `.config/hypr/`.
+> Omarchy owns the defaults and may overwrite user files on upgrade — the
+> symlink means your tweaks stay versioned here.
 
 ## How this repo works
 
@@ -88,6 +88,7 @@ missing tools won't break shell startup.
 | `.config/kitty/`, `.config/alacritty/` | Terminal emulators |
 | `.config/lazygit/` | lazygit config |
 | `.config/direnv/` | direnv config |
+| `.config/hypr/` | Hyprland/Omarchy window manager config |
 | `.config/fontconfig/` | Fontconfig tweaks |
 | `.config/opencode/` | [opencode](https://opencode.ai) AI coding agent config |
 | `.config/Vieb/` | Vieb (vim-like browser) config |
@@ -103,7 +104,7 @@ ignore (and eventually delete).
 
 ## Notes
 
-- `~/.config/hypr/`, `waybar`, `walker`, `mako`, etc. are managed by Omarchy
+- `waybar`, `walker`, `mako`, etc. are managed by Omarchy
   and intentionally excluded from this repo.
 - The `wl-copy` placeholder at the repo root is just a stub; install
   `wl-clipboard` from the Arch repos for clipboard support.

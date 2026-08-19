@@ -5,3 +5,10 @@ alias work="cd ~/companies"
 alias ld='lazydocker'
 alias lg='lazygit'
 alias tagent='tmux new-session -A -s agent "ssh -t sagi@cloud-agent tmux new-session -A -s main"'
+
+# --- KVM/libvirt helpers ---
+alias vms='virsh -c qemu:///system list --all'
+alias vmstart='virsh -c qemu:///system start'
+alias vmstop='virsh -c qemu:///system shutdown'
+alias vmconsole='virt-viewer --connect qemu:///system'
+alias vmgui='/usr/bin/python3 /usr/bin/virt-manager'

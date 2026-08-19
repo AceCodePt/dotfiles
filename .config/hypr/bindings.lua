@@ -15,6 +15,7 @@ o.bind("SUPER + I", "Switch to workspace 3", hl.dsp.focus({ workspace = "3" }))
 o.bind("SUPER + O", "Switch to workspace 4", hl.dsp.focus({ workspace = "4" }))
 o.bind("SUPER + P", "Switch to workspace 5", hl.dsp.focus({ workspace = "5" }))
 
+hl.unbind("SUPER + SHIFT + Y")
 o.bind("SUPER + SHIFT + Y", "Move window to workspace 1", hl.dsp.window.move({ workspace = "1" }))
 o.bind("SUPER + SHIFT + U", "Move window to workspace 2", hl.dsp.window.move({ workspace = "2" }))
 o.bind("SUPER + SHIFT + I", "Move window to workspace 3", hl.dsp.window.move({ workspace = "3" }))

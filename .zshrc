@@ -216,6 +216,4 @@ alias speak="$HOME/.local/bin/speak.sh"
 . "$HOME/.local/share/../bin/env"
 
 
-# export PATH=/home/sagi/bin:$PATH
-
-# [[ -e "/home/sagi/lib/oracle-cli/lib/python3.12/site-packages/oci_cli/bin/oci_autocomplete.sh" ]] && source "/home/sagi/lib/oracle-cli/lib/python3.12/site-packages/oci_cli/bin/oci_autocomplete.sh"
+export PATH=/home/sagi/bin:$PATH

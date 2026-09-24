@@ -1,0 +1,28 @@
+[Unit]
+Description=orch supervisor - settles tasks, runs verification hooks, retriggers agents, merges and archives
+Documentation=https://github.com/AceCodePt/opencode-orchestrator
+After=network-online.target
+
+[Service]
+Type=simple
+# The daemon must be able to (re)start the shared server, which spawns
+# `opencode`. systemd's default PATH does not include the user's shell PATH
+# (e.g. ~/.opencode/bin), so the install-time environment is baked in. This
+# also carries ORCH_ROOTS when the owner set it, so supervised roots survive
+# an install.
+Environment=HOME=/home/sagi
+Environment=PATH=/home/sagi/.cargo/bin:/home/sagi/.local/share/mise/shims:/home/sagi/development/flutter/bin:/home/sagi/bin:/home/sagi/.opencode/bin:/home/sagi/.deno/bin:/home/sagi/.bun/bin:/home/sagi/.local/share/nvim/mason/bin:/home/sagi/.local/share/../bin:/home/sagi/.local/bin/nvim/bin:/home/sagi/.local/scripts:/usr/share/Modules/bin:/home/sagi/.local/share/pnpm:/usr/local/bin:/usr/bin:/bin:/home/sagi/.local/bin:/home/sagi/.local/bin/scripts:/opt/mssql-tools18/bin:/home/sagi/go/bin:/home/sagi/.local/share/mise/installs/go/1.27.1/bin:/home/sagi/.local/share/mise/installs/node/latest/bin:/home/sagi/.local/share/mise/installs/pnpm/11.4.0
+ExecStart=/home/sagi/.local/share/orch/bin/orch daemon run --interval 1
+# Restart always, not on-failure: a supervisor that has exited cleanly is still a
+# supervisor that is not supervising, and nothing else notices its absence.
+Restart=always
+RestartSec=5
+# Journald already timestamps and rotates, so the daemon logs plainly to stdout.
+StandardOutput=journal
+StandardError=journal
+# Never kill the shared server or a running agent when the unit stops: they are
+# started with start_new_session and deliberately outlive this process.
+KillMode=process
+
+[Install]
+WantedBy=default.target

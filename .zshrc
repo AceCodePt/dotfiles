@@ -181,36 +181,6 @@ export PATH="/home/sagi/.cargo/bin:$PATH"
 # opencode
 export PATH=/home/sagi/.opencode/bin:$PATH
 
-# Always start the opencode TUI with an HTTP port, so it can be observed.
-#
-# `opencode --help` claims `--port [default: 0]`, but that is misleading: omitting
-# the flag starts NO server. Verified on 1.18.13 - a TUI launched as plain
-# `opencode` has no listening socket, no unix socket, and no lock file, and its
-# pending approvals live only in TUI memory (the `permission` table stays empty).
-# Such a session cannot be inspected at all; only relaunching helps.
-#
-# Passing `--port 0` explicitly binds 4096 when free and an ephemeral port
-# otherwise, so concurrent TUIs never collide.
-#
-# Subcommands are passed through untouched: `serve` takes its own --port, and the
-# others have no use for one.
-opencode() {
-  case "${1-}" in
-    completion|acp|mcp|attach|run|debug|providers|auth|agent|upgrade|uninstall|\
-serve|web|models|stats|export|import|github|pr|session|plugin|plug|db|\
--h|--help|-v|--version)
-      command opencode "$@"
-      return
-      ;;
-  esac
-  # Respect an explicit --port if the caller already passed one.
-  if [[ "$*" == *--port* ]]; then
-    command opencode "$@"
-    return
-  fi
-  command opencode --port 0 "$@"
-}
-
 alias speak="$HOME/.local/bin/speak.sh"
 
 . "$HOME/.local/share/../bin/env"

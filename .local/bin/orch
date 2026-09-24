@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+# orch launcher - managed by `orch install`; do not edit
+import os
+import sys
+
+_share = os.environ.get("XDG_DATA_HOME") or os.path.join(
+    os.path.expanduser("~"), ".local", "share")
+sys.path.insert(0, os.path.join(_share, "orch", "src"))
+
+from orch.cli import main
+
+if __name__ == "__main__":
+    raise SystemExit(main())

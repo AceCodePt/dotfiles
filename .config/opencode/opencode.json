@@ -3,23 +3,26 @@
   "theme": "system",
   "autoupdate": false,
   "lsp": true,
-  "plugin": [
-    "@ex-machina/opencode-anthropic-auth"
-  ],
-  "mcp": {
-    "linear": {
-      "type": "remote",
-      "url": "https://mcp.linear.app/mcp"
-    }
+  "snapshot": false,
+  "watcher": {
+    "ignore": [
+      "**/node_modules/**",
+      "**/*.git/**",
+      "**/dist/**",
+      "**/build/**"
+    ]
   },
   "experimental": {
     "batch_tool": false
   },
   "permission": {
     "edit": {
+      "/tmp": "allow",
+      "/tmp/**": "allow",
       "**/.orchestration/**": "deny",
       "$HOME/.config/opencode/opencode.json": "deny"
     },
+    "question": "deny",
     "skill": {
       "ask-matt": "deny",
       "claude-handoff": "deny",

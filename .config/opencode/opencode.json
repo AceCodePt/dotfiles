@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/deepseek-v4.1-flash",
   "theme": "system",
   "autoupdate": false,
   "lsp": true,
@@ -17,6 +18,7 @@
   },
   "permission": {
     "edit": {
+      "*": "ask",
       "/tmp": "allow",
       "/tmp/**": "allow",
       "**/.orchestration/**": "deny",

@@ -1,6 +1,4 @@
-// No import: OpenCode 2 accepts a plugin as a plain default-exported
-// `{ id, setup }` object, and neither `@opencode/plugin` nor `@opencode-ai/sdk`
-// is resolvable from this install's config dir. Written against the raw
+// No import: Opelvable from this install's config dir. Written against the raw
 // context, with a small shell helper over Bun.spawn in place of V1's `$`.
 
 const PHONE_USER = "u0_a409";

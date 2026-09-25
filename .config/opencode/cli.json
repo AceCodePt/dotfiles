@@ -8,7 +8,8 @@
     "session.page.up": "none",
     "session.page.down": "none",
     "session.half.page.up": "pgup,shift+up",
-    "session.half.page.down": "pgdown,shift+down"
+    "session.half.page.down": "pgdown,shift+down",
+    "agent.cycle": "tab"
   },
   "diffs": {
     "wrap": "word",

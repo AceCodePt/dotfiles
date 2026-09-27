@@ -1,10 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "opencode/deepseek-v4.1-flash",
-  "theme": "system",
-  "autoupdate": false,
+  "update": "auto",
   "lsp": true,
-  "snapshot": false,
   "watcher": {
     "ignore": [
       "**/node_modules/**",
@@ -13,36 +11,29 @@
       "**/build/**"
     ]
   },
-  "experimental": {
-    "batch_tool": false
-  },
-  "permission": {
-    "edit": {
-      "*": "ask",
-      "/tmp": "allow",
-      "/tmp/**": "allow",
-      "**/.orchestration/**": "deny",
-      "$HOME/.config/opencode/opencode.json": "deny"
-    },
-    "question": "deny",
-    "skill": {
-      "ask-matt": "deny",
-      "claude-handoff": "deny",
-      "grill-me": "deny",
-      "grill-with-docs": "deny",
-      "handoff": "deny",
-      "implement": "deny",
-      "improve-codebase-architecture": "deny",
-      "loop-me": "deny",
-      "setup-ts-deep-modules": "deny",
-      "teach": "deny",
-      "to-questionnaire": "deny",
-      "triage": "deny",
-      "wait-what": "deny",
-      "wayfinder": "deny",
-      "writing-beats": "deny",
-      "writing-fragments": "deny",
-      "writing-shape": "deny"
-    }
-  }
+  "permissions": [
+    { "action": "edit", "resource": "*", "effect": "ask" },
+    { "action": "edit", "resource": "/tmp", "effect": "allow" },
+    { "action": "edit", "resource": "/tmp/**", "effect": "allow" },
+    { "action": "edit", "resource": "**/.orchestration/**", "effect": "deny" },
+    { "action": "edit", "resource": "$HOME/.config/opencode/opencode.json", "effect": "deny" },
+    { "action": "question", "resource": "*", "effect": "deny" },
+    { "action": "skill", "resource": "ask-matt", "effect": "deny" },
+    { "action": "skill", "resource": "claude-handoff", "effect": "deny" },
+    { "action": "skill", "resource": "grill-me", "effect": "deny" },
+    { "action": "skill", "resource": "grill-with-docs", "effect": "deny" },
+    { "action": "skill", "resource": "handoff", "effect": "deny" },
+    { "action": "skill", "resource": "implement", "effect": "deny" },
+    { "action": "skill", "resource": "improve-codebase-architecture", "effect": "deny" },
+    { "action": "skill", "resource": "loop-me", "effect": "deny" },
+    { "action": "skill", "resource": "setup-ts-deep-modules", "effect": "deny" },
+    { "action": "skill", "resource": "teach", "effect": "deny" },
+    { "action": "skill", "resource": "to-questionnaire", "effect": "deny" },
+    { "action": "skill", "resource": "triage", "effect": "deny" },
+    { "action": "skill", "resource": "wait-what", "effect": "deny" },
+    { "action": "skill", "resource": "wayfinder", "effect": "deny" },
+    { "action": "skill", "resource": "writing-beats", "effect": "deny" },
+    { "action": "skill", "resource": "writing-fragments", "effect": "deny" },
+    { "action": "skill", "resource": "writing-shape", "effect": "deny" }
+  ]
 }

@@ -187,3 +187,40 @@ alias speak="$HOME/.local/bin/speak.sh"
 
 
 export PATH=/home/sagi/bin:$PATH
+
+# >>> pass secrets >>>
+# Store one secret in the password store: pset <pass-path> [value]
+# Prompts with hidden input when the value is omitted.
+pset() {
+  local entry=$1 value=$2
+  if [[ -z $entry ]]; then
+    print -u2 "usage: pset <pass-path> [value]"
+    return 2
+  fi
+  if (( $# < 2 )); then
+    read -r -s "value?$entry: " || return 1
+    print
+  fi
+  if [[ -z $value ]]; then
+    print -u2 "refusing to store an empty value"
+    return 2
+  fi
+  local err
+  if ! err=$(printf '%s' "$value" | pass insert -f -m "$entry" 2>&1 >/dev/null); then
+    print -u2 "${err:-could not store $entry}"
+    return 1
+  fi
+  if pass git push -q 2>/dev/null; then
+    print "stored $entry"
+  else
+    print -u2 "stored $entry locally - push failed"
+  fi
+}
+
+pget() { pass show "$1"; }
+plist() { pass ls "${1:-parcel}"; }
+pgenerate() {
+  pass generate -n "$1" "${2:-48}" || return 1
+  pass git push -q 2>/dev/null || print -u2 "generated $1 locally - push failed"
+}
+# <<< pass secrets <<<

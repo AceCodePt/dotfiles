@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "opencode/deepseek-v4.1-flash",
+  "model": "opencode-go/deepseek-v4.1-flash",
   "update": "auto",
   "lsp": true,
   "watcher": {
@@ -12,28 +12,126 @@
     ]
   },
   "permissions": [
-    { "action": "edit", "resource": "*", "effect": "ask" },
-    { "action": "edit", "resource": "/tmp", "effect": "allow" },
-    { "action": "edit", "resource": "/tmp/**", "effect": "allow" },
-    { "action": "edit", "resource": "**/.orchestration/**", "effect": "deny" },
-    { "action": "edit", "resource": "$HOME/.config/opencode/opencode.json", "effect": "deny" },
-    { "action": "question", "resource": "*", "effect": "deny" },
-    { "action": "skill", "resource": "ask-matt", "effect": "deny" },
-    { "action": "skill", "resource": "claude-handoff", "effect": "deny" },
-    { "action": "skill", "resource": "grill-me", "effect": "deny" },
-    { "action": "skill", "resource": "grill-with-docs", "effect": "deny" },
-    { "action": "skill", "resource": "handoff", "effect": "deny" },
-    { "action": "skill", "resource": "implement", "effect": "deny" },
-    { "action": "skill", "resource": "improve-codebase-architecture", "effect": "deny" },
-    { "action": "skill", "resource": "loop-me", "effect": "deny" },
-    { "action": "skill", "resource": "setup-ts-deep-modules", "effect": "deny" },
-    { "action": "skill", "resource": "teach", "effect": "deny" },
-    { "action": "skill", "resource": "to-questionnaire", "effect": "deny" },
-    { "action": "skill", "resource": "triage", "effect": "deny" },
-    { "action": "skill", "resource": "wait-what", "effect": "deny" },
-    { "action": "skill", "resource": "wayfinder", "effect": "deny" },
-    { "action": "skill", "resource": "writing-beats", "effect": "deny" },
-    { "action": "skill", "resource": "writing-fragments", "effect": "deny" },
-    { "action": "skill", "resource": "writing-shape", "effect": "deny" }
-  ]
+    {
+      "action": "edit",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "edit",
+      "resource": "/tmp",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "/tmp/**",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "**/.orchestration/**",
+      "effect": "deny"
+    },
+    {
+      "action": "edit",
+      "resource": "$HOME/.config/opencode/opencode.json",
+      "effect": "deny"
+    },
+    {
+      "action": "question",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "ask-matt",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "claude-handoff",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "grill-me",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "grill-with-docs",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "handoff",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "implement",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "improve-codebase-architecture",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "loop-me",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "setup-ts-deep-modules",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "teach",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "to-questionnaire",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "triage",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "wait-what",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "wayfinder",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "writing-beats",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "writing-fragments",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "writing-shape",
+      "effect": "deny"
+    }
+  ],
+  "permission": {
+    "edit": {
+      "**/.orchestration/**": "deny",
+      "$HOME/.config/opencode/opencode.json": "deny"
+    }
+  }
 }

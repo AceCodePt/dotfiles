@@ -11,7 +11,7 @@ Type=simple
 # also carries ORCH_ROOTS when the owner set it, so supervised roots survive
 # an install.
 Environment=HOME=/home/sagi
-Environment=PATH=/home/sagi/bin:/home/sagi/.opencode/bin:/home/sagi/.deno/bin:/home/sagi/.bun/bin:/home/sagi/.cargo/bin:/home/sagi/.local/share/mise/shims:/home/sagi/development/flutter/bin:/home/sagi/.local/share/nvim/mason/bin:/home/sagi/.local/share/../bin:/home/sagi/.local/bin/nvim/bin:/home/sagi/.local/scripts:/usr/share/Modules/bin:/home/sagi/.local/share/pnpm:/usr/local/bin:/usr/bin:/bin:/home/sagi/.local/bin:/home/sagi/.local/bin/scripts:/opt/mssql-tools18/bin:/home/sagi/go/bin:/home/sagi/.local/share/mise/installs/go/1.27.1/bin:/home/sagi/.local/share/mise/installs/node/latest/bin:/home/sagi/.local/share/mise/installs/pnpm/11.4.0
+Environment=PATH=/home/sagi/.local/share/mise/installs/go/1.27.1/bin:/home/sagi/.local/share/mise/installs/npm/latest/package/bin:/home/sagi/.local/share/mise/installs/node/latest/bin:/home/sagi/.local/share/mise/installs/python/latest/bin:/home/sagi/.cargo/bin:/home/sagi/.local/share/mise/shims:/home/sagi/development/flutter/bin:/home/sagi/bin:/home/sagi/.opencode/bin:/home/sagi/.deno/bin:/home/sagi/.bun/bin:/home/sagi/.local/share/nvim/mason/bin:/home/sagi/.local/share/pnpm/bin:/home/sagi/.local/share/../bin:/home/sagi/.local/bin/nvim/bin:/home/sagi/.local/scripts:/usr/share/Modules/bin:/home/sagi/.local/share/pnpm:/usr/local/bin:/usr/bin:/bin:/home/sagi/.local/bin:/home/sagi/.local/bin/scripts:/opt/mssql-tools18/bin:/home/sagi/go/bin
 ExecStart=/home/sagi/.local/share/orch/bin/orch daemon run --interval 1
 # Restart always, not on-failure: a supervisor that has exited cleanly is still a
 # supervisor that is not supervising, and nothing else notices its absence.

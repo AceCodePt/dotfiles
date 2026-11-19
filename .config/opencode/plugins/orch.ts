@@ -236,61 +236,44 @@ function registerTools(ctx: PluginContext, editor: ToolEditor): void {
     },
   })
 
-  const jobCreateInput: JsonSchema = {
-    type: "object",
-    properties: {
-      name: { type: "string", description: "job name; slugified into the session title" },
-      schedule: {
-        type: "string",
-        description: "five-field cron: minute hour day-of-month month day-of-week (daemon local time)",
-      },
-      prompt: { type: "string", description: "inline markdown prompt" },
-      promptFile: {
-        type: "string",
-        description: "path to a committed markdown prompt file, relative to the project",
-      },
-      agent: { type: "string", description: "optional opencode agent name" },
-      model: { type: "string", description: "optional provider/model, e.g. provider/model" },
-      overlap: {
-        type: "string",
-        enum: ["skip", "allow"],
-        description: "skip a still-running previous run (default) or allow stacking",
-      },
-      commit: {
-        type: "boolean",
-        description: "commit the config change to base (default true)",
-      },
-    },
-    required: ["name", "schedule"],
-    additionalProperties: false,
-  }
-
-  editor.add({
-    name: "create_job",
-    description:
-      "Create a scheduled opencode job in the project's base worktree " +
-      ".orchestration/config.json. Required: name, a five-field schedule, and a " +
-      "prompt (inline markdown) or promptFile (a committed path). Optional: agent, " +
-      "model, overlap. The daemon opens a session on the base worktree when the slot " +
-      "comes due; the session title carries the slot, so a restart cannot replay it. " +
-      "The prompt is the whole instruction set for that session: say what to check, " +
-      "what to fix, what is out of scope, and how to verify. Prefer a committed " +
-      "promptFile beyond a few lines. Commits the config to base by default so the " +
-      "daemon can see it; pass commit: false to leave it for review. Only trusted " +
-      "projects fire.",
-    input: jobCreateInput,
-    async execute(input: Record<string, unknown>, context: any) {
-      return { content: await runTool("cron_add", input, worktreeOf(context)) }
-    },
-  })
-
   editor.add({
     name: "add_job",
     description:
-      "Alias of create_job: add a scheduled opencode job to the project's base " +
-      "worktree .orchestration/config.json. Same fields and behaviour as create_job; " +
-      "commits the config to base by default (commit: false leaves it for review).",
-    input: jobCreateInput,
+      "Add a scheduled opencode job to the project's base worktree " +
+      ".orchestration/config.json. Required: name, schedule, and a prompt (inline " +
+      "markdown) or promptFile (a committed path). Optional: agent, model, overlap. " +
+      "The daemon opens a session on the base worktree when the schedule comes due; " +
+      "the session title carries the slot, so a restart cannot replay it. Commits " +
+      "the config to base by default so the daemon can see it; pass commit: false " +
+      "to leave it for review. Only trusted projects fire.",
+    input: {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "job name; slugified into the session title" },
+        schedule: {
+          type: "string",
+          description: "five-field cron: minute hour day-of-month month day-of-week (daemon local time)",
+        },
+        prompt: { type: "string", description: "inline markdown prompt" },
+        promptFile: {
+          type: "string",
+          description: "path to a committed markdown prompt file, relative to the project",
+        },
+        agent: { type: "string", description: "optional opencode agent name" },
+        model: { type: "string", description: "optional provider/model, e.g. provider/model" },
+        overlap: {
+          type: "string",
+          enum: ["skip", "allow"],
+          description: "skip a still-running previous run (default) or allow stacking",
+        },
+        commit: {
+          type: "boolean",
+          description: "commit the config change to base (default true)",
+        },
+      },
+      required: ["name", "schedule"],
+      additionalProperties: false,
+    },
     async execute(input: Record<string, unknown>, context: any) {
       return { content: await runTool("cron_add", input, worktreeOf(context)) }
     },

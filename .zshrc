@@ -218,7 +218,24 @@ pset() {
 }
 
 pget() { pass show "$1"; }
+
+pcopy() {
+  local src=$1 dst=$2
+  if [[ -z $src || -z $dst ]]; then
+    print -u2 "usage: pcopy <source-path> <target-path>"
+    return 2
+  fi
+  if [[ $src == $dst ]]; then
+    print -u2 "source and target cannot be the same"
+    return 2
+  fi
+  local value
+  value=$(pget "$src") || return $?
+  pset "$dst" "$value"
+}
+
 plist() { pass ls "${1:-parcel}"; }
+
 pgenerate() {
   pass generate -n "$1" "${2:-48}" || return 1
   pass git push -q 2>/dev/null || print -u2 "generated $1 locally - push failed"

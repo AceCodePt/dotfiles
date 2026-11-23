@@ -27,3 +27,6 @@ require("default.hypr.toggles")
 
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
+
+hl.unbind("switch:on:Lid Switch")
+hl.unbind("switch:off:Lid Switch")
